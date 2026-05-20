@@ -25,6 +25,8 @@ export class LibraryPage extends LitElement {
   @state() plans: StudyPlan[] = [];
   @state() customQuizzes: CustomQuiz[] = [];
   @state() loading = true;
+  @state() enrolledOpen = true;
+  @state() unenrolledOpen = true;
   @state() unenrollTarget: Catechism | null = null;
   @state() showUnenrollModal = false;
   @state() newQuizName = '';
@@ -159,7 +161,36 @@ export class LibraryPage extends LitElement {
     .stab:hover { color: #1B3024; border-color: rgba(31,41,32,.35); }
     .stab.active { background: #2D4A3A; color: #F5EFE0; border-color: #2D4A3A; }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    /* Accordion */
+    .accordion { margin-bottom: 12px; }
+    .accordion-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; background: #FFFCF5;
+      border: 1px solid rgba(31,41,32,.1); border-radius: 12px;
+      cursor: pointer; user-select: none; transition: background .15s;
+    }
+    .accordion-header:hover { background: #F5EFE0; }
+    .accordion.open .accordion-header {
+      border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+      border-bottom-color: transparent;
+    }
+    .accordion-left { display: flex; align-items: center; gap: 10px; }
+    .accordion-title { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: #1B3024; }
+    .accordion-count {
+      font-size: 12px; font-weight: 600; color: #4A554A;
+      background: rgba(31,41,32,.07); padding: 2px 8px; border-radius: 999px;
+    }
+    .accordion-chevron {
+      font-size: 18px; color: #7A8278; transition: transform .2s; line-height: 1;
+    }
+    .accordion.open .accordion-chevron { transform: rotate(180deg); }
+    .accordion-body {
+      border: 1px solid rgba(31,41,32,.1); border-top: none;
+      border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+      padding: 16px; background: rgba(31,41,32,.02);
+    }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 0; }
 
     .card {
       background: #FFFCF5; border: 1px solid rgba(31,41,32,.08); border-radius: 16px; padding: 22px;
@@ -333,13 +364,9 @@ export class LibraryPage extends LitElement {
     `;
   }
 
-  private renderCatechisms(): TemplateResult {
-    if (this.loading) return html`<div style="color:#7A8278;padding:40px 0;text-align:center">Loading library…</div>`;
+  private renderCatCard(cat: Catechism): TemplateResult {
+    const plan = this.getPlan(cat.id);
     return html`
-      <div class="grid">
-        ${this.catechisms.map(cat => {
-          const plan = this.getPlan(cat.id);
-          return html`
             <div class="card ${plan ? 'enrolled' : ''} ${this.openMenuId === cat.id ? 'menu-open' : ''}">
               <div class="card-head">
                 <span class="abbrev">${cat.abbreviation}</span>
@@ -386,8 +413,49 @@ export class LibraryPage extends LitElement {
                 ${plan ? 'Continue studying' : 'Enroll & Start'}
               </button>
             </div>
-          `;
-        })}
+    `;
+  }
+
+  private renderCatechisms(): TemplateResult {
+    if (this.loading) return html`<div style="color:#7A8278;padding:40px 0;text-align:center">Loading library…</div>`;
+
+    const enrolled   = this.catechisms.filter(c => this.getPlan(c.id));
+    const unenrolled = this.catechisms.filter(c => !this.getPlan(c.id));
+
+    return html`
+      ${enrolled.length > 0 ? html`
+        <div class="accordion ${this.enrolledOpen ? 'open' : ''}">
+          <div class="accordion-header" @click=${() => this.enrolledOpen = !this.enrolledOpen}>
+            <div class="accordion-left">
+              <span class="accordion-title">Enrolled</span>
+              <span class="accordion-count">${enrolled.length}</span>
+            </div>
+            <span class="accordion-chevron">▾</span>
+          </div>
+          ${this.enrolledOpen ? html`
+            <div class="accordion-body">
+              <div class="grid">${enrolled.map(c => this.renderCatCard(c))}</div>
+            </div>
+          ` : ''}
+        </div>
+      ` : ''}
+
+      <div class="accordion ${this.unenrolledOpen ? 'open' : ''}">
+        <div class="accordion-header" @click=${() => this.unenrolledOpen = !this.unenrolledOpen}>
+          <div class="accordion-left">
+            <span class="accordion-title">Not Enrolled</span>
+            <span class="accordion-count">${unenrolled.length}</span>
+          </div>
+          <span class="accordion-chevron">▾</span>
+        </div>
+        ${this.unenrolledOpen ? html`
+          <div class="accordion-body">
+            ${unenrolled.length === 0
+              ? html`<div style="color:#7A8278;font-size:14px;padding:8px 0">You're enrolled in everything available.</div>`
+              : html`<div class="grid">${unenrolled.map(c => this.renderCatCard(c))}</div>`
+            }
+          </div>
+        ` : ''}
       </div>
     `;
   }
