@@ -8,6 +8,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const sql = getDb();
 
   if (req.method === 'GET') {
+    // ?catechismId=wsc  → per-question progress for the path page
+    const catechismId = req.query.catechismId as string | undefined;
+    if (catechismId) {
+      const questions = await sql`
+        SELECT
+          cq.id, cq.number, cq.section, cq.section_name,
+          up.mastered, up.repetitions, up.due_at
+        FROM catechism_questions cq
+        LEFT JOIN user_progress up
+          ON up.content_id = cq.id
+          AND up.user_id = ${payload.userId}
+          AND up.content_type = 'catechism'
+        WHERE cq.catechism_id = ${catechismId}
+        ORDER BY cq.number ASC
+      `;
+      return res.status(200).json({ questions });
+    }
+
     const plans = await sql`
       SELECT sp.*, c.name AS catechism_name, c.abbreviation, c.question_count
       FROM user_study_plans sp

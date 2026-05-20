@@ -5,23 +5,26 @@ import '../components/stats-bar.js';
 
 interface StudyPlan {
   id: string; plan_type: string; catechism_id?: string;
-  catechism_name?: string; abbreviation?: string; quiz_mode: string; question_count?: number;
+  catechism_name?: string; abbreviation?: string; quiz_mode: string;
 }
 
-const SVG_W = 360;
-const SVG_H = 810;
+interface QuestionProgress {
+  id: string; number: number; section: string; section_name: string;
+  mastered: boolean | null; repetitions: number | null; due_at: string | null;
+}
 
-// x/y = center coords in the SVG viewBox; r = radius
-const NODES = [
-  { num: 'Q1',     state: 'done',             x: 180, y: 58,  r: 34, label: 'Mastered' },
-  { num: 'Q2',     state: 'done',             x: 244, y: 160, r: 34, label: 'Mastered' },
-  { num: 'Q3',     state: 'done',             x: 272, y: 262, r: 34, label: null },
-  { num: 'Q4',     state: 'done',             x: 244, y: 364, r: 34, label: null },
-  { num: 'Q5',     state: 'current',          x: 180, y: 472, r: 40, label: 'Up next' },
-  { num: 'Q6',     state: 'locked',           x: 114, y: 568, r: 34, label: null },
-  { num: 'Q7',     state: 'locked',           x: 84,  y: 664, r: 34, label: null },
-  { num: 'REVIEW', state: 'milestone-locked', x: 180, y: 758, r: 42, label: 'Unit review' },
-];
+interface PathNode {
+  num: string; state: string; x: number; y: number; r: number; label: string | null;
+}
+
+const CENTER_X  = 180;
+const SVG_W     = 360;
+const SPACING   = 90;
+const FIRST_Y   = 58;
+const ZIGZAG    = [0, 64, 90, 64, 0, -64, -90, -64];
+
+function nodeX(i: number) { return CENTER_X + ZIGZAG[i % ZIGZAG.length]; }
+function nodeY(i: number) { return FIRST_Y + i * SPACING; }
 
 @customElement('catechumen-path')
 export class CatechumenPath extends LitElement {
@@ -33,11 +36,17 @@ export class CatechumenPath extends LitElement {
 
   @state() plans: StudyPlan[] = [];
   @state() selectedId = '';
+  @state() allProgress: QuestionProgress[] = [];
   @state() plansLoading = true;
+  @state() progressLoading = false;
 
   connectedCallback() {
     super.connectedCallback();
     this.loadPlans();
+  }
+
+  updated(changed: Map<string, unknown>) {
+    if (changed.has('selectedId') && this.selectedId) this.loadProgress();
   }
 
   async loadPlans() {
@@ -50,9 +59,69 @@ export class CatechumenPath extends LitElement {
     this.plansLoading = false;
   }
 
+  async loadProgress() {
+    this.progressLoading = true;
+    const res = await apiFetch(`/api/study-plans?catechismId=${encodeURIComponent(this.selectedId)}`);
+    if (res.ok) {
+      const data = await res.json();
+      this.allProgress = data.questions ?? [];
+    }
+    this.progressLoading = false;
+  }
+
+  // ── computed helpers ──────────────────────────────────────────────────────
+
   private get selected(): StudyPlan | undefined {
     return this.plans.find(p => p.catechism_id === this.selectedId);
   }
+
+  private get currentSection(): string {
+    const first = this.allProgress.find(q => !q.mastered);
+    return first?.section ?? this.allProgress.at(-1)?.section ?? '';
+  }
+
+  private get sectionQs(): QuestionProgress[] {
+    return this.allProgress.filter(q => q.section === this.currentSection);
+  }
+
+  private get masteredCount(): number {
+    return this.sectionQs.filter(q => q.mastered).length;
+  }
+
+  private get pathNodes(): PathNode[] {
+    const qs = this.sectionQs;
+    const currentNum = qs.find(q => !q.mastered)?.number ?? 0;
+    const allMastered = qs.every(q => q.mastered);
+
+    const nodes: PathNode[] = qs.map((q, i) => {
+      let nodeState: string;
+      if (q.mastered)              nodeState = 'done';
+      else if (q.number === currentNum) nodeState = 'current';
+      else                         nodeState = 'locked';
+
+      return {
+        num: `Q${q.number}`, state: nodeState,
+        x: nodeX(i), y: nodeY(i), r: 34,
+        label: nodeState === 'current' ? 'Up next' : null,
+      };
+    });
+
+    // Milestone at end of section
+    nodes.push({
+      num: 'REVIEW',
+      state: allMastered ? 'milestone' : 'milestone-locked',
+      x: CENTER_X, y: nodeY(qs.length), r: 42,
+      label: 'Unit review',
+    });
+
+    return nodes;
+  }
+
+  private get svgH(): number {
+    return nodeY(this.sectionQs.length) + 42 + 30;
+  }
+
+  // ── styles ────────────────────────────────────────────────────────────────
 
   static styles = css`
     .layout { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
@@ -77,15 +146,16 @@ export class CatechumenPath extends LitElement {
     .quest-eyebrow { font-family: 'Fraunces', serif; font-style: italic; font-size: 13px; color: #F0E1B8; margin-bottom: 4px; }
     .quest-title  { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; margin-bottom: 6px; }
     .quest-progress { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(245,239,224,.8); }
-    .quest-bar { flex: 1; max-width: 200px; height: 6px; background: rgba(245,239,224,.15); border-radius: 3px; overflow: hidden; }
+    .quest-bar  { flex: 1; max-width: 200px; height: 6px; background: rgba(245,239,224,.15); border-radius: 3px; overflow: hidden; }
     .quest-fill { height: 100%; width: 33%; background: #C89B3C; border-radius: 3px; }
     .quest button {
       background: #F5EFE0; color: #1B3024; padding: 12px 22px; border-radius: 10px;
-      font-weight: 700; font-size: 14px; cursor: pointer; letter-spacing: .02em; position: relative; z-index: 1; border: none;
+      font-weight: 700; font-size: 14px; cursor: pointer; letter-spacing: .02em;
+      position: relative; z-index: 1; border: none;
     }
     .quest button:hover { background: #FFFCF5; }
 
-    /* Catechism selector tabs */
+    /* Catechism selector */
     .path-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
     .path-tab {
       padding: 8px 16px; font-size: 13px; font-weight: 600; color: #4A554A;
@@ -96,6 +166,7 @@ export class CatechumenPath extends LitElement {
     .path-tab:hover  { color: #1B3024; border-color: rgba(31,41,32,.35); }
     .path-tab.active { background: #2D4A3A; color: #F5EFE0; border-color: #2D4A3A; }
 
+    /* Unit header */
     .unit-header {
       display: flex; align-items: baseline; gap: 16px;
       margin-bottom: 24px; padding-bottom: 14px;
@@ -103,16 +174,9 @@ export class CatechumenPath extends LitElement {
     }
     .unit-number { font-family: 'Fraunces', serif; font-style: italic; font-size: 14px; color: #B5481E; letter-spacing: .02em; }
     .unit-title  { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500; color: #1B3024; letter-spacing: -.01em; }
-    .unit-status { margin-left: auto; font-size: 13px; color: #7A8278; font-weight: 500; }
+    .unit-status { margin-left: auto; font-size: 13px; color: #7A8278; font-weight: 500; white-space: nowrap; }
 
-    .empty-path {
-      text-align: center; padding: 60px 24px; color: #7A8278;
-      border: 1.5px dashed rgba(31,41,32,.15); border-radius: 16px;
-    }
-    .empty-path p { font-size: 15px; margin-bottom: 16px; }
-    .empty-path strong { color: #1B3024; }
-
-    /* SVG path track */
+    /* Path */
     .path-wrap  { position: relative; max-width: 360px; margin: 0 auto; padding: 12px 0; user-select: none; }
     .path-svg   { display: block; width: 100%; }
     .path-nodes { position: absolute; inset: 0; }
@@ -175,6 +239,19 @@ export class CatechumenPath extends LitElement {
     }
     .node.current .node-label { color: #B5481E; }
 
+    /* Loading skeleton */
+    .skeleton { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 12px 0; }
+    .skel-node { border-radius: 50%; background: rgba(31,41,32,.07); animation: shimmer 1.4s infinite; }
+    @keyframes shimmer { 0%,100% { opacity:.5 } 50% { opacity:1 } }
+
+    /* Empty state */
+    .empty-path {
+      text-align: center; padding: 60px 24px; color: #7A8278;
+      border: 1.5px dashed rgba(31,41,32,.15); border-radius: 16px;
+    }
+    .empty-path p { font-size: 15px; margin-bottom: 8px; }
+    .empty-path strong { color: #1B3024; }
+
     /* Sidebar */
     .side { display: flex; flex-direction: column; gap: 16px; }
     .side-card { background: #FFFCF5; border: 1px solid rgba(31,41,32,.08); border-radius: 16px; padding: 20px; }
@@ -196,52 +273,71 @@ export class CatechumenPath extends LitElement {
     .verse-card cite { font-size: 12px; font-style: normal; color: rgba(245,239,224,.7); font-weight: 500; letter-spacing: .04em; }
   `;
 
-  private renderTrack(): TemplateResult {
+  // ── render helpers ────────────────────────────────────────────────────────
+
+  private renderPath(): TemplateResult {
+    if (this.progressLoading || (this.plansLoading && !this.allProgress.length)) {
+      return html`
+        <div class="skeleton">
+          ${[68, 68, 68, 80, 68, 68].map(s => html`<div class="skel-node" style="width:${s}px;height:${s}px"></div>`)}
+        </div>
+      `;
+    }
+
+    const nodes = this.pathNodes;
+    const svgH  = this.svgH;
+    const qs    = this.sectionQs;
+
+    const firstQ = qs[0]?.number ?? 1;
+    const lastQ  = qs.at(-1)?.number ?? 1;
+    const sectionLabel = qs[0]?.section ?? '';
+    const sectionName  = qs[0]?.section_name ?? this.selected?.catechism_name ?? '';
+
     return html`
-      <svg class="path-svg" viewBox="0 0 ${SVG_W} ${SVG_H}" xmlns="http://www.w3.org/2000/svg"></svg>
-    `;
-  }
+      <div class="unit-header">
+        <div>
+          <div class="unit-number">${sectionLabel} · Questions ${firstQ}–${lastQ}</div>
+          <div class="unit-title">${sectionName}</div>
+        </div>
+        <div class="unit-status">${this.masteredCount} of ${qs.length} mastered</div>
+      </div>
 
-  private renderNodes(): TemplateResult {
-    return html`
-      <div class="path-nodes">
-        ${NODES.map(n => {
-          const isMilestone = n.state.startsWith('milestone');
-          const isLocked    = n.state.includes('locked');
-          const isCurrent   = n.state === 'current';
-          const isDone      = n.state === 'done';
-          const size        = n.r * 2;
-          const top  = `${(n.y / SVG_H * 100).toFixed(3)}%`;
-          const left = `${(n.x / SVG_W * 100).toFixed(3)}%`;
-
-          return html`
-            <div class="node-pos" style="top:${top};left:${left}">
-              <div class="node
-                ${isMilestone ? 'milestone' : ''}
-                ${isLocked    ? 'locked'    : ''}
-                ${isCurrent   ? 'current'   : ''}
-                ${isDone      ? 'done'      : ''}"
-                style="width:${size}px;height:${size}px">
-
-                ${isMilestone ? html`
-                  <span class="trophy">★</span>
-                  ${n.label ? html`<span class="node-label">${n.label}</span>` : ''}
-                ` : isCurrent ? html`
-                  <span class="play">Begin</span>
-                  <span class="num">${n.num}</span>
-                  ${n.label ? html`<span class="node-label">${n.label}</span>` : ''}
-                ` : isDone ? html`
-                  <span class="num">${n.num}</span>
-                  <span class="badge">★</span>
-                  ${n.label ? html`<span class="node-label">${n.label}</span>` : ''}
-                ` : html`
-                  <span class="num">${n.num}</span>
-                  ${n.label ? html`<span class="node-label">${n.label}</span>` : ''}
-                `}
+      <div class="path-wrap">
+        <svg class="path-svg" viewBox="0 0 ${SVG_W} ${svgH}" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="path-nodes">
+          ${nodes.map(n => {
+            const isMilestone = n.state.startsWith('milestone');
+            const isLocked    = n.state.includes('locked');
+            const isCurrent   = n.state === 'current';
+            const isDone      = n.state === 'done';
+            const top  = `${(n.y / svgH  * 100).toFixed(3)}%`;
+            const left = `${(n.x / SVG_W * 100).toFixed(3)}%`;
+            return html`
+              <div class="node-pos" style="top:${top};left:${left}">
+                <div class="node
+                  ${isMilestone ? 'milestone' : ''}
+                  ${isLocked    ? 'locked'    : ''}
+                  ${isCurrent   ? 'current'   : ''}
+                  ${isDone      ? 'done'      : ''}"
+                  style="width:${n.r * 2}px;height:${n.r * 2}px">
+                  ${isMilestone ? html`
+                    <span class="trophy">★</span>
+                    <span class="node-label">${n.label}</span>
+                  ` : isCurrent ? html`
+                    <span class="play">Begin</span>
+                    <span class="num">${n.num}</span>
+                    <span class="node-label">${n.label}</span>
+                  ` : isDone ? html`
+                    <span class="num">${n.num}</span>
+                    <span class="badge">★</span>
+                  ` : html`
+                    <span class="num">${n.num}</span>
+                  `}
+                </div>
               </div>
-            </div>
-          `;
-        })}
+            `;
+          })}
+        </div>
       </div>
     `;
   }
@@ -279,22 +375,9 @@ export class CatechumenPath extends LitElement {
           ${!this.plansLoading && this.plans.length === 0 ? html`
             <div class="empty-path">
               <p>You haven't enrolled in any catechism yet.</p>
-              <p>Head to the <strong>Library</strong> to choose one and start learning.</p>
+              <p>Head to the <strong>Library</strong> to get started.</p>
             </div>
-          ` : html`
-            <div class="unit-header">
-              <div>
-                <div class="unit-number">Unit I · Questions 1–12</div>
-                <div class="unit-title">${this.selected?.catechism_name ?? '…'}</div>
-              </div>
-              <div class="unit-status">8 of 12 mastered</div>
-            </div>
-
-            <div class="path-wrap">
-              ${this.renderTrack()}
-              ${this.renderNodes()}
-            </div>
-          `}
+          ` : this.renderPath()}
         </div>
 
         <aside class="side">
@@ -316,14 +399,20 @@ export class CatechumenPath extends LitElement {
             </div>
             <div class="achievement-row">
               <div class="ach-icon locked">🔒</div>
-              <div><div class="ach-name dim">Unit conqueror</div><div class="ach-desc">Complete an entire unit · 8/12</div></div>
+              <div>
+                <div class="ach-name dim">Unit conqueror</div>
+                <div class="ach-desc">Complete an entire unit · ${this.masteredCount}/${this.sectionQs.length}</div>
+              </div>
             </div>
           </div>
 
           <div class="side-card">
             <h3>Up next in review</h3>
             <div style="font-size:13px;color:#7A8278;line-height:1.6">
-              Spaced repetition will surface <strong style="color:#1F2920">Q1</strong> and <strong style="color:#1F2920">Q3</strong> for review tomorrow.
+              ${this.sectionQs.filter(q => q.mastered).length === 0
+                ? 'Answer questions to start building your review schedule.'
+                : html`Spaced repetition will surface your answered questions for review based on how well you know them.`
+              }
             </div>
           </div>
         </aside>
