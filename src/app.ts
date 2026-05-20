@@ -97,7 +97,6 @@ export class CatechumenApp extends LitElement {
       { id: 'library', label: 'Library' },
       { id: 'lesson',  label: 'Lesson' },
       ...(user?.role === 'parent' ? [{ id: 'parent' as Screen, label: 'Family' }] : []),
-      { id: 'league',  label: 'League' },
     ];
     return html`
       <nav class="nav">
