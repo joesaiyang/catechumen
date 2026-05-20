@@ -661,6 +661,542 @@ export default async function seedCatechism(sql: any): Promise<void> {
         { reference: 'Phil. 2:8', text: 'And being found in fashion as a man, he humbled himself, and became obedient unto death, even the death of the cross.' }
       ]
     },
+    {
+      catechism_id: 'wlc', number: 50,
+      section: 'Christ the Mediator', section_name: 'Christ the Mediator',
+      question: 'Wherein consisted Christ\'s humiliation after his death?',
+      answer: 'Christ\'s humiliation after his death consisted in his being buried, and continuing in the state of the dead, and under the power of death till the third day; which hath been otherwise expressed in these words, He descended into hell.',
+      proof_texts: [
+        { reference: '1 Cor. 15:3-4', text: 'For I delivered unto you first of all that which I also received, how that Christ died for our sins according to the scriptures; And that he was buried, and that he rose again the third day according to the scriptures.' },
+        { reference: 'Acts 2:24-27,31', text: 'Whom God hath raised up, having loosed the pains of death: because it was not possible that he should be holden of it... He seeing this before spake of the resurrection of Christ, that his soul was not left in hell, neither his flesh did see corruption.' },
+        { reference: 'Matt. 12:40', text: 'For as Jonas was three days and three nights in the whale\'s belly; so shall the Son of man be three days and three nights in the heart of the earth.' },
+        { reference: 'Rom. 6:9', text: 'Knowing that Christ being raised from the dead dieth no more; death hath no more dominion over him.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 51,
+      section: 'Christ the Mediator', section_name: 'Christ the Mediator',
+      question: 'What was the estate of Christ\'s exaltation?',
+      answer: 'The estate of Christ\'s exaltation comprehendeth his resurrection, ascension, sitting at the right hand of the Father, and his coming again to judge the world.',
+      proof_texts: [
+        { reference: '1 Cor. 15:4', text: 'And that he was buried, and that he rose again the third day according to the scriptures.' },
+        { reference: 'Acts 1:11', text: 'Ye men of Galilee, why stand ye gazing up into heaven? this same Jesus, which is taken up from you into heaven, shall so come in like manner as ye have seen him go into heaven.' },
+        { reference: 'Eph. 1:20', text: 'Which he wrought in Christ, when he raised him from the dead, and set him at his own right hand in the heavenly places.' },
+        { reference: 'Acts 1:9-11', text: 'And when he had spoken these things, while they beheld, he was taken up; and a cloud received him out of their sight.' },
+        { reference: 'Acts 17:31', text: 'Because he hath appointed a day, in the which he will judge the world in righteousness by that man whom he hath ordained; whereof he hath given assurance unto all men, in that he hath raised him from the dead.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 52,
+      section: 'Christ the Mediator', section_name: 'Christ the Mediator',
+      question: 'How was Christ exalted in his resurrection?',
+      answer: 'Christ was exalted in his resurrection, in that, not having seen corruption in death (of which it was not possible for him to be held), and having the very same body in which he suffered, with the essential properties thereof (but without mortality, and other common infirmities belonging to this life), really united to his soul, he rose again from the dead the third day by his own power; whereby he declared himself to be the Son of God, to have satisfied divine justice, to have vanquished death, and him that had the power of it, and to be Lord of quick and dead: all which he did as a public person, the head of his church, for their justification, quickening in grace, support against enemies, and to assure them of their resurrection from the dead at the last day.',
+      proof_texts: [
+        { reference: 'Acts 2:24,27', text: 'Whom God hath raised up, having loosed the pains of death... Because thou wilt not leave my soul in hell, neither wilt thou suffer thine Holy One to see corruption.' },
+        { reference: 'Luke 24:39', text: 'Behold my hands and my feet, that it is I myself: handle me, and see; for a spirit hath not flesh and bones, as ye see me have.' },
+        { reference: 'Rom. 1:4', text: 'And declared to be the Son of God with power, according to the spirit of holiness, by the resurrection from the dead.' },
+        { reference: 'Rom. 8:34', text: 'Who is he that condemneth? It is Christ that died, yea rather, that is risen again, who is even at the right hand of God, who also maketh intercession for us.' },
+        { reference: 'Heb. 2:14', text: 'Forasmuch then as the children are partakers of flesh and blood, he also himself likewise took part of the same; that through death he might destroy him that had the power of death, that is, the devil.' },
+        { reference: 'Rom. 14:9', text: 'For to this end Christ both died, and rose, and revived, that he might be Lord both of the dead and living.' },
+        { reference: 'Rom. 4:25', text: 'Who was delivered for our offences, and was raised again for our justification.' },
+        { reference: '1 Cor. 15:21-22', text: 'For since by man came death, by man came also the resurrection of the dead. For as in Adam all die, even so in Christ shall all be made alive.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 53,
+      section: 'Christ the Mediator', section_name: 'Christ the Mediator',
+      question: 'How was Christ exalted in his ascension?',
+      answer: 'Christ was exalted in his ascension, in that having after his resurrection often appeared unto and conversed with his apostles, speaking to them of the things pertaining to the kingdom of God, and giving them commission to preach the gospel to all nations, forty days after his resurrection, he, in our nature, and as our head, triumphing over enemies, visibly went up into the highest heavens, there to receive gifts for men, to raise up our affections thither, and to prepare a place for us, where himself is, and shall continue till his second coming at the end of the world.',
+      proof_texts: [
+        { reference: 'Acts 1:2-3', text: 'Until the day in which he was taken up, after that he through the Holy Ghost had given commandments unto the apostles whom he had chosen: To whom also he shewed himself alive after his passion by many infallible proofs, being seen of them forty days, and speaking of the things pertaining to the kingdom of God.' },
+        { reference: 'Eph. 4:8', text: 'Wherefore he saith, When he ascended up on high, he led captivity captive, and gave gifts unto men.' },
+        { reference: 'Acts 1:9-11', text: 'And when he had spoken these things, while they beheld, he was taken up; and a cloud received him out of their sight.' },
+        { reference: 'Heb. 6:20', text: 'Whither the forerunner is for us entered, even Jesus, made an high priest for ever after the order of Melchisedec.' },
+        { reference: 'John 14:3', text: 'And if I go and prepare a place for you, I will come again, and receive you unto myself; that where I am, there ye may be also.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 54,
+      section: 'Christ the Mediator', section_name: 'Christ the Mediator',
+      question: 'How is Christ exalted in his sitting at the right hand of God?',
+      answer: 'Christ is exalted in his sitting at the right hand of God, in that as God-man he is advanced to the highest favour with God the Father, with all fullness of joy, glory, and power over all things in heaven and earth; and doth gather and defend his church, and subdue their enemies; furnisheth his ministers and people with gifts and graces, and maketh intercession for them.',
+      proof_texts: [
+        { reference: 'Phil. 2:9', text: 'Wherefore God also hath highly exalted him, and given him a name which is above every name.' },
+        { reference: 'Acts 2:28', text: 'Thou hast made known to me the ways of life; thou shalt make me full of joy with thy countenance.' },
+        { reference: 'Eph. 1:20-22', text: 'Which he wrought in Christ, when he raised him from the dead, and set him at his own right hand in the heavenly places, Far above all principality, and power, and might, and dominion, and every name that is named... And hath put all things under his feet, and gave him to be the head over all things to the church.' },
+        { reference: 'Eph. 4:10-12', text: 'He that descended is the same also that ascended up far above all heavens, that he might fill all things. And he gave some, apostles; and some, prophets; and some, evangelists; and some, pastors and teachers; For the perfecting of the saints.' },
+        { reference: 'Rom. 8:34', text: 'Who is he that condemneth? It is Christ that died, yea rather, that is risen again, who is even at the right hand of God, who also maketh intercession for us.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 55,
+      section: 'Christ the Mediator', section_name: 'Christ the Mediator',
+      question: 'How doth Christ make intercession?',
+      answer: 'Christ maketh intercession, by his appearing in our nature continually before the Father in heaven, in the merit of his obedience and sacrifice on earth, declaring his will to have it applied to all believers; answering all accusations against them, and procuring for them quiet of conscience, notwithstanding daily failings, access with boldness to the throne of grace, and acceptance of their persons and services.',
+      proof_texts: [
+        { reference: 'Heb. 9:12,24', text: 'Neither by the blood of goats and calves, but by his own blood he entered in once into the holy place, having obtained eternal redemption for us... For Christ is not entered into the holy places made with hands... but into heaven itself, now to appear in the presence of God for us.' },
+        { reference: 'John 17:9,20,24', text: 'I pray for them: I pray not for the world, but for them which thou hast given me; for they are thine... Neither pray I for these alone, but for them also which shall believe on me through their word... Father, I will that they also, whom thou hast given me, be with me where I am.' },
+        { reference: 'Rom. 8:33-34', text: 'Who shall lay any thing to the charge of God\'s elect? It is God that justifieth. Who is he that condemneth? It is Christ that died, yea rather, that is risen again, who is even at the right hand of God, who also maketh intercession for us.' },
+        { reference: '1 John 2:1-2', text: 'My little children, these things write I unto you, that ye sin not. And if any man sin, we have an advocate with the Father, Jesus Christ the righteous: And he is the propitiation for our sins.' },
+        { reference: 'Heb. 4:16', text: 'Let us therefore come boldly unto the throne of grace, that we may obtain mercy, and find grace to help in time of need.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 56,
+      section: 'Christ the Mediator', section_name: 'Christ the Mediator',
+      question: 'How is Christ to be exalted in his coming again to judge the world?',
+      answer: 'Christ is to be exalted in his coming again to judge the world, in that he, who was unjustly judged and condemned by wicked men, shall come again at the last day in great power, and in the full manifestation of his own glory, and of his Father\'s, with all his holy angels, with a shout, with the voice of the archangel, and with the trumpet of God, to judge the world in righteousness.',
+      proof_texts: [
+        { reference: 'Acts 3:14-15', text: 'But ye denied the Holy One and the Just, and desired a murderer to be granted unto you; And killed the Prince of life, whom God hath raised from the dead; whereof we are witnesses.' },
+        { reference: 'Matt. 24:30', text: 'And then shall appear the sign of the Son of man in heaven: and then shall all the tribes of the earth mourn, and they shall see the Son of man coming in the clouds of heaven with power and great glory.' },
+        { reference: '1 Thess. 4:16', text: 'For the Lord himself shall descend from heaven with a shout, with the voice of the archangel, and with the trump of God: and the dead in Christ shall rise first.' },
+        { reference: 'Acts 17:31', text: 'Because he hath appointed a day, in the which he will judge the world in righteousness by that man whom he hath ordained.' }
+      ]
+    },
+
+    // ─── Section 5: Benefits of Redemption (Q57–90) ─────────────────────────
+    {
+      catechism_id: 'wlc', number: 57,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What benefits hath Christ procured by his mediation?',
+      answer: 'Christ, by his mediation, hath procured redemption, with all other benefits of the covenant of grace.',
+      proof_texts: [
+        { reference: 'Heb. 9:12', text: 'Neither by the blood of goats and calves, but by his own blood he entered in once into the holy place, having obtained eternal redemption for us.' },
+        { reference: '2 Cor. 1:20', text: 'For all the promises of God in him are yea, and in him Amen, unto the glory of God by us.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 58,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'How do we come to be made partakers of the benefits which Christ hath procured?',
+      answer: 'We are made partakers of the benefits which Christ hath procured, by the application of them unto us, which is the work of God the Holy Ghost.',
+      proof_texts: [
+        { reference: 'John 1:12', text: 'But as many as received him, to them gave he power to become the sons of God, even to them that believe on his name.' },
+        { reference: 'Titus 3:5-6', text: 'Not by works of righteousness which we have done, but according to his mercy he saved us, by the washing of regeneration, and renewing of the Holy Ghost; Which he shed on us abundantly through Jesus Christ our Saviour.' },
+        { reference: 'John 3:5-6', text: 'Jesus answered, Verily, verily, I say unto thee, Except a man be born of water and of the Spirit, he cannot enter into the kingdom of God. That which is born of the flesh is flesh; and that which is born of the Spirit is spirit.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 59,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'Who are made partakers of redemption through Christ?',
+      answer: 'Redemption is certainly applied, and effectually communicated, to all those for whom Christ hath purchased it; who are in time by the Holy Ghost enabled to believe in Christ according to the gospel.',
+      proof_texts: [
+        { reference: 'Eph. 1:13-14', text: 'In whom ye also trusted, after that ye heard the word of truth, the gospel of your salvation: in whom also after that ye believed, ye were sealed with that holy Spirit of promise, Which is the earnest of our inheritance until the redemption of the purchased possession.' },
+        { reference: 'John 6:37,39', text: 'All that the Father giveth me shall come to me; and him that cometh to me I will in no wise cast out... And this is the Father\'s will which hath sent me, that of all which he hath given me I should lose nothing, but should raise it up again at the last day.' },
+        { reference: 'John 10:15-16', text: 'As the Father knoweth me, even so know I the Father: and I lay down my life for the sheep. And other sheep I have, which are not of this fold: them also I must bring, and they shall hear my voice; and there shall be one fold, and one shepherd.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 60,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'Can they who have never heard the gospel, and so know not Jesus Christ, nor believe in him, be saved by their living according to the light of nature?',
+      answer: 'They who, having never heard the gospel, know not Jesus Christ, and believe not in him, cannot be saved, be they never so diligent to frame their lives according to the light of nature, or the laws of that religion which they profess; neither is there salvation in any other, but in Christ alone, who is the Saviour only of his body the church.',
+      proof_texts: [
+        { reference: 'Rom. 10:14', text: 'How then shall they call on him in whom they have not believed? and how shall they believe in him of whom they have not heard? and how shall they hear without a preacher?' },
+        { reference: 'Acts 4:12', text: 'Neither is there salvation in any other: for there is none other name under heaven given among men, whereby we must be saved.' },
+        { reference: 'John 14:6', text: 'Jesus saith unto him, I am the way, the truth, and the life: no man cometh unto the Father, but by me.' },
+        { reference: 'Eph. 5:23', text: 'For the husband is the head of the wife, even as Christ is the head of the church: and he is the saviour of the body.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 61,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'Are all they saved who hear the gospel, and live in the church?',
+      answer: 'All that hear the gospel, and live in the visible church, are not saved; but only they who are true members of the church invisible.',
+      proof_texts: [
+        { reference: 'John 12:38-40', text: 'That the saying of Esaias the prophet might be fulfilled... Lord, who hath believed our report? and to whom hath the arm of the Lord been revealed? Therefore they could not believe.' },
+        { reference: 'Rom. 9:6', text: 'Not as though the word of God hath taken none effect. For they are not all Israel, which are of Israel.' },
+        { reference: 'Matt. 22:14', text: 'For many are called, but few are chosen.' },
+        { reference: 'Matt. 7:21', text: 'Not every one that saith unto me, Lord, Lord, shall enter into the kingdom of heaven; but he that doeth the will of my Father which is in heaven.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 62,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is the visible church?',
+      answer: 'The visible church is a society made up of all such as in all ages and places of the world do profess the true religion, and of their children.',
+      proof_texts: [
+        { reference: '1 Cor. 1:2', text: 'Unto the church of God which is at Corinth, to them that are sanctified in Christ Jesus, called to be saints, with all that in every place call upon the name of Jesus Christ our Lord.' },
+        { reference: '1 Cor. 12:13', text: 'For by one Spirit are we all baptized into one body, whether we be Jews or Gentiles, whether we be bond or free; and have been all made to drink into one Spirit.' },
+        { reference: 'Rom. 15:9-12', text: 'And that the Gentiles might glorify God for his mercy; as it is written, For this cause I will confess to thee among the Gentiles, and sing unto thy name.' },
+        { reference: 'Acts 2:39', text: 'For the promise is unto you, and to your children, and to all that are afar off, even as many as the Lord our God shall call.' },
+        { reference: '1 Cor. 7:14', text: 'For the unbelieving husband is sanctified by the wife, and the unbelieving wife is sanctified by the husband: else were your children unclean; but now are they holy.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 63,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What are the special privileges of the visible church?',
+      answer: 'The visible church hath the privilege of being under God\'s special care and government; of being protected and preserved in all ages, notwithstanding the opposition of all enemies; and of enjoying the communion of saints, the ordinary means of salvation, and offers of grace by Christ to all the members of it in the ministry of the gospel, testifying, that whosoever believes in him shall be saved, and excluding none that will come unto him.',
+      proof_texts: [
+        { reference: 'Isa. 4:5-6', text: 'And the LORD will create upon every dwelling place of mount Zion, and upon her assemblies, a cloud and smoke by day, and the shining of a flaming fire by night: for upon all the glory shall be a defence. And there shall be a tabernacle for a shadow in the daytime from the heat.' },
+        { reference: 'Matt. 16:18', text: 'And I say also unto thee, That thou art Peter, and upon this rock I will build my church; and the gates of hell shall not prevail against it.' },
+        { reference: 'Ps. 23:6', text: 'Surely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever.' },
+        { reference: 'Acts 2:42', text: 'And they continued stedfastly in the apostles\' doctrine and fellowship, and in breaking of bread, and in prayers.' },
+        { reference: 'Mark 16:15-16', text: 'And he said unto them, Go ye into all the world, and preach the gospel to every creature. He that believeth and is baptized shall be saved; but he that believeth not shall be damned.' },
+        { reference: 'John 6:37', text: 'All that the Father giveth me shall come to me; and him that cometh to me I will in no wise cast out.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 64,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is the invisible church?',
+      answer: 'The invisible church is the whole number of the elect, that have been, are, or shall be gathered into one under Christ the head.',
+      proof_texts: [
+        { reference: 'Eph. 1:10,22-23', text: 'That in the dispensation of the fulness of times he might gather together in one all things in Christ... And hath put all things under his feet, and gave him to be the head over all things to the church, Which is his body, the fulness of him that filleth all in all.' },
+        { reference: 'John 10:16', text: 'And other sheep I have, which are not of this fold: them also I must bring, and they shall hear my voice; and there shall be one fold, and one shepherd.' },
+        { reference: 'John 11:52', text: 'And not for that nation only, but that also he should gather together in one the children of God that were scattered abroad.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 65,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What special benefits do the members of the invisible church enjoy by Christ?',
+      answer: 'The members of the invisible church by Christ enjoy union and communion with him in grace and glory.',
+      proof_texts: [
+        { reference: 'John 17:21', text: 'That they all may be one; as thou, Father, art in me, and I in thee, that they also may be one in us: that the world may believe that thou hast sent me.' },
+        { reference: 'Eph. 2:5-6', text: 'Even when we were dead in sins, hath quickened us together with Christ... And hath raised us up together, and made us sit together in heavenly places in Christ Jesus.' },
+        { reference: 'John 17:24', text: 'Father, I will that they also, whom thou hast given me, be with me where I am; that they may behold my glory.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 66,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is that union which the elect have with Christ?',
+      answer: 'The union which the elect have with Christ is the work of God\'s grace, whereby they are spiritually and mystically, yet really and inseparably, joined to Christ as their head and husband; which is done in their effectual calling.',
+      proof_texts: [
+        { reference: 'Eph. 1:22', text: 'And hath put all things under his feet, and gave him to be the head over all things to the church.' },
+        { reference: 'Eph. 5:23', text: 'For the husband is the head of the wife, even as Christ is the head of the church: and he is the saviour of the body.' },
+        { reference: '1 Cor. 6:17', text: 'But he that is joined unto the Lord is one spirit.' },
+        { reference: 'John 10:28', text: 'And I give unto them eternal life; and they shall never perish, neither shall any man pluck them out of my hand.' },
+        { reference: '1 Cor. 1:9', text: 'God is faithful, by whom ye were called unto the fellowship of his Son Jesus Christ our Lord.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 67,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is effectual calling?',
+      answer: 'Effectual calling is the work of God\'s almighty power and grace, whereby (out of his free and special love to his elect, and from nothing in them moving him thereunto) he doth, in his accepted time, invite and draw them to Jesus Christ, by his word and Spirit; savingly enlightening their minds, renewing and powerfully determining their wills, so as they (although in themselves dead in sin) are hereby made willing and able freely to answer his call, and to accept and embrace the grace offered and conveyed therein.',
+      proof_texts: [
+        { reference: 'John 5:25', text: 'Verily, verily, I say unto you, The hour is coming, and now is, when the dead shall hear the voice of the Son of God: and they that hear shall live.' },
+        { reference: 'Eph. 1:18-20', text: 'The eyes of your understanding being enlightened; that ye may know what is the hope of his calling... According to the working of his mighty power, Which he wrought in Christ, when he raised him from the dead.' },
+        { reference: '2 Tim. 1:9', text: 'Who hath saved us, and called us with an holy calling, not according to our works, but according to his own purpose and grace, which was given us in Christ Jesus before the world began.' },
+        { reference: 'Titus 3:4-5', text: 'But after that the kindness and love of God our Saviour toward man appeared, Not by works of righteousness which we have done, but according to his mercy he saved us, by the washing of regeneration, and renewing of the Holy Ghost.' },
+        { reference: 'Eph. 2:1,5', text: 'And you hath he quickened, who were dead in trespasses and sins... Even when we were dead in sins, hath quickened us together with Christ.' },
+        { reference: 'Phil. 2:13', text: 'For it is God which worketh in you both to will and to do of his good pleasure.' },
+        { reference: 'Deut. 30:6', text: 'And the LORD thy God will circumcise thine heart, and the heart of thy seed, to love the LORD thy God with all thine heart, and with all thy soul, that thou mayest live.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 68,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'Are the elect only effectually called?',
+      answer: 'All the elect, and they only, are effectually called; although others may be, and often are, outwardly called by the ministry of the word, and have some common operations of the Spirit; who, for their wilful neglect and contempt of the grace offered to them, being justly left in their unbelief, do never truly come to Jesus Christ.',
+      proof_texts: [
+        { reference: 'Acts 13:48', text: 'And when the Gentiles heard this, they were glad, and glorified the word of the Lord: and as many as were ordained to eternal life believed.' },
+        { reference: 'Matt. 22:14', text: 'For many are called, but few are chosen.' },
+        { reference: 'Matt. 7:22', text: 'Many will say to me in that day, Lord, Lord, have we not prophesied in thy name? and in thy name have cast out devils? and in thy name done many wonderful works?' },
+        { reference: 'Heb. 6:4-6', text: 'For it is impossible for those who were once enlightened, and have tasted of the heavenly gift, and were made partakers of the Holy Ghost, And have tasted the good word of God, and the powers of the world to come, If they shall fall away, to renew them again unto repentance.' },
+        { reference: 'John 12:38-40', text: 'That the saying of Esaias the prophet might be fulfilled... He hath blinded their eyes, and hardened their heart; that they should not see with their eyes, nor understand with their heart, and be converted.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 69,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is the communion in grace which the members of the invisible church have with Christ?',
+      answer: 'The communion in grace which the members of the invisible church have with Christ, is their partaking of the virtue of his mediation, in their justification, adoption, sanctification, and whatever else, in this life, manifests their union with him.',
+      proof_texts: [
+        { reference: '1 Cor. 1:30', text: 'But of him are ye in Christ Jesus, who of God is made unto us wisdom, and righteousness, and sanctification, and redemption.' },
+        { reference: 'Eph. 1:5', text: 'Having predestinated us unto the adoption of children by Jesus Christ to himself, according to the good pleasure of his will.' },
+        { reference: '1 Cor. 1:30', text: 'But of him are ye in Christ Jesus, who of God is made unto us wisdom, and righteousness, and sanctification, and redemption.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 70,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is justification?',
+      answer: 'Justification is an act of God\'s free grace unto sinners, in which he pardoneth all their sins, accepteth and accounteth their persons righteous in his sight; not for any thing wrought in them, or done by them, but only for the perfect obedience and full satisfaction of Christ, by God imputed to them, and received by faith alone.',
+      proof_texts: [
+        { reference: 'Rom. 3:22,24-25,27-28', text: 'Even the righteousness of God which is by faith of Jesus Christ unto all and upon all them that believe... Being justified freely by his grace through the redemption that is in Christ Jesus... to declare his righteousness... that he might be just, and the justifier of him which believeth in Jesus.' },
+        { reference: 'Rom. 4:6-8', text: 'Even as David also describeth the blessedness of the man, unto whom God imputeth righteousness without works, Saying, Blessed are they whose iniquities are forgiven, and whose sins are covered. Blessed is the man to whom the Lord will not impute sin.' },
+        { reference: '2 Cor. 5:19,21', text: 'To wit, that God was in Christ, reconciling the world unto himself, not imputing their trespasses unto them... For he hath made him to be sin for us, who knew no sin; that we might be made the righteousness of God in him.' },
+        { reference: 'Phil. 3:9', text: 'And be found in him, not having mine own righteousness, which is of the law, but that which is through the faith of Christ, the righteousness which is of God by faith.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 71,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'How is justification an act of God\'s free grace?',
+      answer: 'Although Christ, by his obedience and death, did make a proper, real, and full satisfaction to God\'s justice in the behalf of them that are justified; yet inasmuch as God accepteth the satisfaction from a surety, which he might have demanded of them, and did provide this surety, his own only Son, imputing his righteousness to them, and requiring nothing of them for their justification but faith, which also is his gift, their justification is to them of free grace.',
+      proof_texts: [
+        { reference: 'Rom. 8:32', text: 'He that spared not his own Son, but delivered him up for us all, how shall he not with him also freely give us all things?' },
+        { reference: '2 Cor. 5:21', text: 'For he hath made him to be sin for us, who knew no sin; that we might be made the righteousness of God in him.' },
+        { reference: 'Rom. 3:24', text: 'Being justified freely by his grace through the redemption that is in Christ Jesus.' },
+        { reference: 'Eph. 2:8', text: 'For by grace are ye saved through faith; and that not of yourselves: it is the gift of God.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 72,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is justifying faith?',
+      answer: 'Justifying faith is a saving grace, wrought in the heart of a sinner by the Spirit and word of God, whereby he, being convinced of his sin and misery, and of the disability in himself and all other creatures to recover him out of his lost condition, not only assenteth to the truth of the promise of the gospel, but receiveth and resteth upon Christ and his righteousness, therein held forth, for pardon of sin, and for the accepting and accounting of his person righteous in the sight of God for salvation.',
+      proof_texts: [
+        { reference: 'Heb. 10:39', text: 'But we are not of them who draw back unto perdition; but of them that believe to the saving of the soul.' },
+        { reference: 'Acts 16:30-31', text: 'And brought them out, and said, Sirs, what must I do to be saved? And they said, Believe on the Lord Jesus Christ, and thou shalt be saved, and thy house.' },
+        { reference: 'John 1:12', text: 'But as many as received him, to them gave he power to become the sons of God, even to them that believe on his name.' },
+        { reference: 'Phil. 3:9', text: 'And be found in him, not having mine own righteousness, which is of the law, but that which is through the faith of Christ, the righteousness which is of God by faith.' },
+        { reference: 'Acts 15:11', text: 'But we believe that through the grace of the Lord Jesus Christ we shall be saved, even as they.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 73,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'How doth faith justify a sinner in the sight of God?',
+      answer: 'Faith justifies a sinner in the sight of God, not because of those other graces which do always accompany it, or of good works that are the fruits of it, nor as if the grace of faith, or any act thereof, were imputed to him for his justification; but only as it is an instrument by which he receiveth and applieth Christ and his righteousness.',
+      proof_texts: [
+        { reference: 'Gal. 3:11', text: 'But that no man is justified by the law in the sight of God, it is evident: for, The just shall live by faith.' },
+        { reference: 'Rom. 3:28', text: 'Therefore we conclude that a man is justified by faith without the deeds of the law.' },
+        { reference: 'Rom. 4:5', text: 'But to him that worketh not, but believeth on him that justifieth the ungodly, his faith is counted for righteousness.' },
+        { reference: 'Eph. 2:8', text: 'For by grace are ye saved through faith; and that not of yourselves: it is the gift of God.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 74,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is adoption?',
+      answer: 'Adoption is an act of the free grace of God, in and for his only Son Jesus Christ, whereby all those that are justified are received into the number of his children, have his name put upon them, the Spirit of his Son given to them, are under his fatherly care and dispensations, admitted to all the liberties and privileges of the sons of God, made heirs of all the promises, and fellow-heirs with Christ in glory.',
+      proof_texts: [
+        { reference: '1 John 3:1', text: 'Behold, what manner of love the Father hath bestowed upon us, that we should be called the sons of God.' },
+        { reference: 'John 1:12', text: 'But as many as received him, to them gave he power to become the sons of God, even to them that believe on his name.' },
+        { reference: 'Gal. 4:4-5', text: 'But when the fulness of the time was come, God sent forth his Son, made of a woman, made under the law, To redeem them that were under the law, that we might receive the adoption of sons.' },
+        { reference: 'Rom. 8:17', text: 'And if children, then heirs; heirs of God, and joint-heirs with Christ; if so be that we suffer with him, that we may be also glorified together.' },
+        { reference: 'Heb. 6:12', text: 'That ye be not slothful, but followers of them who through faith and patience inherit the promises.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 75,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is sanctification?',
+      answer: 'Sanctification is a work of God\'s grace, whereby they whom God hath, before the foundation of the world, chosen to be holy, are in time, through the powerful operation of his Spirit applying the death and resurrection of Christ unto them, renewed in their whole man after the image of God; having the seeds of repentance unto life, and all other saving graces, put into their hearts, and those graces so stirred up, increased, and strengthened, as that they more and more die unto sin, and rise unto newness of life.',
+      proof_texts: [
+        { reference: 'Eph. 1:4', text: 'According as he hath chosen us in him before the foundation of the world, that we should be holy and without blame before him in love.' },
+        { reference: '1 Cor. 6:11', text: 'And such were some of you: but ye are washed, but ye are sanctified, but ye are justified in the name of the Lord Jesus, and by the Spirit of our God.' },
+        { reference: 'Eph. 4:23-24', text: 'And be renewed in the spirit of your mind; And that ye put on the new man, which after God is created in righteousness and true holiness.' },
+        { reference: 'Rom. 6:4-6', text: 'Therefore we are buried with him by baptism into death: that like as Christ was raised up from the dead by the glory of the Father, even so we also should walk in newness of life... Knowing this, that our old man is crucified with him, that the body of sin might be destroyed.' },
+        { reference: 'Acts 11:18', text: 'When they heard these things, they held their peace, and glorified God, saying, Then hath God also to the Gentiles granted repentance unto life.' },
+        { reference: 'Gal. 5:22-23', text: 'But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith, Meekness, temperance: against such there is no law.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 76,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is repentance unto life?',
+      answer: 'Repentance unto life is a saving grace, wrought in the heart of a sinner by the Spirit and word of God, whereby, out of the sight and sense, not only of the danger, but also of the filthiness and odiousness of his sins, and upon the apprehension of God\'s mercy in Christ to such as are penitent, he so grieves for and hates his sins, as that he turns from them all to God, purposing and endeavouring constantly to walk with him in all the ways of new obedience.',
+      proof_texts: [
+        { reference: 'Zech. 12:10', text: 'And I will pour upon the house of David, and upon the inhabitants of Jerusalem, the spirit of grace and of supplications: and they shall look upon me whom they have pierced, and they shall mourn for him.' },
+        { reference: 'Acts 11:18', text: 'When they heard these things, they held their peace, and glorified God, saying, Then hath God also to the Gentiles granted repentance unto life.' },
+        { reference: 'Ezek. 36:31', text: 'Then shall ye remember your own evil ways, and your doings that were not good, and shall lothe yourselves in your own sight for your iniquities and for your abominations.' },
+        { reference: 'Isa. 30:22', text: 'Ye shall defile also the covering of thy graven images of silver, and the ornament of thy molten images of gold: thou shalt cast them away as a menstruous cloth; thou shalt say unto it, Get thee hence.' },
+        { reference: 'Luke 15:18', text: 'I will arise and go to my father, and will say unto him, Father, I have sinned against heaven, and before thee.' },
+        { reference: 'Ps. 119:6,59,128', text: 'Then shall I not be ashamed, when I have respect unto all thy commandments... I thought on my ways, and turned my feet unto thy testimonies... Therefore I esteem all thy precepts concerning all things to be right; and I hate every false way.' },
+        { reference: 'Luke 1:6', text: 'And they were both righteous before God, walking in all the commandments and ordinances of the Lord blameless.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 77,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'Wherein do justification and sanctification differ?',
+      answer: 'Although sanctification be inseparably joined with justification, yet they differ, in that God in justification imputeth the righteousness of Christ; in sanctification his Spirit infuseth grace, and enableth to the exercise thereof; in the former, sin is pardoned; in the other, it is subdued: the one doth equally free all believers from the revenging wrath of God, and that perfectly in this life, that they never fall into condemnation; the other is neither equal in all, nor in this life perfect in any, but growing up to perfection.',
+      proof_texts: [
+        { reference: '1 Cor. 6:11', text: 'And such were some of you: but ye are washed, but ye are sanctified, but ye are justified in the name of the Lord Jesus, and by the Spirit of our God.' },
+        { reference: 'Rev. 22:11', text: 'He that is unjust, let him be unjust still: and he which is filthy, let him be filthy still: and he that is righteous, let him be righteous still: and he that is holy, let him be holy still.' },
+        { reference: 'Rom. 3:24-25', text: 'Being justified freely by his grace through the redemption that is in Christ Jesus: Whom God hath set forth to be a propitiation through faith in his blood, to declare his righteousness.' },
+        { reference: 'Ezek. 36:27', text: 'And I will put my spirit within you, and cause you to walk in my statutes, and ye shall keep my judgments, and do them.' },
+        { reference: 'Rom. 3:28', text: 'Therefore we conclude that a man is justified by faith without the deeds of the law.' },
+        { reference: 'Rom. 6:6,14', text: 'Knowing this, that our old man is crucified with him, that the body of sin might be destroyed, that henceforth we should not serve sin... For sin shall not have dominion over you: for ye are not under the law, but under grace.' },
+        { reference: '1 John 1:8,10', text: 'If we say that we have no sin, we deceive ourselves, and the truth is not in us... If we say that we have not sinned, we make him a liar, and his word is not in us.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 78,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'Whence ariseth the imperfection of sanctification in believers?',
+      answer: 'The imperfection of sanctification in believers ariseth from the remnants of sin abiding in every part of them, and the perpetual lustings of the flesh against the spirit; whereby they are often foiled with temptations, and fall into many sins, are hindered in all their spiritual services, and their best works are imperfect and defiled in the sight of God.',
+      proof_texts: [
+        { reference: '1 John 1:10', text: 'If we say that we have not sinned, we make him a liar, and his word is not in us.' },
+        { reference: 'Rom. 7:18,23', text: 'For I know that in me (that is, in my flesh,) dwelleth no good thing: for to will is present with me; but how to perform that which is good I find not... But I see another law in my members, warring against the law of my mind, and bringing me into captivity to the law of sin which is in my members.' },
+        { reference: 'Gal. 5:17', text: 'For the flesh lusteth against the Spirit, and the Spirit against the flesh: and these are contrary the one to the other: so that ye cannot do the things that ye would.' },
+        { reference: 'Isa. 64:6', text: 'But we are all as an unclean thing, and all our righteousnesses are as filthy rags; and we all do fade as a leaf; and our iniquities, like the wind, have taken us away.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 79,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'May not true believers, by reason of their imperfections, and the many temptations and sins they are overtaken with, fall away from the state of grace?',
+      answer: 'True believers, by reason of the unchangeable love of God, and his decree and covenant to give them perseverance, their inseparable union with Christ, his continual intercession for them, and the Spirit and seed of God abiding in them, can neither totally nor finally fall away from the state of grace, but are kept by the power of God through faith unto salvation.',
+      proof_texts: [
+        { reference: 'Jer. 31:3', text: 'The LORD hath appeared of old unto me, saying, Yea, I have loved thee with an everlasting love: therefore with lovingkindness have I drawn thee.' },
+        { reference: '2 Tim. 2:19', text: 'Nevertheless the foundation of God standeth sure, having this seal, The Lord knoweth them that are his.' },
+        { reference: 'Heb. 13:20-21', text: 'Now the God of peace, that brought again from the dead our Lord Jesus, that great shepherd of the sheep... Make you perfect in every good work to do his will.' },
+        { reference: 'John 10:28', text: 'And I give unto them eternal life; and they shall never perish, neither shall any man pluck them out of my hand.' },
+        { reference: 'Heb. 7:25', text: 'Wherefore he is able also to save them to the uttermost that come unto God by him, seeing he ever liveth to make intercession for them.' },
+        { reference: '1 John 3:9', text: 'Whosoever is born of God doth not commit sin; for his seed remaineth in him: and he cannot sin, because he is born of God.' },
+        { reference: '1 Pet. 1:5', text: 'Who are kept by the power of God through faith unto salvation ready to be revealed in the last time.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 80,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'Can true believers be infallibly assured that they are in the estate of grace, and that they shall persevere therein unto salvation?',
+      answer: 'Such as truly believe in Christ, and endeavour to walk in all good conscience before him, may, without extraordinary revelation, by faith grounded upon the truth of God\'s promises, and by the Spirit enabling them to discern in themselves those graces to which the promises of life are made, and bearing witness with their spirits that they are the children of God, be infallibly assured that they are in the estate of grace, and shall persevere therein unto salvation.',
+      proof_texts: [
+        { reference: '1 John 2:3', text: 'And hereby we do know that we know him, if we keep his commandments.' },
+        { reference: '1 Cor. 2:12', text: 'Now we have received, not the spirit of the world, but the spirit which is of God; that we might know the things that are freely given to us of God.' },
+        { reference: '1 John 3:14,18-19,21,24', text: 'We know that we have passed from death unto life, because we love the brethren... let us not love in word, neither in tongue; but in deed and in truth. And hereby we know that we are of the truth... If our heart condemn us not, then have we confidence toward God.' },
+        { reference: 'Heb. 6:11-12', text: 'And we desire that every one of you do shew the same diligence to the full assurance of hope unto the end: That ye be not slothful, but followers of them who through faith and patience inherit the promises.' },
+        { reference: 'Rom. 8:16', text: 'The Spirit itself beareth witness with our spirit, that we are the children of God.' },
+        { reference: '1 John 5:13', text: 'These things have I written unto you that believe on the name of the Son of God; that ye may know that ye have eternal life, and that ye may believe on the name of the Son of God.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 81,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'Are all true believers at all times assured of their present being in the estate of grace, and that they shall be saved?',
+      answer: 'Assurance of grace and salvation not being of the essence of faith, true believers may wait long before they obtain it; and, after the enjoyment thereof, may have it weakened and intermitted, through manifold distempers, sins, temptations, and desertions; yet are they never without such a presence and support of the Spirit of God as keeps them from sinking into utter despair.',
+      proof_texts: [
+        { reference: 'Isa. 50:10', text: 'Who is among you that feareth the LORD, that obeyeth the voice of his servant, that walketh in darkness, and hath no light? let him trust in the name of the LORD, and stay upon his God.' },
+        { reference: 'Ps. 88:1-18', text: 'O LORD God of my salvation, I have cried day and night before thee... Lord, why castest thou off my soul? why hidest thou thy face from me?' },
+        { reference: 'Ps. 77:1-12', text: 'I cried unto God with my voice, even unto God with my voice; and he gave ear unto me... I will remember the years of the right hand of the most High.' },
+        { reference: 'Song 5:2-3,6', text: 'I sleep, but my heart waketh: it is the voice of my beloved that knocketh, saying, Open to me, my sister... I opened to my beloved; but my beloved had withdrawn himself, and was gone.' },
+        { reference: 'Ps. 51:8,12,14', text: 'Make me to hear joy and gladness... Restore unto me the joy of thy salvation; and uphold me with thy free spirit... Deliver me from bloodguiltiness, O God, thou God of my salvation.' },
+        { reference: '1 John 3:9', text: 'Whosoever is born of God doth not commit sin; for his seed remaineth in him: and he cannot sin, because he is born of God.' },
+        { reference: 'Job 13:15', text: 'Though he slay me, yet will I trust in him: but I will maintain mine own ways before him.' },
+        { reference: 'Ps. 73:15,23', text: 'If I say, I will speak thus; behold, I should offend against the generation of thy children... Nevertheless I am continually with thee: thou hast holden me by my right hand.' },
+        { reference: 'Isa. 54:7-10', text: 'For a small moment have I forsaken thee; but with great mercies will I gather thee... For the mountains shall depart, and the hills be removed; but my kindness shall not depart from thee.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 82,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is the communion in glory which the members of the invisible church have with Christ?',
+      answer: 'The communion in glory which the members of the invisible church have with Christ, is in this life, immediately after death, and at last perfected at the resurrection and day of judgment.',
+      proof_texts: [
+        { reference: '2 Cor. 3:18', text: 'But we all, with open face beholding as in a glass the glory of the Lord, are changed into the same image from glory to glory, even as by the Spirit of the Lord.' },
+        { reference: 'Luke 23:43', text: 'And Jesus said unto him, Verily I say unto thee, To day shalt thou be with me in paradise.' },
+        { reference: '1 Thess. 4:17', text: 'Then we which are alive and remain shall be caught up together with them in the clouds, to meet the Lord in the air: and so shall we ever be with the Lord.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 83,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is the communion in glory with Christ which the members of the invisible church enjoy in this life?',
+      answer: 'The members of the invisible church have communicated to them in this life the firstfruits of glory with Christ, as they are members of him their head, and so in him are interested in that glory which he is fully possessed of; and, as an earnest thereof, do enjoy the sense of God\'s love, peace of conscience, joy in the Holy Ghost, and hope of glory; as, on the contrary, sense of God\'s revenging wrath, horror of conscience, and a fearful expectation of judgment, are to the wicked the beginning of their torments which they shall endure after death.',
+      proof_texts: [
+        { reference: 'Eph. 2:5-6', text: 'Even when we were dead in sins, hath quickened us together with Christ... And hath raised us up together, and made us sit together in heavenly places in Christ Jesus.' },
+        { reference: 'Rom. 5:5', text: 'And hope maketh not ashamed; because the love of God is shed abroad in our hearts by the Holy Ghost which is given unto us.' },
+        { reference: 'Rom. 14:17', text: 'For the kingdom of God is not meat and drink; but righteousness, and peace, and joy in the Holy Ghost.' },
+        { reference: 'Phil. 1:23', text: 'For I am in a strait betwixt two, having a desire to depart, and to be with Christ; which is far better.' },
+        { reference: 'Rom. 2:9', text: 'Tribulation and anguish, upon every soul of man that doeth evil, of the Jew first, and also of the Gentile.' },
+        { reference: 'Mark 9:44', text: 'Where their worm dieth not, and the fire is not quenched.' },
+        { reference: 'Heb. 10:27', text: 'But a certain fearful looking for of judgment and fiery indignation, which shall devour the adversaries.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 84,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'Shall all men die?',
+      answer: 'Death being threatened as the wages of sin, it is appointed unto all men once to die; for that all have sinned.',
+      proof_texts: [
+        { reference: 'Rom. 6:23', text: 'For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.' },
+        { reference: 'Heb. 9:27', text: 'And as it is appointed unto men once to die, but after this the judgment.' },
+        { reference: 'Rom. 5:12', text: 'Wherefore, as by one man sin entered into the world, and death by sin; and so death passed upon all men, for that all have sinned.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 85,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'Death being the wages of sin, why are not the righteous delivered from death, seeing all their sins are forgiven in Christ?',
+      answer: 'The righteous shall not be delivered from death itself, but from the sting and curse of it; so that, although they die, yet it is out of God\'s love, to free them perfectly from sin and misery, and to make them capable of further communion with Christ in glory, which they then enter into.',
+      proof_texts: [
+        { reference: '1 Cor. 15:55-57', text: 'O death, where is thy sting? O grave, where is thy victory? The sting of death is sin; and the strength of sin is the law. But thanks be to God, which giveth us the victory through our Lord Jesus Christ.' },
+        { reference: 'Heb. 2:15', text: 'And deliver them who through fear of death were all their lifetime subject to bondage.' },
+        { reference: 'Isa. 57:1-2', text: 'The righteous perisheth, and no man layeth it to heart: and merciful men are taken away, none considering that the righteous is taken away from the evil to come. He shall enter into peace.' },
+        { reference: 'Rev. 14:13', text: 'And I heard a voice from heaven saying unto me, Write, Blessed are the dead which die in the Lord from henceforth: Yea, saith the Spirit, that they may rest from their labours; and their works do follow them.' },
+        { reference: 'Phil. 1:23', text: 'For I am in a strait betwixt two, having a desire to depart, and to be with Christ; which is far better.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 86,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What is the communion in glory with Christ which the members of the invisible church enjoy immediately after death?',
+      answer: 'The communion in glory with Christ which the members of the invisible church enjoy immediately after death is, in that their souls are then made perfect in holiness, and received into the highest heavens, where they behold the face of God in light and glory, waiting for the full redemption of their bodies, which even in death continue united to Christ, and rest in their graves as in their beds, till at the last day they be again united to their souls. Whereas the souls of the wicked are at their death cast into hell, where they remain in torments and utter darkness, and their bodies kept in their graves, as in their prisons, till the resurrection and judgment of the great day.',
+      proof_texts: [
+        { reference: 'Heb. 12:23', text: 'To the general assembly and church of the firstborn, which are written in heaven, and to God the Judge of all, and to the spirits of just men made perfect.' },
+        { reference: '2 Cor. 5:1,6,8', text: 'For we know that if our earthly house of this tabernacle were dissolved, we have a building of God, an house not made with hands, eternal in the heavens... willing rather to be absent from the body, and to be present with the Lord.' },
+        { reference: 'Phil. 1:23', text: 'For I am in a strait betwixt two, having a desire to depart, and to be with Christ; which is far better.' },
+        { reference: 'Acts 3:21', text: 'Whom the heaven must receive until the times of restitution of all things.' },
+        { reference: '1 Thess. 4:14', text: 'For if we believe that Jesus died and rose again, even so them also which sleep in Jesus will God bring with him.' },
+        { reference: 'Isa. 57:2', text: 'He shall enter into peace: they shall rest in their beds, each one walking in his uprightness.' },
+        { reference: 'Job 19:26', text: 'And though after my skin worms destroy this body, yet in my flesh shall I see God.' },
+        { reference: 'Luke 16:23-24', text: 'And in hell he lift up his eyes, being in torments, and seeth Abraham afar off, and Lazarus in his bosom. And he cried and said, Father Abraham, have mercy on me.' },
+        { reference: 'Acts 1:25', text: 'That he may take part of this ministry and apostleship, from which Judas by transgression fell, that he might go to his own place.' },
+        { reference: 'Jude 1:6-7', text: 'And the angels which kept not their first estate, but left their own habitation, he hath reserved in everlasting chains under darkness unto the judgment of the great day. Even as Sodom and Gomorrha... are set forth for an example, suffering the vengeance of eternal fire.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 87,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What are we to believe concerning the resurrection?',
+      answer: 'We are to believe, that at the last day there shall be a general resurrection of the dead, both of the just and unjust: when they that are then found alive shall in a moment be changed; and the selfsame bodies of the dead which were laid in the grave, being then again united to their souls forever, shall be raised up by the power of God. The bodies of the just, by the Spirit of Christ, and by virtue of his resurrection as their head, shall be raised in power, spiritual, incorruptible, and made like to his glorious body; and the bodies of the wicked shall be raised up in dishonour by him, as an offended judge.',
+      proof_texts: [
+        { reference: 'Acts 24:15', text: 'And have hope toward God, which they themselves also allow, that there shall be a resurrection of the dead, both of the just and unjust.' },
+        { reference: '1 Cor. 15:51-53', text: 'Behold, I shew you a mystery; We shall not all sleep, but we shall all be changed, In a moment, in the twinkling of an eye, at the last trump: for the trumpet shall sound, and the dead shall be raised incorruptible, and we shall be changed.' },
+        { reference: 'John 5:28-29', text: 'Marvel not at this: for the hour is coming, in the which all that are in the graves shall hear his voice, And shall come forth; they that have done good, unto the resurrection of life; and they that have done evil, unto the resurrection of damnation.' },
+        { reference: '1 Cor. 15:21-23', text: 'For since by man came death, by man came also the resurrection of the dead. For as in Adam all die, even so in Christ shall all be made alive. But every man in his own order: Christ the firstfruits; afterward they that are Christ\'s at his coming.' },
+        { reference: 'Phil. 3:21', text: 'Who shall change our vile body, that it may be fashioned like unto his glorious body, according to the working whereby he is able even to subdue all things unto himself.' },
+        { reference: 'Dan. 12:2', text: 'And many of them that sleep in the dust of the earth shall awake, some to everlasting life, and some to shame and everlasting contempt.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 88,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What shall immediately follow after the resurrection?',
+      answer: 'Immediately after the resurrection shall follow the general and final judgment of angels and men; the day and hour whereof no one knoweth but the Father only; and it is so appointed, that all may watch and pray, and be ever ready for the coming of the Lord.',
+      proof_texts: [
+        { reference: '2 Pet. 2:4', text: 'For if God spared not the angels that sinned, but cast them down to hell, and delivered them into chains of darkness, to be reserved unto judgment.' },
+        { reference: 'Matt. 25:46', text: 'And these shall go away into everlasting punishment: but the righteous into life eternal.' },
+        { reference: 'Matt. 24:36,42,44', text: 'But of that day and hour knoweth no man, no, not the angels of heaven, but my Father only... Watch therefore: for ye know not what hour your Lord doth come... Therefore be ye also ready: for in such an hour as ye think not the Son of man cometh.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 89,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What shall be done to the wicked at the day of judgment?',
+      answer: 'At the day of judgment, the wicked shall be set on Christ\'s left hand, and, upon clear and sufficient evidence convicted and condemned, be cast into eternal torments, and punished with everlasting destruction from the presence of the Lord, and from the glory of his power.',
+      proof_texts: [
+        { reference: 'Matt. 25:33,41-43', text: 'And he shall set the sheep on his right hand, but the goats on the left... Then shall he say also unto them on the left hand, Depart from me, ye cursed, into everlasting fire.' },
+        { reference: '2 Thess. 1:8-9', text: 'In flaming fire taking vengeance on them that know not God, and that obey not the gospel of our Lord Jesus Christ: Who shall be punished with everlasting destruction from the presence of the Lord, and from the glory of his power.' },
+        { reference: 'Mark 9:43-48', text: 'And if thy hand offend thee, cut it off... into the fire that never shall be quenched: Where their worm dieth not, and the fire is not quenched.' },
+        { reference: 'Dan. 12:2', text: 'And many of them that sleep in the dust of the earth shall awake, some to everlasting life, and some to shame and everlasting contempt.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 90,
+      section: 'Benefits of Redemption', section_name: 'Benefits of Redemption',
+      question: 'What shall be done to the righteous at the day of judgment?',
+      answer: 'At the day of judgment, the righteous, being caught up to Christ in the clouds, shall be set on his right hand, and there openly acknowledged and acquitted, shall join with him in the judging of reprobate angels and men, and shall be received into heaven, where they shall be fully and forever freed from all sin and misery; filled with inconceivable joys, made perfectly holy and happy both in body and soul, in the company of innumerable saints and holy angels, but especially in the immediate vision and fruition of God the Father, of our Lord Jesus Christ, and of the Holy Spirit, to all eternity. And this is the perfect and full communion, which the members of the invisible church shall enjoy with Christ in glory, at the resurrection and day of judgment.',
+      proof_texts: [
+        { reference: '1 Thess. 4:17', text: 'Then we which are alive and remain shall be caught up together with them in the clouds, to meet the Lord in the air: and so shall we ever be with the Lord.' },
+        { reference: 'Matt. 25:33', text: 'And he shall set the sheep on his right hand, but the goats on the left.' },
+        { reference: '1 Cor. 6:2-3', text: 'Do ye not know that the saints shall judge the world? and if the world shall be judged by you, are ye unworthy to judge the smallest matters? Know ye not that we shall judge angels?' },
+        { reference: 'John 17:24', text: 'Father, I will that they also, whom thou hast given me, be with me where I am; that they may behold my glory, which thou hast given me.' },
+        { reference: '1 John 3:2', text: 'Beloved, now are we the sons of God, and it doth not yet appear what we shall be: but we know that, when he shall appear, we shall be like him; for we shall see him as he is.' },
+        { reference: '1 Cor. 13:12', text: 'For now we see through a glass, darkly; but then face to face: now I know in part; but then shall I know even as also I am known.' },
+        { reference: 'Eph. 5:27', text: 'That he might present it to himself a glorious church, not having spot, or wrinkle, or any such thing; but that it should be holy and without blemish.' },
+        { reference: 'Ps. 16:11', text: 'Thou wilt shew me the path of life: in thy presence is fulness of joy; at thy right hand there are pleasures for evermore.' }
+      ]
+    },
   ];
 
   for (const q of questions) {

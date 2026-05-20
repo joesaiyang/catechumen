@@ -110,9 +110,18 @@ export class CatechumenLesson extends LitElement {
   @state() startTime = 0;
   @state() errorMsg = '';
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.loadQuestions();
+  private _loadedSource = '';
+  private _loadedType   = '';
+
+  // Reload whenever content source or type changes (including first render)
+  updated(changed: Map<string, unknown>) {
+    if (changed.has('contentSource') || changed.has('contentType')) {
+      if (this.contentSource !== this._loadedSource || this.contentType !== this._loadedType) {
+        this._loadedSource = this.contentSource;
+        this._loadedType   = this.contentType;
+        this.loadQuestions();
+      }
+    }
   }
 
   async loadQuestions() {
