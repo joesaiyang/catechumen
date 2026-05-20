@@ -317,7 +317,7 @@ export class CatechumenLesson extends LitElement {
 
     /* ── blanks ── */
     .blank {
-      display: inline-block; min-width: 90px; padding: 2px 6px; margin: 0 8px;
+      display: inline-block; min-width: 140px; padding: 2px 10px; margin: 0 8px;
       background: transparent; border: none;
       border-bottom: 2px solid rgba(45,74,58,.4);
       text-align: center; font-style: italic; color: rgba(31,41,32,.35);
