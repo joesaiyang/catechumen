@@ -61,9 +61,23 @@ function buildExercise(answer: string) {
   const tokens = answer.split(/(\s+)/);
   const count  = blankCount(answer);
 
-  const candidates = tokens
+  // Try progressively looser filters until we have enough candidates
+  let candidates = tokens
     .map((t, i) => ({ i, c: clean(t) }))
     .filter(({ c }) => c.length >= 4 && !STOP.has(c));
+
+  if (candidates.length < count) {
+    candidates = tokens
+      .map((t, i) => ({ i, c: clean(t) }))
+      .filter(({ c }) => c.length >= 3 && !STOP.has(c));
+  }
+
+  // Last resort: any word with 2+ chars
+  if (candidates.length === 0) {
+    candidates = tokens
+      .map((t, i) => ({ i, c: clean(t) }))
+      .filter(({ c }) => c.length >= 2);
+  }
 
   candidates.sort((a, b) => b.c.length - a.c.length);
   const chosen = new Set(candidates.slice(0, count).map(x => x.i));
