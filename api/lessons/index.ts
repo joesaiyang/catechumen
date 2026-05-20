@@ -60,7 +60,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       SELECT
         cq.id, cq.catechism_id, cq.number, cq.section, cq.section_name,
         cq.question, cq.answer, cq.proof_texts,
-        up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered
+        up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered,
+        false AS is_new
       FROM catechism_questions cq
       JOIN user_progress up
         ON up.content_id = cq.id
@@ -81,7 +82,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           cq.id, cq.catechism_id, cq.number, cq.section, cq.section_name,
           cq.question, cq.answer, cq.proof_texts,
           0 AS repetitions, 2.5 AS ease_factor, 1 AS interval_days,
-          now() AS due_at, false AS mastered
+          now() AS due_at, false AS mastered,
+          true AS is_new
         FROM catechism_questions cq
         WHERE cq.catechism_id = ${source}
           AND cq.id NOT IN (
@@ -101,7 +103,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         mv.id, mv.reference, mv.book, mv.testament, mv.text_web AS answer,
         mv.theme, mv.difficulty, mv.tags,
         mv.reference AS question,
-        up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered
+        up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered,
+        false AS is_new
       FROM memory_verses mv
       JOIN user_progress up
         ON up.content_id = mv.id
@@ -121,7 +124,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           mv.theme, mv.difficulty, mv.tags,
           mv.reference AS question,
           0 AS repetitions, 2.5 AS ease_factor, 1 AS interval_days,
-          now() AS due_at, false AS mastered
+          now() AS due_at, false AS mastered, true AS is_new
         FROM memory_verses mv
         WHERE mv.id NOT IN (
           SELECT content_id FROM user_progress
@@ -138,7 +141,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const due = await sql`
       SELECT bq.id, bq.testament, bq.book, bq.reference, bq.category,
              bq.difficulty, bq.question, bq.answer, bq.options,
-             up.repetitions, up.ease_factor, up.due_at, up.mastered
+             up.repetitions, up.ease_factor, up.due_at, up.mastered, false AS is_new
       FROM bible_quiz_questions bq
       JOIN user_progress up
         ON up.content_id = bq.id
@@ -155,7 +158,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       unseen = await sql`
         SELECT bq.id, bq.testament, bq.book, bq.reference, bq.category,
                bq.difficulty, bq.question, bq.answer, bq.options,
-               0 AS repetitions, 2.5 AS ease_factor, now() AS due_at, false AS mastered
+               0 AS repetitions, 2.5 AS ease_factor, now() AS due_at, false AS mastered, true AS is_new
         FROM bible_quiz_questions bq
         WHERE bq.id NOT IN (
           SELECT content_id FROM user_progress

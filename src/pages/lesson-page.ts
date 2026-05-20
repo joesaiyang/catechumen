@@ -13,13 +13,14 @@ interface ApiQuestion {
   question: string;
   answer: string;
   proof_texts: { reference: string; text: string }[];
+  is_new?: boolean;
 }
 
 interface Blank   { word: string; filled: string | null; chipIdx: number | null; }
 interface Chip    { word: string; used: boolean; }
 interface Segment { type: 'text' | 'blank'; text?: string; blankIdx?: number; }
 
-type Phase = 'loading' | 'error' | 'filling' | 'correct' | 'incorrect' | 'complete';
+type Phase = 'loading' | 'error' | 'studying' | 'filling' | 'correct' | 'incorrect' | 'complete';
 
 const STOP = new Set([
   'a','an','the','and','or','but','if','in','on','at','to','for','of','with','by',
@@ -202,6 +203,17 @@ export class CatechumenLesson extends LitElement {
 
   setupQuestion(idx: number) {
     const q = this.questions[idx];
+    if (q.is_new) {
+      // New question — show the full answer first before quizzing
+      this.phase     = 'studying';
+      this.startTime = Date.now();
+    } else {
+      this.beginQuiz(idx);
+    }
+  }
+
+  beginQuiz(idx = this.qIdx) {
+    const q = this.questions[idx];
     const { segments, blanks, bank } = buildExercise(q.answer);
     this.segments   = segments;
     this.blanks     = blanks;
@@ -315,6 +327,19 @@ export class CatechumenLesson extends LitElement {
     .question   { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500; color: #1F2920; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed rgba(31,41,32,.15); }
     .answer     { font-family: 'Fraunces', serif; font-size: 22px; line-height: 2.1; color: #1F2920; margin-bottom: 28px; }
 
+    /* ── study card (new question intro) ── */
+    .new-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+      background: #F0E1B8; color: #8A6620; border-radius: 999px;
+      font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .study-answer {
+      font-family: 'Fraunces', serif; font-size: 20px; line-height: 1.75; color: #1B3024;
+      background: rgba(45,74,58,.04); border-left: 3px solid #2D4A3A;
+      padding: 16px 20px; border-radius: 0 10px 10px 0; margin-bottom: 8px;
+    }
+
     /* ── blanks ── */
     .blank {
       display: inline-block; min-width: 140px; padding: 2px 10px; margin: 0 8px;
@@ -416,6 +441,50 @@ export class CatechumenLesson extends LitElement {
         ? html`${s.text}`
         : this.renderBlank(s.blankIdx!)
     )}`;
+  }
+
+  private renderStudy(): TemplateResult {
+    const q        = this.questions[this.qIdx];
+    const progress = ((this.qIdx) / this.questions.length) * 100;
+    const proofText = q.proof_texts?.[0];
+    return html`
+      <div class="lesson-frame">
+        <div class="top">
+          <div class="exit" @click=${this.loadQuestions}><i class="ti ti-x"></i></div>
+          <div class="prog-wrap">
+            <div class="prog-label">Question ${this.qIdx + 1} of ${this.questions.length}</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
+          </div>
+          <div class="xp-mini"><i class="ti ti-diamond"></i>${this.xp} XP</div>
+          <div class="hearts-mini"><i class="ti ti-heart-filled"></i>${this.hearts}</div>
+        </div>
+
+        <div class="lesson-card">
+          <div class="meta">
+            <span class="pill"><i class="ti ti-bookmark"></i> ${q.number != null ? `Q${q.number}` : 'Question'}</span>
+            <span class="pill unit-pill">${q.section_name ?? q.unit_name ?? ''}</span>
+          </div>
+          <div class="new-badge">✦ New question</div>
+          <div class="qa-label">Question</div>
+          <p class="question">${q.question}</p>
+          <div class="qa-label">Answer</div>
+          <div class="study-answer">${q.answer}</div>
+        </div>
+
+        ${proofText ? html`
+          <details>
+            <summary>Scripture proof text</summary>
+            <p>"${proofText.text}" — ${proofText.reference}</p>
+          </details>
+        ` : ''}
+
+        <div class="actions" style="margin-top:16px">
+          <button class="check-btn continue" @click=${() => this.beginQuiz()}>
+            Got it — test me →
+          </button>
+        </div>
+      </div>
+    `;
   }
 
   private renderLoading(): TemplateResult {
@@ -539,6 +608,7 @@ export class CatechumenLesson extends LitElement {
     if (this.phase === 'loading')  return this.renderLoading();
     if (this.phase === 'error')    return this.renderError();
     if (this.phase === 'complete') return this.renderComplete();
+    if (this.phase === 'studying') return this.renderStudy();
     return this.renderLesson();
   }
 }
