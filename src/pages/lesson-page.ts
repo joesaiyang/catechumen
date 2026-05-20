@@ -450,7 +450,7 @@ export class CatechumenLesson extends LitElement {
     return html`
       <div class="lesson-frame">
         <div class="top">
-          <div class="exit" @click=${() => this.dispatchEvent(new CustomEvent("exit-lesson", { bubbles: true, composed: true }))}>✕</div>
+          <div class="exit" @click=${() => this.dispatchEvent(new CustomEvent("exit-lesson", { bubbles: true, composed: true }))}>←</div>
           <div class="prog-wrap">
             <div class="prog-label">Question ${this.qIdx + 1} of ${this.questions.length}</div>
             <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
@@ -539,7 +539,7 @@ export class CatechumenLesson extends LitElement {
     return html`
       <div class="lesson-frame">
         <div class="top">
-          <div class="exit" @click=${() => this.dispatchEvent(new CustomEvent("exit-lesson", { bubbles: true, composed: true }))}>✕</div>
+          <div class="exit" @click=${() => this.dispatchEvent(new CustomEvent("exit-lesson", { bubbles: true, composed: true }))}>←</div>
           <div class="prog-wrap">
             <div class="prog-label">${this.reviewMode ? 'Review' : 'Question'} ${this.qIdx + 1} of ${this.questions.length}</div>
             <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
@@ -578,7 +578,7 @@ export class CatechumenLesson extends LitElement {
         ` : ''}
         ${this.phase === 'incorrect' ? html`
           <div class="feedback error">
-            <div class="fb-icon">✕</div>
+            <div class="fb-icon">←</div>
             <div>
               <div class="fb-title">Not quite — you lost a heart.</div>
               <div class="fb-sub">Tap a filled blank to clear it and try again.</div>
