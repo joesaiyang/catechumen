@@ -1,11 +1,15 @@
 import { LitElement, html, css, TemplateResult } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { auth, apiFetch } from '../store/auth.js';
 
 interface ApiQuestion {
-  number: number;
-  unit: number;
-  unit_name: string;
+  id: string;
+  number?: number;
+  catechism_id?: string;
+  unit?: number;
+  unit_name?: string;
+  section?: string;
+  section_name?: string;
   question: string;
   answer: string;
   proof_texts: { reference: string; text: string }[];
@@ -88,6 +92,10 @@ function buildExercise(answer: string) {
 
 @customElement('catechumen-lesson')
 export class CatechumenLesson extends LitElement {
+  @property({ type: String, attribute: 'content-type'   }) contentType   = 'catechism';
+  @property({ type: String, attribute: 'content-source' }) contentSource = 'wsc';
+  @property({ type: String, attribute: 'quiz-mode'      }) quizMode      = 'fill_blank';
+
   @state() phase: Phase = 'loading';
   @state() questions: ApiQuestion[] = [];
   @state() qIdx = 0;
@@ -111,7 +119,7 @@ export class CatechumenLesson extends LitElement {
     this.phase = 'loading';
     this.qIdx = 0; this.sessionXp = 0; this.sessionCorrect = 0;
     try {
-      const res = await apiFetch('/api/lessons?limit=5');
+      const res = await apiFetch(`/api/lessons?limit=5&type=${this.contentType}&source=${this.contentSource}`);
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
       this.questions = data.questions ?? [];
@@ -164,7 +172,10 @@ export class CatechumenLesson extends LitElement {
     try {
       const res = await apiFetch('/api/lessons/answer', {
         method: 'POST',
-        body: JSON.stringify({ questionId: q.number, correct, timeMs, mode: 'fill_blank' }),
+        body: JSON.stringify({
+          contentId: q.id, contentType: this.contentType,
+          correct, timeMs, mode: this.quizMode,
+        }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -399,8 +410,8 @@ export class CatechumenLesson extends LitElement {
 
         <div class="lesson-card">
           <div class="meta">
-            <span class="pill"><i class="ti ti-bookmark"></i> Question ${q.number}</span>
-            <span class="pill unit-pill">${q.unit_name}</span>
+            <span class="pill"><i class="ti ti-bookmark"></i> ${q.number != null ? `Q${q.number}` : 'Question'}</span>
+            <span class="pill unit-pill">${q.section_name ?? q.unit_name ?? ''}</span>
           </div>
           <div class="prompt">Fill in the blanks</div>
           <h2 class="instruction">Complete the answer using the words below.</h2>

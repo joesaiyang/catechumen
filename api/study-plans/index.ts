@@ -1,0 +1,58 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import getDb from '../_lib/db.js';
+import { requireAuth } from '../_lib/auth.js';
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const payload = requireAuth(req, res as never);
+  if (!payload) return;
+  const sql = getDb();
+
+  if (req.method === 'GET') {
+    const plans = await sql`
+      SELECT sp.*, c.name AS catechism_name, c.abbreviation, c.question_count
+      FROM user_study_plans sp
+      LEFT JOIN catechisms c ON c.id = sp.catechism_id
+      WHERE sp.user_id = ${payload.userId} AND sp.is_active = true
+      ORDER BY sp.started_at ASC
+    `;
+    return res.status(200).json({ plans });
+  }
+
+  if (req.method === 'POST') {
+    const { planType, catechismId, customQuizId, quizMode } = req.body as {
+      planType: string; catechismId?: string; customQuizId?: string; quizMode?: string;
+    };
+    if (!planType) return res.status(400).json({ error: 'Missing planType' });
+
+    const [plan] = await sql`
+      INSERT INTO user_study_plans (user_id, plan_type, catechism_id, custom_quiz_id, quiz_mode)
+      VALUES (
+        ${payload.userId}, ${planType},
+        ${catechismId ?? null}, ${customQuizId ?? null},
+        ${quizMode ?? 'fill_blank'}
+      )
+      ON CONFLICT (user_id, plan_type, catechism_id, custom_quiz_id)
+      DO UPDATE SET quiz_mode = ${quizMode ?? 'fill_blank'}, is_active = true
+      RETURNING *
+    `;
+    return res.status(201).json({ plan });
+  }
+
+  if (req.method === 'PATCH') {
+    const { planId, quizMode, isActive } = req.body as {
+      planId: string; quizMode?: string; isActive?: boolean;
+    };
+    if (!planId) return res.status(400).json({ error: 'Missing planId' });
+
+    const [plan] = await sql`
+      UPDATE user_study_plans SET
+        quiz_mode = COALESCE(${quizMode ?? null}, quiz_mode),
+        is_active = COALESCE(${isActive ?? null}, is_active)
+      WHERE id = ${planId} AND user_id = ${payload.userId}
+      RETURNING *
+    `;
+    return res.status(200).json({ plan });
+  }
+
+  return res.status(405).json({ error: 'Method not allowed' });
+}
