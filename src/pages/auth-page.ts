@@ -42,6 +42,7 @@ export class AuthPage extends LitElement {
     .logo-mark {
       width: 44px; height: 44px; background: #2D4A3A; border-radius: 50%;
       overflow: hidden; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
     }
     .tagline { text-align: center; font-family: 'Fraunces', serif; font-style: italic; font-size: 15px; color: #7E2F11; margin-top: -28px; margin-bottom: 32px; }
 
@@ -316,7 +317,7 @@ export class AuthPage extends LitElement {
     return html`
       <div class="wrap">
         <div class="logo">
-          <div class="logo-mark"><img src="/logo.png" alt="Catechumen" width="44" height="44" style="display:block;width:100%;height:100%;object-fit:contain"></div>
+          <div class="logo-mark"><img src="/logo.png" alt="Catechumen" style="display:block;width:70%;height:70%;object-fit:contain"></div>
           <span>Catechumen</span>
         </div>
         <div class="tagline">The Shorter Catechism, made to stick.</div>

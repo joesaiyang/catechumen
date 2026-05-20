@@ -49,6 +49,7 @@ export class CatechumenApp extends LitElement {
     .logo-mark {
       width: 36px; height: 36px; background: #2D4A3A; border-radius: 50%;
       overflow: hidden; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
     }
     .nav-links { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
     .nav-link {
@@ -101,7 +102,7 @@ export class CatechumenApp extends LitElement {
     return html`
       <nav class="nav">
         <div class="logo" @click=${() => this.setScreen('path')}>
-          <div class="logo-mark"><img src="/logo.png" alt="Catechumen" width="36" height="36" style="display:block;width:100%;height:100%;object-fit:contain"></div>
+          <div class="logo-mark"><img src="/logo.png" alt="Catechumen" style="display:block;width:70%;height:70%;object-fit:contain"></div>
           <span>Catechumen</span>
         </div>
         <div class="nav-links">
