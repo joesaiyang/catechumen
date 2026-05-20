@@ -51,7 +51,7 @@ function clean(w: string): string {
 
 function blankCount(answer: string): number {
   const len = answer.length;
-  if (len < 80)  return 1;
+  if (len < 50)  return 1;
   if (len < 200) return 2;
   if (len < 400) return 3;
   return 4;
@@ -63,6 +63,7 @@ const PRIORITY_BLANK_WORDS = new Set([
   'free','sin','obey','pray','dead','holy','born','good','evil','love',
   'soul','word','king','lamb','true','life','hope','faith',
   'misery','mercy','grace','truth','light','glory','blood','wrath',
+  'glorify','enjoy','believe','repent','worship','sanctify','justify',
 ]);
 
 function buildExercise(answer: string) {
