@@ -497,6 +497,10 @@ export class CatechumenLesson extends LitElement {
             <span class="pill"><i class="ti ti-bookmark"></i> ${q.number != null ? `Q${q.number}` : 'Question'}</span>
             <span class="pill unit-pill">${q.section_name ?? q.unit_name ?? ''}</span>
           </div>
+          <!-- DEBUG: remove after fix confirmed -->
+          <div style="font-size:11px;color:#9B2C2C;margin-bottom:8px">
+            blanks:${this.blanks.length} segs:${this.segments.length} src:${this.contentSource} ans-len:${q.answer.length}
+          </div>
           ${this.quizMode === 'multiple_choice' ? html`
             <div class="prompt">Multiple choice</div>
             <h2 class="instruction">Choose the correct answer.</h2>
