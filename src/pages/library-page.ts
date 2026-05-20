@@ -16,20 +16,7 @@ interface CustomQuiz {
   id: string; name: string; description?: string; item_count: number;
 }
 
-type QuizMode = 'fill_blank' | 'multiple_choice' | 'free_recall';
 type ActiveTab = 'catechisms' | 'bible' | 'verses' | 'custom';
-
-const MODE_LABELS: Record<QuizMode, string> = {
-  fill_blank:       'Fill in the blank',
-  multiple_choice:  'Multiple choice',
-  free_recall:      'Free recall',
-};
-
-const MODE_ICONS: Record<QuizMode, string> = {
-  fill_blank:       'ti-pencil',
-  multiple_choice:  'ti-list-check',
-  free_recall:      'ti-writing',
-};
 
 @customElement('library-page')
 export class LibraryPage extends LitElement {
@@ -38,9 +25,6 @@ export class LibraryPage extends LitElement {
   @state() plans: StudyPlan[] = [];
   @state() customQuizzes: CustomQuiz[] = [];
   @state() loading = true;
-  @state() showModeModal = false;
-  @state() modalCatechism: Catechism | null = null;
-  @state() selectedMode: QuizMode = 'fill_blank';
   @state() newQuizName = '';
   @state() newQuizDesc = '';
   @state() showNewQuizForm = false;
@@ -74,48 +58,21 @@ export class LibraryPage extends LitElement {
     return this.plans.find(p => p.catechism_id === catId);
   }
 
-  @state() private _changeMode = false;
-
-  private async startOrConfigure(cat: Catechism, changeMode = false) {
-    const existing = this.getPlan(cat.id);
-    this.modalCatechism = cat;
-    this.selectedMode   = (existing?.quiz_mode as QuizMode) ?? 'fill_blank';
-    this._changeMode    = changeMode;
-    this.showModeModal  = true;
-  }
-
-  private async confirmStart() {
-    if (!this.modalCatechism) return;
+  private async startLesson(cat: Catechism) {
     await apiFetch('/api/study-plans', {
       method: 'POST',
-      body: JSON.stringify({
-        planType: 'catechism',
-        catechismId: this.modalCatechism.id,
-        quizMode: this.selectedMode,
-      }),
+      body: JSON.stringify({ planType: 'catechism', catechismId: cat.id, quizMode: 'fill_blank' }),
     });
-    this.showModeModal = false;
-    if (this._changeMode) {
-      // Just update the pill — stay on the library page
-      await this.loadData();
-    } else {
-      this.dispatchEvent(new CustomEvent('start-lesson', {
-        bubbles: true, composed: true,
-        detail: { type: 'catechism', source: this.modalCatechism.id, mode: this.selectedMode },
-      }));
-    }
+    this.dispatchEvent(new CustomEvent('start-lesson', {
+      bubbles: true, composed: true,
+      detail: { type: 'catechism', source: cat.id, mode: 'fill_blank' },
+    }));
   }
 
   private startReview(cat: Catechism) {
-    const plan = this.getPlan(cat.id);
     this.dispatchEvent(new CustomEvent('start-lesson', {
       bubbles: true, composed: true,
-      detail: {
-        type: 'catechism',
-        source: cat.id,
-        mode: plan?.quiz_mode ?? 'fill_blank',
-        reviewMode: true,
-      },
+      detail: { type: 'catechism', source: cat.id, mode: 'fill_blank', reviewMode: true },
     }));
   }
 
@@ -139,25 +96,25 @@ export class LibraryPage extends LitElement {
     this._toastTimer = setTimeout(() => { this.toastMsg = ''; }, 3000);
   }
 
-  private async startBibleQuiz(mode: QuizMode) {
+  private async startBibleQuiz() {
     await apiFetch('/api/study-plans', {
       method: 'POST',
-      body: JSON.stringify({ planType: 'bible_quiz', quizMode: mode }),
+      body: JSON.stringify({ planType: 'bible_quiz', quizMode: 'fill_blank' }),
     });
     this.dispatchEvent(new CustomEvent('start-lesson', {
       bubbles: true, composed: true,
-      detail: { type: 'bible_quiz', source: 'bible_quiz', mode },
+      detail: { type: 'bible_quiz', source: 'bible_quiz', mode: 'fill_blank' },
     }));
   }
 
-  private async startVerses(mode: QuizMode) {
+  private async startVerses() {
     await apiFetch('/api/study-plans', {
       method: 'POST',
-      body: JSON.stringify({ planType: 'verses', quizMode: mode }),
+      body: JSON.stringify({ planType: 'verses', quizMode: 'fill_blank' }),
     });
     this.dispatchEvent(new CustomEvent('start-lesson', {
       bubbles: true, composed: true,
-      detail: { type: 'verse', source: 'verses', mode },
+      detail: { type: 'verse', source: 'verses', mode: 'fill_blank' },
     }));
   }
 
@@ -218,12 +175,6 @@ export class LibraryPage extends LitElement {
     .card-meta { display: flex; gap: 16px; font-size: 12px; color: #4A554A; font-weight: 500; }
     .card-meta span { display: flex; align-items: center; gap: 4px; }
 
-    .mode-pill {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; background: #F0E1B8; color: #8A6620;
-      border-radius: 999px; font-size: 11px; font-weight: 600; margin-top: 12px;
-    }
-
     .start-btn {
       display: flex; align-items: center; justify-content: center; gap: 8px;
       width: 100%; margin-top: 14px; padding: 12px;
@@ -265,7 +216,7 @@ export class LibraryPage extends LitElement {
     /* Click-away backdrop */
     .menu-backdrop { position: fixed; inset: 0; z-index: 150; }
 
-    /* Mode selection modal */
+    /* Modal shared */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(31,41,32,.4); backdrop-filter: blur(4px);
       display: flex; align-items: center; justify-content: center; z-index: 100; padding: 24px;
@@ -276,23 +227,8 @@ export class LibraryPage extends LitElement {
     }
     .modal-title { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; color: #1B3024; margin-bottom: 6px; }
     .modal-sub   { font-size: 14px; color: #7A8278; margin-bottom: 24px; }
-    .mode-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-    .mode-option {
-      display: flex; align-items: center; gap: 14px; padding: 14px 16px;
-      border: 1.5px solid rgba(31,41,32,.12); border-radius: 12px; cursor: pointer; transition: all .15s;
-    }
-    .mode-option.selected { border-color: #2D4A3A; background: rgba(45,74,58,.04); }
-    .mode-icon { width: 40px; height: 40px; background: #E1EBE5; color: #2D4A3A; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-    .mode-option.selected .mode-icon { background: #2D4A3A; color: #F5EFE0; }
-    .mode-name  { font-weight: 600; font-size: 14px; color: #1F2920; }
-    .mode-desc  { font-size: 12px; color: #7A8278; margin-top: 2px; }
-    .radio { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(31,41,32,.2); margin-left: auto; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .mode-option.selected .radio { border-color: #2D4A3A; background: #2D4A3A; }
-    .mode-option.selected .radio::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #F5EFE0; }
     .modal-actions { display: flex; gap: 10px; }
     .btn-cancel  { flex: 1; padding: 13px; background: transparent; border: 1.5px solid rgba(31,41,32,.15); border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; }
-    .btn-confirm { flex: 2; padding: 13px; background: #2D4A3A; color: #F5EFE0; border: none; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; }
-    .btn-confirm:hover { background: #1B3024; }
 
     /* Reset confirmation modal */
     .reset-modal { max-width: 400px; }
@@ -343,41 +279,6 @@ export class LibraryPage extends LitElement {
     .empty-state p { font-size: 15px; }
   `;
 
-  private renderModeModal(): TemplateResult {
-    if (!this.showModeModal || !this.modalCatechism) return html``;
-    const cat = this.modalCatechism;
-    const modes: { id: QuizMode; desc: string }[] = [
-      { id: 'fill_blank',      desc: 'Tap the right words to fill in missing parts of the answer.' },
-      { id: 'multiple_choice', desc: 'Choose the correct answer from four options.' },
-      { id: 'free_recall',     desc: 'Type the full answer from memory — the hardest mode.' },
-    ];
-    return html`
-      <div class="modal-overlay" @click=${(e: Event) => { if (e.target === e.currentTarget) this.showModeModal = false; }}>
-        <div class="modal">
-          <div class="modal-title">${cat.name}</div>
-          <div class="modal-sub">Choose how you want to be tested on this material.</div>
-          <div class="mode-options">
-            ${modes.map(m => html`
-              <div class="mode-option ${this.selectedMode === m.id ? 'selected' : ''}"
-                   @click=${() => this.selectedMode = m.id}>
-                <div class="mode-icon"><i class="ti ${MODE_ICONS[m.id]}"></i></div>
-                <div>
-                  <div class="mode-name">${MODE_LABELS[m.id]}</div>
-                  <div class="mode-desc">${m.desc}</div>
-                </div>
-                <div class="radio"></div>
-              </div>
-            `)}
-          </div>
-          <div class="modal-actions">
-            <button class="btn-cancel" @click=${() => this.showModeModal = false}>Cancel</button>
-            <button class="btn-confirm" @click=${this.confirmStart}>${this._changeMode ? 'Apply' : 'Start studying →'}</button>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
   private renderResetModal(): TemplateResult {
     if (!this.showResetModal || !this.resetTarget) return html``;
     const cat = this.resetTarget;
@@ -426,9 +327,6 @@ export class LibraryPage extends LitElement {
                           <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.startReview(cat); }}>
                             <i class="ti ti-repeat"></i> Review answered questions
                           </div>
-                          <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.startOrConfigure(cat, true); }}>
-                            <i class="ti ti-settings"></i> Change mode
-                          </div>
                           <div class="dropdown-divider"></div>
                           <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this._toast('Reminders coming soon!'); }}>
                             <i class="ti ti-bell"></i> Set reminder
@@ -449,13 +347,10 @@ export class LibraryPage extends LitElement {
                 <span><i class="ti ti-calendar"></i> ${cat.year}</span>
                 <span><i class="ti ti-church"></i> ${cat.tradition}</span>
               </div>
-              ${plan ? html`
-                <div class="mode-pill"><i class="ti ${MODE_ICONS[plan.quiz_mode as QuizMode]}"></i> ${MODE_LABELS[plan.quiz_mode as QuizMode]}</div>
-              ` : ''}
               ${cat.copyright_note ? html`
                 <div class="copyright-note"><i class="ti ti-info-circle"></i>${cat.copyright_note}</div>
               ` : ''}
-              <button class="start-btn" @click=${() => this.startOrConfigure(cat)}>
+              <button class="start-btn" @click=${() => this.startLesson(cat)}>
                 <i class="ti ti-${plan ? 'player-play' : 'plus'}"></i>
                 ${plan ? 'Continue studying' : 'Start this catechism'}
               </button>
@@ -468,7 +363,6 @@ export class LibraryPage extends LitElement {
 
   private renderBible(): TemplateResult {
     const planBQ = this.plans.find(p => p.plan_type === 'bible_quiz');
-    const modes: QuizMode[] = ['fill_blank', 'multiple_choice', 'free_recall'];
     return html`
       <div class="grid">
         <div class="card ${planBQ ? 'enrolled' : ''}">
@@ -482,13 +376,10 @@ export class LibraryPage extends LitElement {
             <span><i class="ti ti-help-circle"></i> 100+ questions</span>
             <span><i class="ti ti-book-2"></i> OT &amp; NT</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
-            ${modes.map(m => html`
-              <button class="start-btn ${planBQ?.quiz_mode === m ? '' : 'configure'}" @click=${() => this.startBibleQuiz(m)}>
-                <i class="ti ${MODE_ICONS[m]}"></i> ${MODE_LABELS[m]}
-              </button>
-            `)}
-          </div>
+          <button class="start-btn" style="margin-top:14px" @click=${() => this.startBibleQuiz()}>
+            <i class="ti ti-${planBQ ? 'player-play' : 'plus'}"></i>
+            ${planBQ ? 'Continue studying' : 'Start Bible Quiz'}
+          </button>
         </div>
       </div>
     `;
@@ -496,7 +387,6 @@ export class LibraryPage extends LitElement {
 
   private renderVerses(): TemplateResult {
     const planV = this.plans.find(p => p.plan_type === 'verses');
-    const modes: QuizMode[] = ['fill_blank', 'multiple_choice', 'free_recall'];
     return html`
       <div class="grid">
         <div class="card ${planV ? 'enrolled' : ''}">
@@ -511,12 +401,11 @@ export class LibraryPage extends LitElement {
             <span><i class="ti ti-tag"></i> 10 themes</span>
             <span><i class="ti ti-book"></i> WEB translation</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
-            ${modes.map(m => html`
-              <button class="start-btn ${planV?.quiz_mode === m ? '' : 'configure'}" @click=${() => this.startVerses(m)}>
-                <i class="ti ${MODE_ICONS[m]}"></i> ${MODE_LABELS[m]}
-              </button>
-            `)}
+          <div style="margin-top:14px">
+            <button class="start-btn" @click=${() => this.startVerses()}>
+              <i class="ti ti-${planV ? 'player-play' : 'plus'}"></i>
+              ${planV ? 'Continue studying' : 'Start Memory Verses'}
+            </button>
           </div>
         </div>
       </div>
@@ -616,7 +505,6 @@ export class LibraryPage extends LitElement {
       ${this.tab === 'verses'     ? this.renderVerses()     : ''}
       ${this.tab === 'custom'     ? this.renderCustom()     : ''}
 
-      ${this.renderModeModal()}
       ${this.renderResetModal()}
       ${this.openMenuId ? html`<div class="menu-backdrop" @click=${() => this.openMenuId = null}></div>` : ''}
       ${this.toastMsg ? html`<div class="toast">${this.toastMsg}</div>` : ''}
