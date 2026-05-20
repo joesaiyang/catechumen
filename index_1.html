@@ -1,0 +1,2185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catechumen — A new way to learn the Shorter Catechism</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.17.0/dist/tabler-icons.min.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "lit": "https://cdn.jsdelivr.net/npm/lit@3.2.0/index.js",
+        "lit/": "https://cdn.jsdelivr.net/npm/lit@3.2.0/",
+        "@lit/reactive-element": "https://cdn.jsdelivr.net/npm/@lit/reactive-element@2.0.4/reactive-element.js",
+        "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@3.2.0/lit-html.js",
+        "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@3.2.0/",
+        "lit-element/": "https://cdn.jsdelivr.net/npm/lit-element@4.1.0/",
+        "lit-element/lit-element.js": "https://cdn.jsdelivr.net/npm/lit-element@4.1.0/lit-element.js"
+      }
+    }
+  </script>
+  <style>
+    :root {
+      /* Warm parchment palette */
+      --paper: #F5EFE0;
+      --paper-deep: #EDE3CC;
+      --paper-shadow: #D9CDB0;
+      --ink: #1F2920;
+      --ink-soft: #4A554A;
+      --ink-faint: #7A8278;
+
+      /* Deep evergreen — life, growth, Eden */
+      --moss: #2D4A3A;
+      --moss-deep: #1B3024;
+      --moss-light: #5A7A65;
+      --sage: #B8C9B0;
+
+      /* Warm rust — fire, autumn, sacred */
+      --ember: #B5481E;
+      --ember-deep: #7E2F11;
+      --ember-light: #E89773;
+      --ember-pale: #F4DCC9;
+
+      /* Gold — honor, achievement */
+      --gold: #C89B3C;
+      --gold-deep: #8A6620;
+      --gold-pale: #F0E1B8;
+
+      /* Crimson — heart, error, blood of Christ */
+      --crimson: #9B2C2C;
+      --crimson-pale: #E8D0CE;
+
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+
+      --shadow-soft: 0 1px 2px rgba(31, 41, 32, 0.06), 0 2px 8px rgba(31, 41, 32, 0.04);
+      --shadow-card: 0 2px 4px rgba(31, 41, 32, 0.08), 0 4px 16px rgba(31, 41, 32, 0.06);
+      --shadow-raised: 0 4px 8px rgba(31, 41, 32, 0.10), 0 12px 28px rgba(31, 41, 32, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: var(--font-sans);
+      color: var(--ink);
+      background: var(--paper);
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(184, 145, 80, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(45, 74, 58, 0.04) 0%, transparent 50%),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0 0.3 0 0 0 0.025 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ============== NAV ============== */
+    .nav {
+      padding: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(31, 41, 32, 0.08);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--moss-deep);
+    }
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--moss);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--paper);
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 18px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      transition: all 0.15s;
+    }
+    .nav-link:hover { color: var(--moss-deep); background: rgba(45, 74, 58, 0.06); }
+    .nav-link.active { color: var(--moss-deep); background: rgba(45, 74, 58, 0.08); }
+
+    /* ============== HERO STRIP ============== */
+    .hero {
+      padding: 56px 0 32px;
+      text-align: center;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 15px;
+      color: var(--ember-deep);
+      letter-spacing: 0.02em;
+      margin-bottom: 16px;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--moss-deep);
+      max-width: 800px;
+      margin: 0 auto 20px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--ember);
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--ink-soft);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.55;
+    }
+
+    /* ============== DEMO TABS ============== */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin: 40px auto 24px;
+      padding: 6px;
+      background: var(--paper-deep);
+      border-radius: var(--radius-xl);
+      width: fit-content;
+      border: 1px solid rgba(31, 41, 32, 0.06);
+    }
+    .tab {
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      border-radius: 18px;
+      transition: all 0.2s;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--ink); }
+    .tab.active {
+      background: var(--moss);
+      color: var(--paper);
+      box-shadow: var(--shadow-soft);
+    }
+
+    /* ============== DEMO STAGE ============== */
+    .stage {
+      padding: 24px 0 80px;
+      min-height: 700px;
+    }
+    .screen {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+    .screen.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============== FOOTER ============== */
+    .footer {
+      padding: 32px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--ink-faint);
+      border-top: 1px solid rgba(31, 41, 32, 0.08);
+      margin-top: 40px;
+    }
+    .footer em {
+      font-family: var(--font-display);
+      font-style: italic;
+      color: var(--ink-soft);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <nav class="nav">
+    <div class="logo">
+      <div class="logo-mark">C</div>
+      <span>Catechumen</span>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link active" href="#">Learn</a>
+      <a class="nav-link" href="#">Family</a>
+      <a class="nav-link" href="#">League</a>
+      <a class="nav-link" href="#">Profile</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-eyebrow">A prototype · click through the screens below</div>
+    <h1 class="hero-title">
+      The Shorter Catechism,<br />
+      made to <em>stick</em>.
+    </h1>
+    <p class="hero-sub">
+      A family-first approach to memorizing the Westminster Shorter Catechism — daily quests, spaced repetition, and the gentle pressure of a streak you don't want to break.
+    </p>
+  </section>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-screen="path">Learning path</button>
+    <button class="tab" data-screen="lesson">Lesson</button>
+    <button class="tab" data-screen="parent">Parent dashboard</button>
+    <button class="tab" data-screen="league">Weekly league</button>
+  </div>
+
+  <main class="stage">
+    <div class="screen active" data-screen="path"><catechumen-path></catechumen-path></div>
+    <div class="screen" data-screen="lesson"><catechumen-lesson></catechumen-lesson></div>
+    <div class="screen" data-screen="parent"><catechumen-parent></catechumen-parent></div>
+    <div class="screen" data-screen="league"><catechumen-league></catechumen-league></div>
+  </main>
+
+  <footer class="footer">
+    <em>"It is worth while to be a Shorter Catechism boy. They grow to be men. And better than that, they are exceedingly apt to grow to be men of God."</em><br />
+    — B.B. Warfield
+  </footer>
+
+</div>
+
+<script type="module">
+import { LitElement, html, css } from 'lit';
+
+// ============================================================
+// SHARED STYLES
+// ============================================================
+const sharedStyles = css`
+  :host {
+    display: block;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: #1F2920;
+  }
+  .card {
+    background: #FFFCF5;
+    border: 1px solid rgba(31, 41, 32, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 2px 4px rgba(31, 41, 32, 0.08), 0 4px 16px rgba(31, 41, 32, 0.06);
+  }
+  .display { font-family: 'Fraunces', Georgia, serif; }
+  .label-eyebrow {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #7E2F11;
+    letter-spacing: 0.02em;
+  }
+  button.primary {
+    background: #2D4A3A;
+    color: #F5EFE0;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.01em;
+  }
+  button.primary:hover { background: #1B3024; }
+  button.primary:disabled {
+    background: rgba(31, 41, 32, 0.1);
+    color: rgba(31, 41, 32, 0.4);
+    cursor: not-allowed;
+  }
+  button.secondary {
+    background: transparent;
+    color: #2D4A3A;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    border: 1px solid rgba(45, 74, 58, 0.25);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  button.secondary:hover { background: rgba(45, 74, 58, 0.05); border-color: rgba(45, 74, 58, 0.4); }
+`;
+
+// ============================================================
+// APP SHELL STATS BAR
+// ============================================================
+class StatsBar extends LitElement {
+  static styles = [sharedStyles, css`
+    .bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 14px 20px;
+      background: #FFFCF5;
+      border: 1px solid rgba(31, 41, 32, 0.08);
+      border-radius: 16px;
+      margin-bottom: 24px;
+    }
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+    }
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .stat-icon.flame { background: #F4DCC9; color: #B5481E; }
+    .stat-icon.gem { background: #E1EBE5; color: #2D4A3A; }
+    .stat-icon.heart { background: #E8D0CE; color: #9B2C2C; }
+    .stat-icon.gold { background: #F0E1B8; color: #8A6620; }
+    .stat-num {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1F2920;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 11px;
+      color: #7A8278;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+    .divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(31, 41, 32, 0.1);
+    }
+    .spacer { flex: 1; }
+    .greet {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 17px;
+      color: #4A554A;
+    }
+    .greet strong { font-weight: 600; font-style: normal; color: #1F2920; }
+  `];
+
+  render() {
+    return html`
+      <div class="bar">
+        <div class="greet">Welcome back, <strong>Samuel</strong></div>
+        <div class="spacer"></div>
+        <div class="stat">
+          <div class="stat-icon flame"><i class="ti ti-flame"></i></div>
+          <div>
+            <div class="stat-num">12</div>
+            <div class="stat-label">streak</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="stat">
+          <div class="stat-icon gem"><i class="ti ti-diamond"></i></div>
+          <div>
+            <div class="stat-num">340</div>
+            <div class="stat-label">XP this week</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="stat">
+          <div class="stat-icon heart"><i class="ti ti-heart-filled"></i></div>
+          <div>
+            <div class="stat-num">4/5</div>
+            <div class="stat-label">hearts</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="stat">
+          <div class="stat-icon gold"><i class="ti ti-coin"></i></div>
+          <div>
+            <div class="stat-num">86</div>
+            <div class="stat-label">gems</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+customElements.define('stats-bar', StatsBar);
+
+// ============================================================
+// SCREEN 1: LEARNING PATH
+// ============================================================
+class CatechumenPath extends LitElement {
+  static styles = [sharedStyles, css`
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+    }
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    /* Daily quest banner */
+    .quest {
+      background: linear-gradient(135deg, #2D4A3A 0%, #1B3024 100%);
+      color: #F5EFE0;
+      border-radius: 16px;
+      padding: 22px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .quest::before {
+      content: '';
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 180px;
+      height: 180px;
+      background: rgba(245, 239, 224, 0.05);
+      border-radius: 50%;
+    }
+    .quest-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(245, 239, 224, 0.12);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #F0E1B8;
+      flex-shrink: 0;
+    }
+    .quest-text { flex: 1; }
+    .quest-eyebrow {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: #F0E1B8;
+      margin-bottom: 4px;
+    }
+    .quest-title {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .quest-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(245, 239, 224, 0.8);
+    }
+    .quest-bar {
+      flex: 1;
+      max-width: 200px;
+      height: 6px;
+      background: rgba(245, 239, 224, 0.15);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .quest-fill {
+      height: 100%;
+      width: 33%;
+      background: #C89B3C;
+      border-radius: 3px;
+    }
+    .quest button {
+      background: #F5EFE0;
+      color: #1B3024;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      position: relative;
+      z-index: 1;
+    }
+    .quest button:hover { background: #FFFCF5; }
+
+    /* Unit headers */
+    .unit-section { margin-bottom: 40px; }
+    .unit-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed rgba(31, 41, 32, 0.15);
+    }
+    .unit-number {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: #B5481E;
+      letter-spacing: 0.02em;
+    }
+    .unit-title {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      font-weight: 500;
+      color: #1B3024;
+      letter-spacing: -0.01em;
+    }
+    .unit-status {
+      margin-left: auto;
+      font-size: 13px;
+      color: #7A8278;
+      font-weight: 500;
+    }
+
+    /* Path nodes — wavy layout */
+    .path {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      padding: 12px 0;
+    }
+    .node-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .node-row.shift-l { margin-right: 100px; }
+    .node-row.shift-r { margin-left: 100px; }
+    .node-row.shift-ll { margin-right: 180px; }
+    .node-row.shift-rr { margin-left: 180px; }
+    .node {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .node:hover:not(.locked) { transform: scale(1.06) translateY(-2px); }
+    .node.done {
+      background: #2D4A3A;
+      color: #F0E1B8;
+      box-shadow: 0 4px 12px rgba(45, 74, 58, 0.25);
+    }
+    .node.done .num { font-size: 15px; }
+    .node.done .badge {
+      position: absolute;
+      bottom: -3px;
+      right: -3px;
+      width: 22px;
+      height: 22px;
+      background: #C89B3C;
+      color: #1F2920;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+      border: 2px solid #FFFCF5;
+    }
+    .node.current {
+      background: #FFFCF5;
+      color: #B5481E;
+      border: 3px solid #B5481E;
+      width: 80px;
+      height: 80px;
+      box-shadow: 0 6px 20px rgba(181, 72, 30, 0.25);
+      animation: pulse 2.5s infinite;
+    }
+    .node.current .num { font-size: 18px; }
+    .node.current .play {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: -2px;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 6px 20px rgba(181, 72, 30, 0.25); }
+      50% { box-shadow: 0 6px 20px rgba(181, 72, 30, 0.4), 0 0 0 10px rgba(181, 72, 30, 0); }
+    }
+    .node.locked {
+      background: rgba(31, 41, 32, 0.05);
+      color: rgba(31, 41, 32, 0.3);
+      cursor: not-allowed;
+      border: 1px dashed rgba(31, 41, 32, 0.2);
+    }
+    .node.locked .num { font-size: 14px; }
+    .node-label {
+      position: absolute;
+      top: 100%;
+      margin-top: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: #7A8278;
+      white-space: nowrap;
+    }
+    .node.milestone {
+      width: 84px;
+      height: 84px;
+      background: #F0E1B8;
+      color: #8A6620;
+      border: 2px solid #C89B3C;
+      box-shadow: 0 4px 14px rgba(200, 155, 60, 0.25);
+    }
+    .node.milestone i { font-size: 32px; }
+    .node.milestone.locked {
+      background: rgba(31, 41, 32, 0.05);
+      color: rgba(31, 41, 32, 0.3);
+      border-color: rgba(31, 41, 32, 0.15);
+      box-shadow: none;
+    }
+
+    /* Wavy connectors */
+    .connector {
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(to bottom, #2D4A3A 50%, transparent 50%);
+      background-size: 2px 6px;
+    }
+    .connector.dim { background: linear-gradient(to bottom, rgba(31, 41, 32, 0.2) 50%, transparent 50%); background-size: 2px 6px; }
+
+    /* Side panel */
+    .side {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .side-card {
+      background: #FFFCF5;
+      border: 1px solid rgba(31, 41, 32, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .side-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1B3024;
+    }
+    .achievement-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(31, 41, 32, 0.08);
+    }
+    .achievement-row:last-child { border-bottom: none; }
+    .ach-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .ach-icon.gold { background: #F0E1B8; color: #8A6620; }
+    .ach-icon.green { background: #E1EBE5; color: #2D4A3A; }
+    .ach-icon.locked { background: rgba(31, 41, 32, 0.05); color: rgba(31, 41, 32, 0.25); }
+    .ach-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1F2920;
+      margin-bottom: 2px;
+    }
+    .ach-name.dim { color: rgba(31, 41, 32, 0.4); }
+    .ach-desc { font-size: 12px; color: #7A8278; line-height: 1.4; }
+    .verse-card {
+      background: #1B3024;
+      color: #F5EFE0;
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+    }
+    .verse-card .label-eyebrow { color: #C89B3C; }
+    .verse-card blockquote {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 15px;
+      line-height: 1.55;
+      margin: 8px 0 10px;
+      color: #F5EFE0;
+    }
+    .verse-card cite {
+      font-size: 12px;
+      font-style: normal;
+      color: rgba(245, 239, 224, 0.7);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+  `];
+
+  render() {
+    return html`
+      <stats-bar></stats-bar>
+
+      <div class="quest">
+        <div class="quest-icon"><i class="ti ti-target-arrow"></i></div>
+        <div class="quest-text">
+          <div class="quest-eyebrow">Today's quest</div>
+          <div class="quest-title">Master 3 questions</div>
+          <div class="quest-progress">
+            <div class="quest-bar"><div class="quest-fill"></div></div>
+            <span>1 of 3 · +50 XP on completion</span>
+          </div>
+        </div>
+        <button>Continue →</button>
+      </div>
+
+      <div class="layout">
+        <div>
+          <div class="unit-section">
+            <div class="unit-header">
+              <div>
+                <div class="unit-number">Unit I · Questions 1–12</div>
+                <div class="unit-title">God as Creator</div>
+              </div>
+              <div class="unit-status">8 of 12 mastered</div>
+            </div>
+
+            <div class="path">
+              <div class="node-row">
+                <div class="node done">
+                  <span class="num">Q1</span>
+                  <span class="badge">★</span>
+                  <span class="node-label">Mastered</span>
+                </div>
+              </div>
+              <div class="connector"></div>
+              <div class="node-row shift-r">
+                <div class="node done">
+                  <span class="num">Q2</span>
+                  <span class="badge">★</span>
+                  <span class="node-label">Mastered</span>
+                </div>
+              </div>
+              <div class="connector"></div>
+              <div class="node-row shift-rr">
+                <div class="node done">
+                  <span class="num">Q3</span>
+                  <span class="badge">★</span>
+                </div>
+              </div>
+              <div class="connector"></div>
+              <div class="node-row shift-r">
+                <div class="node done">
+                  <span class="num">Q4</span>
+                  <span class="badge">★</span>
+                </div>
+              </div>
+              <div class="connector"></div>
+              <div class="node-row">
+                <div class="node current">
+                  <span class="play">Begin</span>
+                  <span class="num">Q5</span>
+                  <span class="node-label" style="color: #B5481E; font-weight: 600;">Up next</span>
+                </div>
+              </div>
+              <div class="connector dim"></div>
+              <div class="node-row shift-l">
+                <div class="node locked">
+                  <span class="num">Q6</span>
+                </div>
+              </div>
+              <div class="connector dim"></div>
+              <div class="node-row shift-ll">
+                <div class="node locked">
+                  <span class="num">Q7</span>
+                </div>
+              </div>
+              <div class="connector dim"></div>
+              <div class="node-row">
+                <div class="node milestone locked">
+                  <i class="ti ti-trophy"></i>
+                  <span class="node-label">Unit review</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="side">
+          <div class="verse-card">
+            <div class="label-eyebrow">Verse of the day</div>
+            <blockquote>"Whether therefore ye eat, or drink, or whatsoever ye do, do all to the glory of God."</blockquote>
+            <cite>— 1 Corinthians 10:31</cite>
+          </div>
+
+          <div class="side-card">
+            <h3>Recent achievements</h3>
+            <div class="achievement-row">
+              <div class="ach-icon gold"><i class="ti ti-flame"></i></div>
+              <div>
+                <div class="ach-name">10-day streak</div>
+                <div class="ach-desc">Practiced 10 days in a row</div>
+              </div>
+            </div>
+            <div class="achievement-row">
+              <div class="ach-icon green"><i class="ti ti-book-2"></i></div>
+              <div>
+                <div class="ach-name">First mastery</div>
+                <div class="ach-desc">Mastered your first question</div>
+              </div>
+            </div>
+            <div class="achievement-row">
+              <div class="ach-icon locked"><i class="ti ti-lock"></i></div>
+              <div>
+                <div class="ach-name dim">Unit conqueror</div>
+                <div class="ach-desc">Complete an entire unit · 8/12</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card">
+            <h3>Up next in review</h3>
+            <div style="font-size: 13px; color: #7A8278; line-height: 1.6;">
+              Spaced repetition will surface <strong style="color: #1F2920;">Q1</strong> and <strong style="color: #1F2920;">Q3</strong> for review tomorrow. Practice keeps them strong.
+            </div>
+          </div>
+        </aside>
+      </div>
+    `;
+  }
+}
+customElements.define('catechumen-path', CatechumenPath);
+
+// ============================================================
+// SCREEN 2: LESSON (interactive fill-in-the-blank)
+// ============================================================
+class CatechumenLesson extends LitElement {
+  static properties = {
+    blanks: { state: true },
+    bank: { state: true },
+    currentIdx: { state: true },
+    phase: { state: true }, // 'filling' | 'correct' | 'incorrect'
+    hearts: { state: true },
+    xp: { state: true },
+  };
+
+  constructor() {
+    super();
+    this.blanks = [
+      { word: 'glorify', filled: null, position: 0 },
+      { word: 'enjoy', filled: null, position: 1 },
+    ];
+    this.bank = [
+      { word: 'worship', used: false },
+      { word: 'glorify', used: false },
+      { word: 'serve', used: false },
+      { word: 'enjoy', used: false },
+      { word: 'praise', used: false },
+    ];
+    this.currentIdx = 0;
+    this.phase = 'filling';
+    this.hearts = 4;
+    this.xp = 340;
+  }
+
+  static styles = [sharedStyles, css`
+    .lesson-frame {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Top bar with exit & progress */
+    .top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .exit {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(31, 41, 32, 0.05);
+      color: #4A554A;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 18px;
+    }
+    .exit:hover { background: rgba(31, 41, 32, 0.1); }
+    .prog-bar {
+      flex: 1;
+      height: 14px;
+      background: rgba(31, 41, 32, 0.07);
+      border-radius: 7px;
+      overflow: hidden;
+      position: relative;
+    }
+    .prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #5A7A65, #2D4A3A);
+      border-radius: 7px;
+      width: 40%;
+      transition: width 0.5s ease;
+    }
+    .hearts-mini {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #E8D0CE;
+      color: #9B2C2C;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .hearts-mini i { font-size: 18px; }
+
+    /* Question card */
+    .lesson-card {
+      background: #FFFCF5;
+      border: 1px solid rgba(31, 41, 32, 0.08);
+      border-radius: 20px;
+      padding: 32px 36px;
+      box-shadow: 0 2px 4px rgba(31, 41, 32, 0.08), 0 4px 16px rgba(31, 41, 32, 0.06);
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .lesson-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #2D4A3A, #B5481E);
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: #E1EBE5;
+      color: #1B3024;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .pill i { font-size: 14px; }
+    .hint-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #F0E1B8;
+      color: #8A6620;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s;
+    }
+    .hint-btn:hover { background: #E8D49A; }
+
+    .prompt {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: #B5481E;
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+    }
+    .instruction {
+      font-family: 'Fraunces', serif;
+      font-size: 26px;
+      font-weight: 500;
+      color: #1B3024;
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+    }
+
+    .qa-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #7A8278;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .question {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 500;
+      color: #1F2920;
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px dashed rgba(31, 41, 32, 0.15);
+    }
+
+    .answer {
+      font-family: 'Fraunces', serif;
+      font-size: 24px;
+      line-height: 2;
+      color: #1F2920;
+      margin-bottom: 32px;
+    }
+    .blank {
+      display: inline-block;
+      min-width: 140px;
+      padding: 4px 16px;
+      margin: 0 4px;
+      background: #F5EFE0;
+      border: 2px dashed rgba(45, 74, 58, 0.35);
+      border-radius: 10px;
+      text-align: center;
+      font-style: italic;
+      color: rgba(31, 41, 32, 0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+      vertical-align: middle;
+    }
+    .blank.filled {
+      background: #E1EBE5;
+      border: 2px solid #2D4A3A;
+      color: #1B3024;
+      font-style: normal;
+      font-weight: 600;
+    }
+    .blank.correct {
+      background: #E1EBE5;
+      border: 2px solid #2D4A3A;
+      color: #1B3024;
+      font-style: normal;
+      font-weight: 600;
+      animation: pop 0.4s ease;
+    }
+    .blank.incorrect {
+      background: #E8D0CE;
+      border: 2px solid #9B2C2C;
+      color: #9B2C2C;
+      font-style: normal;
+      font-weight: 600;
+      animation: shake 0.4s ease;
+    }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    .bank-section { margin-top: 8px; }
+    .bank-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #7A8278;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+    .bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .chip {
+      padding: 12px 22px;
+      background: #FFFCF5;
+      border: 1px solid rgba(31, 41, 32, 0.15);
+      border-bottom: 3px solid rgba(31, 41, 32, 0.2);
+      border-radius: 12px;
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: #1F2920;
+      cursor: pointer;
+      transition: all 0.1s;
+      user-select: none;
+    }
+    .chip:hover:not(.used) {
+      border-color: #2D4A3A;
+      background: #F5EFE0;
+      transform: translateY(-1px);
+    }
+    .chip:active:not(.used) {
+      transform: translateY(1px);
+      border-bottom-width: 1px;
+    }
+    .chip.used {
+      opacity: 0.25;
+      cursor: not-allowed;
+      border-bottom-width: 1px;
+    }
+
+    /* Feedback footer */
+    .feedback {
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feedback.success {
+      background: #E1EBE5;
+      border: 1px solid #5A7A65;
+    }
+    .feedback.error {
+      background: #E8D0CE;
+      border: 1px solid #C5878A;
+    }
+    .feedback-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .feedback.success .feedback-icon { background: #2D4A3A; color: #F0E1B8; }
+    .feedback.error .feedback-icon { background: #9B2C2C; color: #F5EFE0; }
+    .feedback-text {
+      flex: 1;
+    }
+    .feedback-title {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .feedback.success .feedback-title { color: #1B3024; }
+    .feedback.error .feedback-title { color: #7E1F1F; }
+    .feedback-sub { font-size: 13px; color: #4A554A; }
+
+    /* Footer actions */
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .skip {
+      padding: 14px 22px;
+      background: transparent;
+      color: #7A8278;
+      border: none;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: color 0.15s;
+    }
+    .skip:hover { color: #1F2920; }
+    .check-btn {
+      flex: 1;
+      padding: 18px 28px;
+      background: #2D4A3A;
+      color: #F5EFE0;
+      border: none;
+      border-bottom: 4px solid #1B3024;
+      border-radius: 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+    .check-btn:hover:not(:disabled) { background: #1B3024; }
+    .check-btn:active:not(:disabled) {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
+    .check-btn:disabled {
+      background: rgba(31, 41, 32, 0.08);
+      color: rgba(31, 41, 32, 0.3);
+      border-bottom-color: rgba(31, 41, 32, 0.1);
+      cursor: not-allowed;
+    }
+    .check-btn.continue {
+      background: #B5481E;
+      border-bottom-color: #7E2F11;
+    }
+    .check-btn.continue:hover { background: #7E2F11; }
+    .check-btn.try-again {
+      background: #9B2C2C;
+      border-bottom-color: #6B1F1F;
+    }
+
+    /* Proof text */
+    details {
+      padding: 14px 18px;
+      background: #FFFCF5;
+      border: 1px solid rgba(31, 41, 32, 0.08);
+      border-radius: 12px;
+      font-size: 14px;
+    }
+    summary {
+      cursor: pointer;
+      color: #4A554A;
+      font-weight: 500;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before {
+      content: '\\002B';
+      font-weight: 600;
+      color: #B5481E;
+    }
+    details[open] summary::before { content: '\\2212'; }
+    details p {
+      margin-top: 12px;
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      color: #1F2920;
+      line-height: 1.6;
+    }
+  `];
+
+  pickChip(idx) {
+    if (this.phase !== 'filling') return;
+    const chip = this.bank[idx];
+    if (chip.used) return;
+    if (this.currentIdx >= this.blanks.length) return;
+
+    this.blanks[this.currentIdx].filled = chip.word;
+    this.blanks[this.currentIdx].chipIdx = idx;
+    this.bank[idx].used = true;
+    this.currentIdx++;
+    this.requestUpdate();
+  }
+
+  clearBlank(idx) {
+    if (this.phase !== 'filling') return;
+    const blank = this.blanks[idx];
+    if (!blank.filled) return;
+    this.bank[blank.chipIdx].used = false;
+    blank.filled = null;
+    blank.chipIdx = null;
+    // Recompute currentIdx to first empty
+    this.currentIdx = this.blanks.findIndex(b => !b.filled);
+    if (this.currentIdx === -1) this.currentIdx = this.blanks.length;
+    this.requestUpdate();
+  }
+
+  check() {
+    const allCorrect = this.blanks.every(b => b.filled === b.word);
+    this.phase = allCorrect ? 'correct' : 'incorrect';
+    if (allCorrect) this.xp += 15;
+    else this.hearts = Math.max(0, this.hearts - 1);
+  }
+
+  reset() {
+    this.blanks.forEach(b => { b.filled = null; b.chipIdx = null; });
+    this.bank.forEach(c => c.used = false);
+    this.currentIdx = 0;
+    this.phase = 'filling';
+    this.requestUpdate();
+  }
+
+  render() {
+    const allFilled = this.blanks.every(b => b.filled);
+    return html`
+      <div class="lesson-frame">
+        <div class="top">
+          <div class="exit"><i class="ti ti-x"></i></div>
+          <div class="prog-bar"><div class="prog-fill"></div></div>
+          <div class="hearts-mini">
+            <i class="ti ti-heart-filled"></i>
+            <span>${this.hearts}</span>
+          </div>
+        </div>
+
+        <div class="lesson-card">
+          <div class="meta">
+            <span class="pill"><i class="ti ti-bookmark"></i> Question 1 · Unit I</span>
+            <button class="hint-btn"><i class="ti ti-bulb"></i> Use a hint (5 gems)</button>
+          </div>
+
+          <div class="prompt">Fill in the blanks</div>
+          <h2 class="instruction">Complete the answer using the words below.</h2>
+
+          <div class="qa-label">Question</div>
+          <p class="question">What is the chief end of man?</p>
+
+          <div class="qa-label">Answer</div>
+          <p class="answer">
+            Man's chief end is to
+            ${this.renderBlank(0)}
+            God, and to
+            ${this.renderBlank(1)}
+            him for ever.
+          </p>
+
+          <div class="bank-section">
+            <div class="bank-label">Tap the words in order</div>
+            <div class="bank">
+              ${this.bank.map((c, i) => html`
+                <button
+                  class="chip ${c.used ? 'used' : ''}"
+                  @click=${() => this.pickChip(i)}
+                  ?disabled=${c.used}
+                >${c.word}</button>
+              `)}
+            </div>
+          </div>
+        </div>
+
+        ${this.phase === 'correct' ? html`
+          <div class="feedback success">
+            <div class="feedback-icon"><i class="ti ti-check"></i></div>
+            <div class="feedback-text">
+              <div class="feedback-title">Excellent!</div>
+              <div class="feedback-sub">+15 XP earned · Mastery on Q1 is growing</div>
+            </div>
+          </div>
+        ` : ''}
+
+        ${this.phase === 'incorrect' ? html`
+          <div class="feedback error">
+            <div class="feedback-icon"><i class="ti ti-x"></i></div>
+            <div class="feedback-text">
+              <div class="feedback-title">Not quite — you lost a heart.</div>
+              <div class="feedback-sub">Take another look. Tap any filled blank to clear it.</div>
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="actions" style="margin-bottom: 16px;">
+          <button class="skip">Skip</button>
+          ${this.phase === 'filling' ? html`
+            <button class="check-btn" @click=${this.check} ?disabled=${!allFilled}>
+              Check answer
+            </button>
+          ` : ''}
+          ${this.phase === 'correct' ? html`
+            <button class="check-btn continue" @click=${this.reset}>
+              Continue →
+            </button>
+          ` : ''}
+          ${this.phase === 'incorrect' ? html`
+            <button class="check-btn try-again" @click=${this.reset}>
+              Try again
+            </button>
+          ` : ''}
+        </div>
+
+        <details>
+          <summary>Scripture proof text</summary>
+          <p>"Whether therefore ye eat, or drink, or whatsoever ye do, do all to the glory of God." — 1 Corinthians 10:31</p>
+        </details>
+      </div>
+    `;
+  }
+
+  renderBlank(idx) {
+    const b = this.blanks[idx];
+    const cls = this.phase === 'correct' ? 'correct'
+              : this.phase === 'incorrect' ? (b.filled === b.word ? 'correct' : 'incorrect')
+              : b.filled ? 'filled' : '';
+    return html`
+      <span class="blank ${cls}" @click=${() => this.clearBlank(idx)}>
+        ${b.filled || '______'}
+      </span>
+    `;
+  }
+}
+customElements.define('catechumen-lesson', CatechumenLesson);
+
+// ============================================================
+// SCREEN 3: PARENT DASHBOARD
+// ============================================================
+class CatechumenParent extends LitElement {
+  static styles = [sharedStyles, css`
+    .parent-header {
+      margin-bottom: 28px;
+    }
+    .ph-eyebrow {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: #B5481E;
+      margin-bottom: 6px;
+    }
+    .ph-title {
+      font-family: 'Fraunces', serif;
+      font-size: 36px;
+      font-weight: 500;
+      color: #1B3024;
+      letter-spacing: -0.01em;
+    }
+    .ph-sub {
+      font-size: 15px;
+      color: #4A554A;
+      margin-top: 4px;
+    }
+
+    /* Overview stats */
+    .overview {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 720px) {
+      .overview { grid-template-columns: repeat(2, 1fr); }
+    }
+    .stat-card {
+      background: #FFFCF5;
+      border: 1px solid rgba(31, 41, 32, 0.08);
+      border-radius: 14px;
+      padding: 18px 20px;
+      position: relative;
+    }
+    .stat-card-icon {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      font-size: 22px;
+      color: rgba(31, 41, 32, 0.2);
+    }
+    .stat-card-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #7A8278;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .stat-card-num {
+      font-family: 'Fraunces', serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: #1B3024;
+      line-height: 1;
+    }
+    .stat-card-trend {
+      font-size: 12px;
+      color: #2D4A3A;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+    }
+    .stat-card-trend.down { color: #9B2C2C; }
+
+    /* Children section */
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed rgba(31, 41, 32, 0.15);
+    }
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: 24px;
+      font-weight: 500;
+      color: #1B3024;
+    }
+    .add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: #2D4A3A;
+      color: #F5EFE0;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+    }
+    .add-btn:hover { background: #1B3024; }
+
+    .children-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .child-card {
+      background: #FFFCF5;
+      border: 1px solid rgba(31, 41, 32, 0.08);
+      border-radius: 16px;
+      padding: 22px;
+      transition: all 0.15s;
+    }
+    .child-card:hover {
+      border-color: rgba(45, 74, 58, 0.3);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+    }
+    .child-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #F5EFE0;
+      flex-shrink: 0;
+    }
+    .avatar.green { background: linear-gradient(135deg, #2D4A3A, #5A7A65); }
+    .avatar.rust { background: linear-gradient(135deg, #B5481E, #E89773); }
+    .avatar.gold { background: linear-gradient(135deg, #C89B3C, #E8C875); color: #1F2920; }
+    .child-name {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1F2920;
+    }
+    .child-age {
+      font-size: 13px;
+      color: #7A8278;
+    }
+    .child-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .cs {
+      text-align: center;
+      padding: 10px 8px;
+      background: #F5EFE0;
+      border-radius: 10px;
+    }
+    .cs-num {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1B3024;
+    }
+    .cs-label {
+      font-size: 10px;
+      color: #7A8278;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .progress-row {
+      margin-bottom: 12px;
+    }
+    .progress-row-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #4A554A;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .progress-row-bar {
+      height: 8px;
+      background: rgba(31, 41, 32, 0.07);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-row-fill {
+      height: 100%;
+      background: #2D4A3A;
+      border-radius: 4px;
+    }
+    .last-active {
+      font-size: 12px;
+      color: #7A8278;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .last-active.warn { color: #B5481E; }
+
+    /* Activity chart */
+    .chart-card {
+      background: #FFFCF5;
+      border: 1px solid rgba(31, 41, 32, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .chart-title {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1B3024;
+      margin-bottom: 4px;
+    }
+    .chart-sub {
+      font-size: 13px;
+      color: #7A8278;
+      margin-bottom: 20px;
+    }
+    .chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 140px;
+      padding-bottom: 24px;
+      border-bottom: 1px dashed rgba(31, 41, 32, 0.15);
+      position: relative;
+    }
+    .bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      height: 100%;
+      justify-content: flex-end;
+      position: relative;
+    }
+    .bar-stack {
+      width: 100%;
+      max-width: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .bar {
+      width: 100%;
+      border-radius: 4px;
+    }
+    .bar.samuel { background: #2D4A3A; }
+    .bar.eden { background: #B5481E; }
+    .bar.lydia { background: #C89B3C; }
+    .day-label {
+      position: absolute;
+      bottom: -20px;
+      font-size: 11px;
+      color: #7A8278;
+      font-weight: 600;
+    }
+    .legend {
+      display: flex;
+      gap: 20px;
+      margin-top: 18px;
+      font-size: 13px;
+    }
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #4A554A;
+    }
+    .leg-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+  `];
+
+  render() {
+    return html`
+      <div class="parent-header">
+        <div class="ph-eyebrow">Family · The Halverson household</div>
+        <h1 class="ph-title">Watching over their growth</h1>
+        <p class="ph-sub">All three are progressing through Unit I together this month.</p>
+      </div>
+
+      <div class="overview">
+        <div class="stat-card">
+          <i class="ti ti-users stat-card-icon"></i>
+          <div class="stat-card-label">Children</div>
+          <div class="stat-card-num">3</div>
+        </div>
+        <div class="stat-card">
+          <i class="ti ti-book-2 stat-card-icon"></i>
+          <div class="stat-card-label">Questions mastered</div>
+          <div class="stat-card-num">19</div>
+          <div class="stat-card-trend"><i class="ti ti-trending-up"></i> +4 this week</div>
+        </div>
+        <div class="stat-card">
+          <i class="ti ti-flame stat-card-icon"></i>
+          <div class="stat-card-label">Combined streak days</div>
+          <div class="stat-card-num">28</div>
+        </div>
+        <div class="stat-card">
+          <i class="ti ti-clock stat-card-icon"></i>
+          <div class="stat-card-label">Time this week</div>
+          <div class="stat-card-num">42<span style="font-size: 18px; color: #7A8278;">m</span></div>
+          <div class="stat-card-trend"><i class="ti ti-trending-up"></i> +12m vs last</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title">Practice this week</div>
+        <div class="chart-sub">Minutes of practice per child, by day</div>
+        <div class="chart">
+          ${this.renderDay('M', [6, 4, 3])}
+          ${this.renderDay('T', [8, 5, 4])}
+          ${this.renderDay('W', [5, 6, 2])}
+          ${this.renderDay('T', [7, 3, 5])}
+          ${this.renderDay('F', [9, 7, 4])}
+          ${this.renderDay('S', [4, 8, 6])}
+          ${this.renderDay('S', [10, 5, 3])}
+        </div>
+        <div class="legend">
+          <div class="leg-item"><span class="leg-dot" style="background: #2D4A3A;"></span> Samuel</div>
+          <div class="leg-item"><span class="leg-dot" style="background: #B5481E;"></span> Eden</div>
+          <div class="leg-item"><span class="leg-dot" style="background: #C89B3C;"></span> Lydia</div>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <h2 class="section-title">Your children</h2>
+        <button class="add-btn"><i class="ti ti-plus"></i> Add child</button>
+      </div>
+
+      <div class="children-grid">
+        ${this.renderChild('Samuel', 11, 'S', 'green', { streak: 12, mastered: 8, xp: 340 }, 67, 'Practiced 2h ago', false)}
+        ${this.renderChild('Eden', 9, 'E', 'rust', { streak: 7, mastered: 6, xp: 220 }, 50, 'Practiced today', false)}
+        ${this.renderChild('Lydia', 6, 'L', 'gold', { streak: 3, mastered: 5, xp: 145 }, 42, 'Hasn\\'t practiced today', true)}
+      </div>
+    `;
+  }
+
+  renderDay(label, values) {
+    const max = 12;
+    return html`
+      <div class="bar-group">
+        <div class="bar-stack">
+          <div class="bar samuel" style="height: ${values[0] / max * 100}px"></div>
+          <div class="bar eden" style="height: ${values[1] / max * 100}px"></div>
+          <div class="bar lydia" style="height: ${values[2] / max * 100}px"></div>
+        </div>
+        <div class="day-label">${label}</div>
+      </div>
+    `;
+  }
+
+  renderChild(name, age, initial, color, stats, progress, lastActive, warn) {
+    return html`
+      <div class="child-card">
+        <div class="child-head">
+          <div class="avatar ${color}">${initial}</div>
+          <div>
+            <div class="child-name">${name}</div>
+            <div class="child-age">Age ${age} · Unit I in progress</div>
+          </div>
+        </div>
+        <div class="child-stats">
+          <div class="cs">
+            <div class="cs-num">${stats.streak}</div>
+            <div class="cs-label">Streak</div>
+          </div>
+          <div class="cs">
+            <div class="cs-num">${stats.mastered}</div>
+            <div class="cs-label">Mastered</div>
+          </div>
+          <div class="cs">
+            <div class="cs-num">${stats.xp}</div>
+            <div class="cs-label">XP</div>
+          </div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-row-label">
+            <span>Unit I progress</span>
+            <span>${progress}%</span>
+          </div>
+          <div class="progress-row-bar">
+            <div class="progress-row-fill" style="width: ${progress}%"></div>
+          </div>
+        </div>
+        <div class="last-active ${warn ? 'warn' : ''}">
+          <i class="ti ti-${warn ? 'alert-circle' : 'clock'}"></i>
+          ${lastActive}
+        </div>
+      </div>
+    `;
+  }
+}
+customElements.define('catechumen-parent', CatechumenParent);
+
+// ============================================================
+// SCREEN 4: WEEKLY LEAGUE
+// ============================================================
+class CatechumenLeague extends LitElement {
+  static styles = [sharedStyles, css`
+    .league-frame {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .league-banner {
+      background: linear-gradient(135deg, #1B3024 0%, #2D4A3A 100%);
+      color: #F5EFE0;
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .league-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(200, 155, 60, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(181, 72, 30, 0.12) 0%, transparent 40%);
+    }
+    .league-banner > * { position: relative; }
+    .league-eyebrow {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: #F0E1B8;
+      margin-bottom: 8px;
+    }
+    .league-title {
+      font-family: 'Fraunces', serif;
+      font-size: 38px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .league-sub {
+      font-size: 14px;
+      color: rgba(245, 239, 224, 0.8);
+      margin-bottom: 20px;
+    }
+    .league-medals {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 24px;
+    }
+    .medal {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .medal-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .medal.gold .medal-circle { background: #C89B3C; color: #1F2920; }
+    .medal.silver .medal-circle { background: #C0C7C5; color: #1F2920; }
+    .medal.bronze .medal-circle { background: #B5481E; color: #F5EFE0; }
+    .medal-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(245, 239, 224, 0.8);
+    }
+
+    .leaderboard {
+      background: #FFFCF5;
+      border: 1px solid rgba(31, 41, 32, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .lb-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-bottom: 1px solid rgba(31, 41, 32, 0.08);
+    }
+    .lb-title {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1B3024;
+    }
+    .lb-timer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #F4DCC9;
+      color: #7E2F11;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .promo-zone, .demo-zone {
+      padding: 8px 24px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .promo-zone {
+      background: rgba(45, 74, 58, 0.06);
+      color: #2D4A3A;
+      border-bottom: 1px dashed rgba(45, 74, 58, 0.3);
+    }
+    .demo-zone {
+      background: rgba(155, 44, 44, 0.05);
+      color: #9B2C2C;
+      border-top: 1px dashed rgba(155, 44, 44, 0.3);
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 50px 1fr auto auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 24px;
+      border-bottom: 1px solid rgba(31, 41, 32, 0.06);
+      transition: background 0.15s;
+    }
+    .row:last-child { border-bottom: none; }
+    .row.you {
+      background: linear-gradient(90deg, rgba(45, 74, 58, 0.08) 0%, rgba(45, 74, 58, 0.02) 100%);
+      border-left: 3px solid #2D4A3A;
+      padding-left: 21px;
+    }
+    .rank {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #7A8278;
+      text-align: center;
+    }
+    .rank.gold { color: #8A6620; }
+    .rank.silver { color: #6E7574; }
+    .rank.bronze { color: #B5481E; }
+    .rank-medal {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      line-height: 32px;
+      color: #1F2920;
+      font-weight: 700;
+    }
+    .rank-medal.gold { background: #F0E1B8; }
+    .rank-medal.silver { background: #DCDFDE; }
+    .rank-medal.bronze { background: #F4DCC9; color: #7E2F11; }
+    .row-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .row-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: #F5EFE0;
+    }
+    .row-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1F2920;
+    }
+    .row-meta {
+      font-size: 11px;
+      color: #7A8278;
+    }
+    .row-xp {
+      font-family: 'Fraunces', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: #1B3024;
+    }
+    .row-xp-label {
+      font-size: 11px;
+      color: #7A8278;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-left: 4px;
+    }
+  `];
+
+  render() {
+    const players = [
+      { rank: 1, name: 'Theodora R.', meta: 'Tampa, FL', xp: 1240, color: '#2D4A3A', initial: 'T' },
+      { rank: 2, name: 'Marcus J.', meta: 'Greenville, SC', xp: 980, color: '#B5481E', initial: 'M' },
+      { rank: 3, name: 'Hannah L.', meta: 'Tulsa, OK', xp: 870, color: '#C89B3C', initial: 'H' },
+      { rank: 4, name: 'Caleb W.', meta: 'Boise, ID', xp: 740, color: '#5A7A65', initial: 'C' },
+      { rank: 5, name: 'Samuel H.', meta: 'You · Loganville, GA', xp: 680, color: '#1B3024', initial: 'S', you: true },
+      { rank: 6, name: 'Priscilla K.', meta: 'Knoxville, TN', xp: 540, color: '#9B2C2C', initial: 'P' },
+      { rank: 7, name: 'Benjamin O.', meta: 'Lincoln, NE', xp: 480, color: '#2D4A3A', initial: 'B' },
+    ];
+
+    return html`
+      <div class="league-frame">
+        <div class="league-banner">
+          <div class="league-eyebrow">Week 12 · Sept 2 — Sept 8</div>
+          <h1 class="league-title">Sapphire League</h1>
+          <div class="league-sub">Top 7 advance to Emerald · Bottom 5 fall to Citrine</div>
+
+          <div class="league-medals">
+            <div class="medal gold">
+              <div class="medal-circle"><i class="ti ti-medal-2"></i></div>
+              <div class="medal-label">Gold</div>
+            </div>
+            <div class="medal silver">
+              <div class="medal-circle"><i class="ti ti-medal-2"></i></div>
+              <div class="medal-label">Silver</div>
+            </div>
+            <div class="medal bronze">
+              <div class="medal-circle"><i class="ti ti-medal-2"></i></div>
+              <div class="medal-label">Bronze</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="leaderboard">
+          <div class="lb-header">
+            <div class="lb-title">This week's standings</div>
+            <div class="lb-timer"><i class="ti ti-clock"></i> 3 days · 14 hrs left</div>
+          </div>
+
+          <div class="promo-zone">
+            <i class="ti ti-arrow-up"></i> Promotion zone — top 7
+          </div>
+
+          ${players.slice(0, 7).map(p => this.renderRow(p))}
+
+          <div class="demo-zone">
+            <i class="ti ti-arrow-down"></i> Demotion zone — bottom 5
+          </div>
+
+          ${this.renderRow({ rank: 26, name: 'Eleanor P.', meta: 'Spokane, WA', xp: 110, color: '#7A8278', initial: 'E' })}
+        </div>
+      </div>
+    `;
+  }
+
+  renderRow(p) {
+    const rankCls = p.rank === 1 ? 'gold' : p.rank === 2 ? 'silver' : p.rank === 3 ? 'bronze' : '';
+    return html`
+      <div class="row ${p.you ? 'you' : ''}">
+        <div class="rank">
+          ${p.rank <= 3 
+            ? html`<span class="rank-medal ${rankCls}">${p.rank}</span>`
+            : p.rank}
+        </div>
+        <div class="row-user">
+          <div class="row-avatar" style="background: ${p.color}">${p.initial}</div>
+          <div>
+            <div class="row-name">${p.name}</div>
+            <div class="row-meta">${p.meta}</div>
+          </div>
+        </div>
+        <div>
+          <span class="row-xp">${p.xp.toLocaleString()}</span>
+          <span class="row-xp-label">XP</span>
+        </div>
+        <div></div>
+      </div>
+    `;
+  }
+}
+customElements.define('catechumen-league', CatechumenLeague);
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.screen;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === tab));
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.toggle('active', s.dataset.screen === target);
+    });
+  });
+});
+</script>
+
+</body>
+</html>
