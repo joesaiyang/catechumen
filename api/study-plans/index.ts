@@ -55,7 +55,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'DELETE') {
-    const { catechismId } = req.body as { catechismId?: string };
+    // Use query param — Vercel does not reliably parse bodies on DELETE requests
+    const catechismId = req.query.catechismId as string | undefined;
     if (!catechismId) return res.status(400).json({ error: 'Missing catechismId' });
 
     await sql`

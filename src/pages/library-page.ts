@@ -112,13 +112,16 @@ export class LibraryPage extends LitElement {
   }
 
   private async resetProgress(cat: Catechism) {
-    await apiFetch('/api/study-plans', {
+    const res = await apiFetch(`/api/study-plans?catechismId=${encodeURIComponent(cat.id)}`, {
       method: 'DELETE',
-      body: JSON.stringify({ catechismId: cat.id }),
     });
     this.showResetModal = false;
     this.resetTarget = null;
-    this._toast('Progress reset — all questions cleared.');
+    if (res.ok) {
+      this._toast('Progress reset — all questions cleared.');
+    } else {
+      this._toast('Reset failed — please try again.');
+    }
     await this.loadData();
   }
 
