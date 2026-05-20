@@ -14,6 +14,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const limit  = Math.min(parseInt(req.query.limit  as string ?? '5',  10), 20);
   const type   = (req.query.type   as string) ?? 'catechism';
   const source = (req.query.source as string) ?? 'wsc';
+  const mode   = (req.query.mode   as string) ?? 'normal'; // 'normal' | 'review'
+
+  // Review mode: return mastered questions shuffled randomly
+  if (mode === 'review' && type === 'catechism') {
+    const mastered = await sql`
+      SELECT
+        cq.id, cq.catechism_id, cq.number, cq.section, cq.section_name,
+        cq.question, cq.answer, cq.proof_texts,
+        up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered
+      FROM catechism_questions cq
+      JOIN user_progress up
+        ON up.content_id = cq.id
+       AND up.user_id = ${payload.userId}
+       AND up.content_type = 'catechism'
+      WHERE cq.catechism_id = ${source}
+        AND up.mastered = true
+      ORDER BY RANDOM()
+      LIMIT ${limit}
+    `;
+    // If no mastered yet, fall through to normal flow by returning answered questions
+    if (mastered.length === 0) {
+      const answered = await sql`
+        SELECT
+          cq.id, cq.catechism_id, cq.number, cq.section, cq.section_name,
+          cq.question, cq.answer, cq.proof_texts,
+          up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered
+        FROM catechism_questions cq
+        JOIN user_progress up
+          ON up.content_id = cq.id
+         AND up.user_id = ${payload.userId}
+         AND up.content_type = 'catechism'
+        WHERE cq.catechism_id = ${source}
+        ORDER BY RANDOM()
+        LIMIT ${limit}
+      `;
+      return res.status(200).json({ questions: answered, type, source, mode: 'review', reviewFallback: true });
+    }
+    return res.status(200).json({ questions: mastered, type, source, mode: 'review' });
+  }
 
   if (type === 'catechism') {
     // Due SRS cards first

@@ -115,9 +115,10 @@ function buildExercise(answer: string) {
 
 @customElement('catechumen-lesson')
 export class CatechumenLesson extends LitElement {
-  @property({ type: String, attribute: 'content-type'   }) contentType   = 'catechism';
-  @property({ type: String, attribute: 'content-source' }) contentSource = 'wsc';
-  @property({ type: String, attribute: 'quiz-mode'      }) quizMode      = 'fill_blank';
+  @property({ type: String,  attribute: 'content-type'   }) contentType   = 'catechism';
+  @property({ type: String,  attribute: 'content-source' }) contentSource = 'wsc';
+  @property({ type: String,  attribute: 'quiz-mode'      }) quizMode      = 'fill_blank';
+  @property({ type: Boolean, attribute: 'review-mode'    }) reviewMode    = false;
 
   @state() phase: Phase = 'loading';
   @state() questions: ApiQuestion[] = [];
@@ -137,14 +138,18 @@ export class CatechumenLesson extends LitElement {
 
   private _loadedSource = '';
   private _loadedType   = '';
+  private _loadedReview = false;
   private _loadSeq      = 0;  // guards against stale responses overwriting fresh ones
 
   // Reload whenever content source or type changes (including first render)
   updated(changed: Map<string, unknown>) {
-    if (changed.has('contentSource') || changed.has('contentType')) {
-      if (this.contentSource !== this._loadedSource || this.contentType !== this._loadedType) {
+    if (changed.has('contentSource') || changed.has('contentType') || changed.has('reviewMode')) {
+      if (this.contentSource !== this._loadedSource ||
+          this.contentType   !== this._loadedType   ||
+          this.reviewMode    !== this._loadedReview) {
         this._loadedSource = this.contentSource;
         this._loadedType   = this.contentType;
+        this._loadedReview = this.reviewMode;
         this.loadQuestions();
       }
     }
@@ -155,7 +160,8 @@ export class CatechumenLesson extends LitElement {
     this.phase = 'loading';
     this.qIdx = 0; this.sessionXp = 0; this.sessionCorrect = 0;
     try {
-      const res = await apiFetch(`/api/lessons?limit=5&type=${this.contentType}&source=${this.contentSource}`);
+      const reviewParam = this.reviewMode ? '&mode=review' : '';
+      const res = await apiFetch(`/api/lessons?limit=5&type=${this.contentType}&source=${this.contentSource}${reviewParam}`);
       if (seq !== this._loadSeq) return; // a newer request is in flight — discard this response
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
@@ -447,7 +453,7 @@ export class CatechumenLesson extends LitElement {
       <div class="lesson-frame">
         <div class="complete-card">
           <div class="complete-icon"><i class="ti ti-trophy"></i></div>
-          <div class="complete-title">Session complete!</div>
+          <div class="complete-title">${this.reviewMode ? 'Review complete!' : 'Session complete!'}</div>
           <div class="complete-sub">Great work — your progress has been saved.</div>
           <div class="complete-stats">
             <div class="cs-item">
@@ -485,7 +491,7 @@ export class CatechumenLesson extends LitElement {
         <div class="top">
           <div class="exit" @click=${this.loadQuestions}><i class="ti ti-x"></i></div>
           <div class="prog-wrap">
-            <div class="prog-label">Question ${this.qIdx + 1} of ${this.questions.length}</div>
+            <div class="prog-label">${this.reviewMode ? 'Review' : 'Question'} ${this.qIdx + 1} of ${this.questions.length}</div>
             <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
           </div>
           <div class="xp-mini"><i class="ti ti-diamond"></i>${this.xp} XP</div>

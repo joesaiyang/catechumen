@@ -5,7 +5,7 @@ import './pages/auth-page.js';
 
 type Screen = 'path' | 'library' | 'lesson' | 'parent' | 'league';
 
-interface LessonConfig { type: string; source: string; mode: string; }
+interface LessonConfig { type: string; source: string; mode: string; reviewMode?: boolean; }
 
 @customElement('catechumen-app')
 export class CatechumenApp extends LitElement {
@@ -143,6 +143,7 @@ export class CatechumenApp extends LitElement {
               content-type=${this.lessonConfig.type}
               content-source=${this.lessonConfig.source}
               quiz-mode=${this.lessonConfig.mode}
+              ?review-mode=${this.lessonConfig.reviewMode ?? false}
             ></catechumen-lesson>
           </div>
           <div class="screen ${this.screen === 'parent'  ? 'active' : ''}">

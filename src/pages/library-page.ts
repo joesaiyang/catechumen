@@ -92,6 +92,19 @@ export class LibraryPage extends LitElement {
     }));
   }
 
+  private startReview(cat: Catechism) {
+    const plan = this.getPlan(cat.id);
+    this.dispatchEvent(new CustomEvent('start-lesson', {
+      bubbles: true, composed: true,
+      detail: {
+        type: 'catechism',
+        source: cat.id,
+        mode: plan?.quiz_mode ?? 'fill_blank',
+        reviewMode: true,
+      },
+    }));
+  }
+
   private async startBibleQuiz(mode: QuizMode) {
     await apiFetch('/api/study-plans', {
       method: 'POST',
@@ -297,11 +310,14 @@ export class LibraryPage extends LitElement {
               ${cat.copyright_note ? html`
                 <div class="copyright-note"><i class="ti ti-info-circle"></i>${cat.copyright_note}</div>
               ` : ''}
-              <button class="start-btn ${plan ? '' : ''}" @click=${() => this.startOrConfigure(cat)}>
+              <button class="start-btn" @click=${() => this.startOrConfigure(cat)}>
                 <i class="ti ti-${plan ? 'player-play' : 'plus'}"></i>
                 ${plan ? 'Continue studying' : 'Start this catechism'}
               </button>
               ${plan ? html`
+                <button class="start-btn configure" @click=${() => this.startReview(cat)} style="margin-top:8px">
+                  <i class="ti ti-repeat"></i> Review answered questions
+                </button>
                 <button class="start-btn configure" @click=${() => this.startOrConfigure(cat)} style="margin-top:8px">
                   <i class="ti ti-settings"></i> Change mode
                 </button>
