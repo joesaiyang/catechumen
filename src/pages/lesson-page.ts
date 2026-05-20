@@ -57,29 +57,50 @@ function blankCount(answer: string): number {
   return 4;
 }
 
+// Short but theologically important words that should be preferred as blanks
+// even over longer generic words.
+const PRIORITY_BLANK_WORDS = new Set([
+  'free','sin','obey','pray','dead','holy','born','good','evil','love',
+  'soul','word','king','lamb','true','life','hope','faith',
+  'misery','mercy','grace','truth','light','glory','blood','wrath',
+]);
+
 function buildExercise(answer: string) {
   const tokens = answer.split(/(\s+)/);
   const count  = blankCount(answer);
 
   // Try progressively looser filters until we have enough candidates
-  let candidates = tokens
+  let rawCandidates = tokens
     .map((t, i) => ({ i, c: clean(t) }))
     .filter(({ c }) => c.length >= 4 && !STOP.has(c));
 
-  if (candidates.length < count) {
-    candidates = tokens
+  if (rawCandidates.length < count) {
+    rawCandidates = tokens
       .map((t, i) => ({ i, c: clean(t) }))
       .filter(({ c }) => c.length >= 3 && !STOP.has(c));
   }
 
-  // Last resort: any word with 2+ chars
-  if (candidates.length === 0) {
-    candidates = tokens
+  if (rawCandidates.length === 0) {
+    rawCandidates = tokens
       .map((t, i) => ({ i, c: clean(t) }))
       .filter(({ c }) => c.length >= 2);
   }
 
-  candidates.sort((a, b) => b.c.length - a.c.length);
+  // Deduplicate by word (keep first occurrence) so the same word isn't
+  // blanked twice, then sort: priority theological words score length+10.
+  const seenWords = new Set<string>();
+  const candidates = rawCandidates.filter(({ c }) => {
+    if (seenWords.has(c)) return false;
+    seenWords.add(c);
+    return true;
+  });
+
+  candidates.sort((a, b) => {
+    const aScore = PRIORITY_BLANK_WORDS.has(a.c) ? a.c.length + 10 : a.c.length;
+    const bScore = PRIORITY_BLANK_WORDS.has(b.c) ? b.c.length + 10 : b.c.length;
+    return bScore - aScore;
+  });
+
   const chosen = new Set(candidates.slice(0, count).map(x => x.i));
 
   const segments: Segment[] = [];
