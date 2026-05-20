@@ -62,7 +62,7 @@ export class AuthPage extends LitElement {
     .field { margin-bottom: 16px; }
     .field label { display: block; font-size: 12px; font-weight: 600; color: #4A554A; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
     .field input {
-      width: 100%; padding: 12px 14px;
+      width: 100%; padding: 12px 14px; box-sizing: border-box;
       background: #F5EFE0; border: 1.5px solid rgba(31,41,32,.15); border-radius: 10px;
       font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; color: #1F2920;
       transition: border-color .15s; outline: none;
