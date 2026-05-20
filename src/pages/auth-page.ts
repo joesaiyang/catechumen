@@ -154,7 +154,7 @@ export class AuthPage extends LitElement {
     e.preventDefault();
     this.error = ''; this.loading = true;
     try {
-      const res = await fetch(`/api/family/lookup?email=${encodeURIComponent(this.childParentEmail)}`);
+      const res = await fetch(`/api/family/children?email=${encodeURIComponent(this.childParentEmail)}`);
       const data = await res.json();
       if (!res.ok) { this.error = data.error ?? 'Family not found'; return; }
       this.childFamilyId = data.familyId;
