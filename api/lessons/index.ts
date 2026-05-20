@@ -22,7 +22,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       SELECT
         cq.id, cq.catechism_id, cq.number, cq.section, cq.section_name,
         cq.question, cq.answer, cq.proof_texts,
-        up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered
+        up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered,
+        (SELECT COUNT(*) FROM catechism_questions sq WHERE sq.catechism_id = cq.catechism_id AND sq.section = cq.section) AS section_total
       FROM catechism_questions cq
       JOIN user_progress up
         ON up.content_id = cq.id
@@ -39,7 +40,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         SELECT
           cq.id, cq.catechism_id, cq.number, cq.section, cq.section_name,
           cq.question, cq.answer, cq.proof_texts,
-          up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered
+          up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered,
+          (SELECT COUNT(*) FROM catechism_questions sq WHERE sq.catechism_id = cq.catechism_id AND sq.section = cq.section) AS section_total
         FROM catechism_questions cq
         JOIN user_progress up
           ON up.content_id = cq.id
@@ -61,7 +63,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         cq.id, cq.catechism_id, cq.number, cq.section, cq.section_name,
         cq.question, cq.answer, cq.proof_texts,
         up.repetitions, up.ease_factor, up.interval_days, up.due_at, up.mastered,
-        false AS is_new
+        false AS is_new,
+        (SELECT COUNT(*) FROM catechism_questions sq WHERE sq.catechism_id = cq.catechism_id AND sq.section = cq.section) AS section_total
       FROM catechism_questions cq
       JOIN user_progress up
         ON up.content_id = cq.id
@@ -83,7 +86,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           cq.question, cq.answer, cq.proof_texts,
           0 AS repetitions, 2.5 AS ease_factor, 1 AS interval_days,
           now() AS due_at, false AS mastered,
-          true AS is_new
+          true AS is_new,
+          (SELECT COUNT(*) FROM catechism_questions sq WHERE sq.catechism_id = cq.catechism_id AND sq.section = cq.section) AS section_total
         FROM catechism_questions cq
         WHERE cq.catechism_id = ${source}
           AND cq.id NOT IN (

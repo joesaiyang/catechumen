@@ -10,6 +10,7 @@ interface ApiQuestion {
   unit_name?: string;
   section?: string;
   section_name?: string;
+  section_total?: number;
   question: string;
   answer: string;
   proof_texts: { reference: string; text: string }[];
@@ -509,7 +510,7 @@ export class CatechumenLesson extends LitElement {
         <div class="top">
           <div class="exit" @click=${() => this.dispatchEvent(new CustomEvent("exit-lesson", { bubbles: true, composed: true }))}>←</div>
           <div class="prog-wrap">
-            <div class="prog-label">${this.questions[this.qIdx].number != null ? `Q${this.questions[this.qIdx].number}` : `Question ${this.qIdx + 1}`}</div>
+            <div class="prog-label">${(() => { const q = this.questions[this.qIdx]; return q.number != null ? `Question ${q.number}${q.section_total ? ` of ${q.section_total}` : ''}` : `Question ${this.qIdx + 1}`; })()}</div>
             <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
           </div>
           <div class="xp-mini">◆${this.xp} XP</div>
@@ -615,7 +616,7 @@ export class CatechumenLesson extends LitElement {
         <div class="top">
           <div class="exit" @click=${() => this.dispatchEvent(new CustomEvent("exit-lesson", { bubbles: true, composed: true }))}>←</div>
           <div class="prog-wrap">
-            <div class="prog-label">${this.reviewMode ? 'Review' : q.number != null ? `Q${q.number}` : `Question ${this.qIdx + 1}`}</div>
+            <div class="prog-label">${this.reviewMode ? 'Review' : q.number != null ? `Question ${q.number}${q.section_total ? ` of ${q.section_total}` : ''}` : `Question ${this.qIdx + 1}`}</div>
             <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
           </div>
           <div class="xp-mini">◆${this.xp} XP</div>
