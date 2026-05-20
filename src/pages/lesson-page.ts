@@ -137,6 +137,7 @@ export class CatechumenLesson extends LitElement {
 
   private _loadedSource = '';
   private _loadedType   = '';
+  private _loadSeq      = 0;  // guards against stale responses overwriting fresh ones
 
   // Reload whenever content source or type changes (including first render)
   updated(changed: Map<string, unknown>) {
@@ -150,16 +151,20 @@ export class CatechumenLesson extends LitElement {
   }
 
   async loadQuestions() {
+    const seq = ++this._loadSeq;
     this.phase = 'loading';
     this.qIdx = 0; this.sessionXp = 0; this.sessionCorrect = 0;
     try {
       const res = await apiFetch(`/api/lessons?limit=5&type=${this.contentType}&source=${this.contentSource}`);
+      if (seq !== this._loadSeq) return; // a newer request is in flight — discard this response
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
+      if (seq !== this._loadSeq) return;
       this.questions = data.questions ?? [];
       if (!this.questions.length) { this.phase = 'complete'; return; }
       this.setupQuestion(0);
     } catch {
+      if (seq !== this._loadSeq) return;
       this.phase = 'error';
       this.errorMsg = 'Could not load questions. Check your connection and try again.';
     }
