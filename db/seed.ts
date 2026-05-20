@@ -3,7 +3,6 @@ import postgres from 'postgres';
 import seedWsc        from './seeds/wsc.js';
 import seedWlc        from './seeds/wlc.js';
 import seedHeidel     from './seeds/heidelberg.js';
-import seedNcc        from './seeds/ncc.js';
 import seedBaptist    from './seeds/baptist1695.js';
 import seedVerses     from './seeds/memory-verses.js';
 import seedBibleQuiz  from './seeds/bible-quiz.js';
@@ -21,9 +20,6 @@ async function main() {
 
   console.log('📖 Heidelberg Catechism (129 questions)...');
   await seedHeidel(sql);
-
-  console.log('📖 New City Catechism (52 questions)...');
-  await seedNcc(sql);
 
   console.log('📖 Baptist Catechism 1695 (107 questions)...');
   await seedBaptist(sql);

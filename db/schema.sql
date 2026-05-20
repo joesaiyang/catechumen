@@ -226,7 +226,6 @@ INSERT INTO catechisms (id, name, abbreviation, description, year, tradition, qu
   ('wsc',        'Westminster Shorter Catechism',  'WSC',  'The foundational catechism of the Westminster Standards, covering essential Christian doctrine in 107 questions.',       1647, 'Reformed Presbyterian', 107),
   ('wlc',        'Westminster Larger Catechism',   'WLC',  'The more detailed companion to the WSC, with 196 questions covering doctrine and duty in greater depth.',               1647, 'Reformed Presbyterian', 196),
   ('heidelberg', 'Heidelberg Catechism',           'HC',   'A warm, personal catechism organized around comfort, misery, deliverance, and gratitude. 129 questions.',              1563, 'Reformed',              129),
-  ('ncc',        'New City Catechism',             'NCC',  '52 questions adapted from historic catechisms for today''s church. By Tim Keller & The Gospel Coalition.',             2012, 'Evangelical',            52),
   ('baptist1695','The Baptist Catechism (1695)',   'BC',   'Benjamin Keach''s catechism for Baptist churches, closely following the WSC with distinctions on baptism. 107 questions.', 1695, 'Reformed Baptist',  107)
 ON CONFLICT (id) DO NOTHING;
 
