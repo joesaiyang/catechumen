@@ -21,7 +21,7 @@ interface Blank   { word: string; filled: string | null; chipIdx: number | null;
 interface Chip    { word: string; used: boolean; }
 interface Segment { type: 'text' | 'blank'; text?: string; blankIdx?: number; }
 
-type Phase = 'loading' | 'error' | 'studying' | 'filling' | 'correct' | 'incorrect' | 'complete' | 'out_of_hearts';
+type Phase = 'loading' | 'error' | 'studying' | 'filling' | 'correct' | 'incorrect' | 'complete' | 'out_of_hearts' | 'caught_up';
 
 const STOP = new Set([
   'a','an','the','and','or','but','if','in','on','at','to','for','of','with','by',
@@ -206,18 +206,19 @@ export class CatechumenLesson extends LitElement {
   }
 
   async loadQuestions() {
+    if (this.hearts === 0) { this.phase = 'out_of_hearts'; return; }
     const seq = ++this._loadSeq;
     this.phase = 'loading';
     this.qIdx = 0; this.sessionXp = 0; this.sessionCorrect = 0;
     try {
       const reviewParam = this.reviewMode ? '&mode=review' : '';
       const res = await apiFetch(`/api/lessons?limit=5&type=${this.contentType}&source=${this.contentSource}${reviewParam}`);
-      if (seq !== this._loadSeq) return; // a newer request is in flight — discard this response
+      if (seq !== this._loadSeq) return;
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
       if (seq !== this._loadSeq) return;
       this.questions = data.questions ?? [];
-      if (!this.questions.length) { this.phase = 'complete'; return; }
+      if (!this.questions.length) { this.phase = 'caught_up'; return; }
       this.setupQuestion(0);
     } catch {
       if (seq !== this._loadSeq) return;
@@ -631,23 +632,59 @@ export class CatechumenLesson extends LitElement {
     `;
   }
 
+  private async purchaseHearts() {
+    const res = await apiFetch('/api/hearts', { method: 'POST' });
+    if (!res.ok) {
+      const data = await res.json();
+      alert(data.error ?? 'Purchase failed');
+      return;
+    }
+    const data = await res.json();
+    this.hearts = data.hearts;
+    this.heartsRefillAt = null;
+    this.xp = data.xp;
+    auth.patch({ hearts: data.hearts, xp: data.xp, hearts_refill_at: null });
+    this.loadQuestions();
+  }
+
   private renderOutOfHearts(): TemplateResult {
+    const label    = this.nextHeartLabel;
+    const canBuy   = (auth.user?.xp ?? 0) >= 100;
+    const showStats = this.sessionCorrect > 0 || this.sessionXp > 0;
     return html`
       <div class="lesson-frame">
         <div class="complete-card">
           <div class="complete-icon" style="color:#9B2C2C">♥</div>
           <div class="complete-title">Out of hearts</div>
-          <div class="complete-sub">You've used all your hearts. Come back later to keep going.</div>
-          <div class="complete-stats">
-            <div class="cs-item">
-              <div class="cs-num">+${this.sessionXp}</div>
-              <div class="cs-lbl">XP earned</div>
-            </div>
-            <div class="cs-item">
-              <div class="cs-num">${this.sessionCorrect}</div>
-              <div class="cs-lbl">Correct</div>
-            </div>
+          <div class="complete-sub">
+            ${label ? html`Next heart in <strong>${label}</strong> — or spend XP to continue now.` : 'Come back later to keep going.'}
           </div>
+          ${showStats ? html`
+            <div class="complete-stats">
+              <div class="cs-item"><div class="cs-num">+${this.sessionXp}</div><div class="cs-lbl">XP earned</div></div>
+              <div class="cs-item"><div class="cs-num">${this.sessionCorrect}</div><div class="cs-lbl">Correct</div></div>
+            </div>` : ''}
+          ${canBuy ? html`
+            <button class="check-btn continue" style="max-width:300px;margin:0 auto 12px;display:block"
+              @click=${this.purchaseHearts}>
+              Spend 100 XP → Refill hearts
+            </button>` : ''}
+          <button class="check-btn" style="max-width:300px;margin:0 auto;display:block;background:transparent;color:#4A554A;border:1px solid rgba(31,41,32,.2);border-bottom-width:1px"
+            @click=${() => this.dispatchEvent(new CustomEvent('exit-lesson', { bubbles: true, composed: true }))}>
+            ← Back to home
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  private renderCaughtUp(): TemplateResult {
+    return html`
+      <div class="lesson-frame">
+        <div class="complete-card">
+          <div class="complete-icon">★</div>
+          <div class="complete-title">All caught up!</div>
+          <div class="complete-sub">No questions are due right now. Come back tomorrow for your next review session.</div>
           <button class="check-btn continue" style="max-width:280px;margin:0 auto;display:block"
             @click=${() => this.dispatchEvent(new CustomEvent('exit-lesson', { bubbles: true, composed: true }))}>
             ← Back to home
@@ -741,6 +778,7 @@ export class CatechumenLesson extends LitElement {
     if (this.phase === 'loading')       return this.renderLoading();
     if (this.phase === 'error')         return this.renderError();
     if (this.phase === 'complete')      return this.renderComplete();
+    if (this.phase === 'caught_up')     return this.renderCaughtUp();
     if (this.phase === 'out_of_hearts') return this.renderOutOfHearts();
     if (this.phase === 'studying')      return this.renderStudy();
     return this.renderLesson();
