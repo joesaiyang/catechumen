@@ -1,6 +1,12 @@
 import { LitElement, html, css, TemplateResult } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
+import { apiFetch } from '../store/auth.js';
 import '../components/stats-bar.js';
+
+interface StudyPlan {
+  id: string; plan_type: string; catechism_id?: string;
+  catechism_name?: string; abbreviation?: string; quiz_mode: string; question_count?: number;
+}
 
 const SVG_W = 360;
 const SVG_H = 810;
@@ -24,6 +30,29 @@ export class CatechumenPath extends LitElement {
   @property({ type: Number }) xp = 0;
   @property({ type: Number }) hearts = 5;
   @property({ type: Number }) gems = 0;
+
+  @state() plans: StudyPlan[] = [];
+  @state() selectedId = '';
+  @state() plansLoading = true;
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.loadPlans();
+  }
+
+  async loadPlans() {
+    const res = await apiFetch('/api/study-plans');
+    if (res.ok) {
+      const data = await res.json();
+      this.plans = (data.plans as StudyPlan[]).filter(p => p.plan_type === 'catechism' && p.catechism_id);
+      if (this.plans.length > 0 && !this.selectedId) this.selectedId = this.plans[0].catechism_id!;
+    }
+    this.plansLoading = false;
+  }
+
+  private get selected(): StudyPlan | undefined {
+    return this.plans.find(p => p.catechism_id === this.selectedId);
+  }
 
   static styles = css`
     .layout { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
@@ -56,6 +85,17 @@ export class CatechumenPath extends LitElement {
     }
     .quest button:hover { background: #FFFCF5; }
 
+    /* Catechism selector tabs */
+    .path-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+    .path-tab {
+      padding: 8px 16px; font-size: 13px; font-weight: 600; color: #4A554A;
+      border-radius: 999px; cursor: pointer; transition: all .15s;
+      border: 1.5px solid rgba(31,41,32,.15); background: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .path-tab:hover  { color: #1B3024; border-color: rgba(31,41,32,.35); }
+    .path-tab.active { background: #2D4A3A; color: #F5EFE0; border-color: #2D4A3A; }
+
     .unit-header {
       display: flex; align-items: baseline; gap: 16px;
       margin-bottom: 24px; padding-bottom: 14px;
@@ -64,6 +104,13 @@ export class CatechumenPath extends LitElement {
     .unit-number { font-family: 'Fraunces', serif; font-style: italic; font-size: 14px; color: #B5481E; letter-spacing: .02em; }
     .unit-title  { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500; color: #1B3024; letter-spacing: -.01em; }
     .unit-status { margin-left: auto; font-size: 13px; color: #7A8278; font-weight: 500; }
+
+    .empty-path {
+      text-align: center; padding: 60px 24px; color: #7A8278;
+      border: 1.5px dashed rgba(31,41,32,.15); border-radius: 16px;
+    }
+    .empty-path p { font-size: 15px; margin-bottom: 16px; }
+    .empty-path strong { color: #1B3024; }
 
     /* SVG path track */
     .path-wrap  { position: relative; max-width: 360px; margin: 0 auto; padding: 12px 0; user-select: none; }
@@ -218,18 +265,36 @@ export class CatechumenPath extends LitElement {
 
       <div class="layout">
         <div>
-          <div class="unit-header">
-            <div>
-              <div class="unit-number">Unit I · Questions 1–12</div>
-              <div class="unit-title">God as Creator</div>
+          ${this.plans.length > 1 ? html`
+            <div class="path-selector">
+              ${this.plans.map(p => html`
+                <button class="path-tab ${this.selectedId === p.catechism_id ? 'active' : ''}"
+                  @click=${() => this.selectedId = p.catechism_id!}>
+                  ${p.abbreviation}
+                </button>
+              `)}
             </div>
-            <div class="unit-status">8 of 12 mastered</div>
-          </div>
+          ` : ''}
 
-          <div class="path-wrap">
-            ${this.renderTrack()}
-            ${this.renderNodes()}
-          </div>
+          ${!this.plansLoading && this.plans.length === 0 ? html`
+            <div class="empty-path">
+              <p>You haven't enrolled in any catechism yet.</p>
+              <p>Head to the <strong>Library</strong> to choose one and start learning.</p>
+            </div>
+          ` : html`
+            <div class="unit-header">
+              <div>
+                <div class="unit-number">Unit I · Questions 1–12</div>
+                <div class="unit-title">${this.selected?.catechism_name ?? '…'}</div>
+              </div>
+              <div class="unit-status">8 of 12 mastered</div>
+            </div>
+
+            <div class="path-wrap">
+              ${this.renderTrack()}
+              ${this.renderNodes()}
+            </div>
+          `}
         </div>
 
         <aside class="side">
