@@ -484,8 +484,6 @@ export class CatechumenLesson extends LitElement {
             <span class="pill"><i class="ti ti-bookmark"></i> ${q.number != null ? `Q${q.number}` : 'Question'}</span>
             <span class="pill unit-pill">${q.section_name ?? q.unit_name ?? ''}</span>
           </div>
-          <div class="prompt">Fill in the blanks</div>
-          <h2 class="instruction">Complete the answer using the words below.</h2>
           <div class="qa-label">Question</div>
           <p class="question">${q.question}</p>
           <div class="qa-label">Answer</div>
