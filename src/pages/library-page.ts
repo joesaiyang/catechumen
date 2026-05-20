@@ -74,10 +74,13 @@ export class LibraryPage extends LitElement {
     return this.plans.find(p => p.catechism_id === catId);
   }
 
-  private async startOrConfigure(cat: Catechism) {
+  @state() private _changeMode = false;
+
+  private async startOrConfigure(cat: Catechism, changeMode = false) {
     const existing = this.getPlan(cat.id);
     this.modalCatechism = cat;
     this.selectedMode   = (existing?.quiz_mode as QuizMode) ?? 'fill_blank';
+    this._changeMode    = changeMode;
     this.showModeModal  = true;
   }
 
@@ -363,7 +366,7 @@ export class LibraryPage extends LitElement {
           </div>
           <div class="modal-actions">
             <button class="btn-cancel" @click=${() => this.showModeModal = false}>Cancel</button>
-            <button class="btn-confirm" @click=${this.confirmStart}>Start studying →</button>
+            <button class="btn-confirm" @click=${this.confirmStart}>${this._changeMode ? 'Apply' : 'Start studying →'}</button>
           </div>
         </div>
       </div>
@@ -418,7 +421,7 @@ export class LibraryPage extends LitElement {
                           <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.startReview(cat); }}>
                             <i class="ti ti-repeat"></i> Review answered questions
                           </div>
-                          <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.startOrConfigure(cat); }}>
+                          <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.startOrConfigure(cat, true); }}>
                             <i class="ti ti-settings"></i> Change mode
                           </div>
                           <div class="dropdown-divider"></div>
