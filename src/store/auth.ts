@@ -51,6 +51,13 @@ export const auth = {
     _listeners.add(fn);
     return () => _listeners.delete(fn);
   },
+
+  patch(updates: Partial<User>) {
+    if (!_state.user) return;
+    _state = { ..._state, user: { ..._state.user, ...updates } };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(_state));
+    _listeners.forEach(fn => fn());
+  },
 };
 
 export async function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {

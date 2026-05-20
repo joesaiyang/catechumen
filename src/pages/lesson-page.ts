@@ -1,31 +1,205 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { auth, apiFetch } from '../store/auth.js';
 
-interface Blank { word: string; filled: string | null; chipIdx: number | null; }
-interface Chip  { word: string; used: boolean; }
-type Phase = 'filling' | 'correct' | 'incorrect';
+interface ApiQuestion {
+  number: number;
+  unit: number;
+  unit_name: string;
+  question: string;
+  answer: string;
+  proof_texts: { reference: string; text: string }[];
+}
+
+interface Blank   { word: string; filled: string | null; chipIdx: number | null; }
+interface Chip    { word: string; used: boolean; }
+interface Segment { type: 'text' | 'blank'; text?: string; blankIdx?: number; }
+
+type Phase = 'loading' | 'error' | 'filling' | 'correct' | 'incorrect' | 'complete';
+
+const STOP = new Set([
+  'a','an','the','and','or','but','if','in','on','at','to','for','of','with','by',
+  'from','as','is','was','are','were','be','been','being','have','has','had','do',
+  'does','did','will','would','could','should','may','might','must','shall','that',
+  'this','these','those','it','its','he','his','she','her','they','their','we','our',
+  'you','your','him','them','us','not','no','nor','so','yet','all','each','every',
+  'more','most','other','some','such','only','same','than','then','when','where',
+  'while','who','which','what','how','there','both','either','neither','any','also',
+  'into','upon','unto','hath','doth','thou','thee','thine','thy','ye','god','christ',
+  'lord','jesus','man','men','one','two','three','four','five','six','seven',
+]);
+
+const DISTRACTORS = [
+  'glorify','justify','sanctify','redeem','reconcile','atone','believe','repent',
+  'obey','worship','praise','honor','enjoy','eternal','temporal','righteous','divine',
+  'infinite','covenant','promise','salvation','redemption','justification',
+  'sanctification','adoption','resurrection','ascension','incarnation','atonement',
+  'sacrament','prayer','preaching','mediator','sovereign','prophet','priest',
+  'faithful','perfect','sinless','merciful','gracious','immutable','foreordained',
+  'everlasting','unchangeable','appointed','preserve','govern','transgress','confess',
+  'effectual','spiritual','temporal','humiliation','exaltation','intercession',
+  'imputed','ordained','appointed','revealed','manifested','declared','proclaimed',
+];
+
+function clean(w: string): string {
+  return w.replace(/[^a-zA-Z]/g, '').toLowerCase();
+}
+
+function buildExercise(answer: string) {
+  const tokens = answer.split(/(\s+)/);
+
+  const candidates = tokens
+    .map((t, i) => ({ i, c: clean(t) }))
+    .filter(({ c }) => c.length >= 5 && !STOP.has(c));
+
+  candidates.sort((a, b) => b.c.length - a.c.length);
+  const chosen = new Set(candidates.slice(0, 2).map(x => x.i));
+
+  const segments: Segment[] = [];
+  const blanks: Blank[] = [];
+  let buf = '';
+
+  tokens.forEach((token, i) => {
+    if (chosen.has(i)) {
+      if (buf) { segments.push({ type: 'text', text: buf }); buf = ''; }
+      const idx = blanks.length;
+      segments.push({ type: 'blank', blankIdx: idx });
+      blanks.push({ word: clean(token), filled: null, chipIdx: null });
+    } else {
+      buf += token;
+    }
+  });
+  if (buf) segments.push({ type: 'text', text: buf });
+
+  const chosenWords = blanks.map(b => b.word);
+  const chosenSet   = new Set(chosenWords);
+  const ansLower    = answer.toLowerCase();
+  const distractors = DISTRACTORS
+    .filter(w => !chosenSet.has(w) && !ansLower.includes(w))
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3);
+
+  const bank: Chip[] = [...chosenWords, ...distractors]
+    .sort(() => Math.random() - 0.5)
+    .map(w => ({ word: w, used: false }));
+
+  return { segments, blanks, bank };
+}
 
 @customElement('catechumen-lesson')
 export class CatechumenLesson extends LitElement {
-  @state() blanks: Blank[] = [
-    { word: 'glorify', filled: null, chipIdx: null },
-    { word: 'enjoy',   filled: null, chipIdx: null },
-  ];
-  @state() bank: Chip[] = [
-    { word: 'worship', used: false },
-    { word: 'glorify', used: false },
-    { word: 'serve',   used: false },
-    { word: 'enjoy',   used: false },
-    { word: 'praise',  used: false },
-  ];
+  @state() phase: Phase = 'loading';
+  @state() questions: ApiQuestion[] = [];
+  @state() qIdx = 0;
+  @state() blanks: Blank[] = [];
+  @state() bank: Chip[] = [];
+  @state() segments: Segment[] = [];
   @state() currentIdx = 0;
-  @state() phase: Phase = 'filling';
-  @state() hearts = 4;
-  @state() xp = 340;
+  @state() hearts = auth.user?.hearts ?? 5;
+  @state() xp = auth.user?.xp ?? 0;
+  @state() sessionXp = 0;
+  @state() sessionCorrect = 0;
+  @state() startTime = 0;
+  @state() errorMsg = '';
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.loadQuestions();
+  }
+
+  async loadQuestions() {
+    this.phase = 'loading';
+    this.qIdx = 0; this.sessionXp = 0; this.sessionCorrect = 0;
+    try {
+      const res = await apiFetch('/api/lessons?limit=5');
+      if (!res.ok) throw new Error('Failed');
+      const data = await res.json();
+      this.questions = data.questions ?? [];
+      if (!this.questions.length) { this.phase = 'complete'; return; }
+      this.setupQuestion(0);
+    } catch {
+      this.phase = 'error';
+      this.errorMsg = 'Could not load questions. Check your connection and try again.';
+    }
+  }
+
+  setupQuestion(idx: number) {
+    const { segments, blanks, bank } = buildExercise(this.questions[idx].answer);
+    this.segments = segments;
+    this.blanks   = blanks;
+    this.bank     = bank;
+    this.currentIdx = 0;
+    this.phase    = 'filling';
+    this.startTime = Date.now();
+  }
+
+  pickChip(idx: number) {
+    if (this.phase !== 'filling') return;
+    const chip = this.bank[idx];
+    if (chip.used || this.currentIdx >= this.blanks.length) return;
+    this.blanks[this.currentIdx].filled   = chip.word;
+    this.blanks[this.currentIdx].chipIdx  = idx;
+    this.bank[idx].used = true;
+    this.currentIdx++;
+    this.requestUpdate();
+  }
+
+  clearBlank(idx: number) {
+    if (this.phase !== 'filling') return;
+    const b = this.blanks[idx];
+    if (!b.filled || b.chipIdx === null) return;
+    this.bank[b.chipIdx].used = false;
+    b.filled = null; b.chipIdx = null;
+    this.currentIdx = this.blanks.findIndex(x => !x.filled);
+    if (this.currentIdx === -1) this.currentIdx = this.blanks.length;
+    this.requestUpdate();
+  }
+
+  async check() {
+    const correct = this.blanks.every(b => b.filled === b.word);
+    const timeMs  = Date.now() - this.startTime;
+    const q       = this.questions[this.qIdx];
+    this.phase    = correct ? 'correct' : 'incorrect';
+
+    try {
+      const res = await apiFetch('/api/lessons/answer', {
+        method: 'POST',
+        body: JSON.stringify({ questionId: q.number, correct, timeMs, mode: 'fill_blank' }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (correct) {
+          this.xp += data.xpEarned;
+          this.sessionXp += data.xpEarned;
+          this.sessionCorrect++;
+          auth.patch({ xp: this.xp });
+        } else {
+          this.hearts = Math.max(0, this.hearts - 1);
+          auth.patch({ hearts: this.hearts });
+        }
+      }
+    } catch { /* best-effort */ }
+  }
+
+  advance() {
+    const next = this.qIdx + 1;
+    if (next >= this.questions.length) { this.phase = 'complete'; }
+    else { this.qIdx = next; this.setupQuestion(next); }
+  }
+
+  tryAgain() {
+    this.blanks.forEach(b => { b.filled = null; b.chipIdx = null; });
+    this.bank.forEach(c => c.used = false);
+    this.currentIdx = 0;
+    this.phase = 'filling';
+    this.startTime = Date.now();
+    this.requestUpdate();
+  }
 
   static styles = css`
     .lesson-frame { max-width: 720px; margin: 0 auto; }
 
+    /* ── top bar ── */
     .top { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
     .exit {
       width: 36px; height: 36px; border-radius: 10px;
@@ -33,11 +207,15 @@ export class CatechumenLesson extends LitElement {
       background: rgba(31,41,32,.05); color: #4A554A; font-size: 18px; cursor: pointer;
     }
     .exit:hover { background: rgba(31,41,32,.1); }
-    .prog-bar { flex: 1; height: 14px; background: rgba(31,41,32,.07); border-radius: 7px; overflow: hidden; }
-    .prog-fill { height: 100%; background: linear-gradient(90deg, #5A7A65, #2D4A3A); border-radius: 7px; width: 40%; transition: width .5s; }
+    .prog-wrap { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .prog-label { font-size: 11px; font-weight: 600; color: #7A8278; letter-spacing: .06em; text-transform: uppercase; }
+    .prog-bar  { height: 14px; background: rgba(31,41,32,.07); border-radius: 7px; overflow: hidden; }
+    .prog-fill { height: 100%; background: linear-gradient(90deg, #5A7A65, #2D4A3A); border-radius: 7px; transition: width .5s; }
     .hearts-mini { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #E8D0CE; color: #9B2C2C; border-radius: 999px; font-weight: 700; font-size: 14px; }
     .hearts-mini i { font-size: 18px; }
+    .xp-mini { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #E1EBE5; color: #1B3024; border-radius: 999px; font-weight: 700; font-size: 14px; }
 
+    /* ── lesson card ── */
     .lesson-card {
       background: #FFFCF5; border: 1px solid rgba(31,41,32,.08); border-radius: 20px;
       padding: 32px 36px; box-shadow: 0 2px 4px rgba(31,41,32,.08), 0 4px 16px rgba(31,41,32,.06);
@@ -47,118 +225,101 @@ export class CatechumenLesson extends LitElement {
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
       background: linear-gradient(90deg, #2D4A3A, #B5481E);
     }
-    .meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: #E1EBE5; color: #1B3024; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: .03em; }
-    .hint-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #F0E1B8; color: #8A6620; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; }
-    .hint-btn:hover { background: #E8D49A; }
+    .meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: #E1EBE5; color: #1B3024; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .unit-pill { background: #F0E1B8; color: #8A6620; }
+    .prompt     { font-family: 'Fraunces', serif; font-style: italic; font-size: 14px; color: #B5481E; margin-bottom: 6px; }
+    .instruction { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; color: #1B3024; margin-bottom: 24px; }
+    .qa-label   { font-size: 11px; font-weight: 700; color: #7A8278; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+    .question   { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500; color: #1F2920; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed rgba(31,41,32,.15); }
+    .answer     { font-family: 'Fraunces', serif; font-size: 22px; line-height: 2.1; color: #1F2920; margin-bottom: 28px; }
 
-    .prompt { font-family: 'Fraunces', serif; font-style: italic; font-size: 14px; color: #B5481E; letter-spacing: .02em; margin-bottom: 8px; }
-    .instruction { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 500; color: #1B3024; margin-bottom: 28px; letter-spacing: -.01em; }
-    .qa-label { font-size: 11px; font-weight: 700; color: #7A8278; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
-    .question { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; color: #1F2920; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px dashed rgba(31,41,32,.15); }
-    .answer { font-family: 'Fraunces', serif; font-size: 24px; line-height: 2; color: #1F2920; margin-bottom: 32px; }
-
+    /* ── blanks ── */
     .blank {
-      display: inline-block; min-width: 140px; padding: 4px 16px; margin: 0 4px;
+      display: inline-block; min-width: 130px; padding: 4px 14px; margin: 0 3px;
       background: #F5EFE0; border: 2px dashed rgba(45,74,58,.35); border-radius: 10px;
       text-align: center; font-style: italic; color: rgba(31,41,32,.3);
       cursor: pointer; transition: all .2s; vertical-align: middle;
     }
-    .blank.filled { background: #E1EBE5; border: 2px solid #2D4A3A; color: #1B3024; font-style: normal; font-weight: 600; }
-    .blank.correct { background: #E1EBE5; border: 2px solid #2D4A3A; color: #1B3024; font-style: normal; font-weight: 600; animation: pop .4s ease; }
+    .blank.filled    { background: #E1EBE5; border: 2px solid #2D4A3A; color: #1B3024; font-style: normal; font-weight: 600; }
+    .blank.correct   { background: #E1EBE5; border: 2px solid #2D4A3A; color: #1B3024; font-style: normal; font-weight: 600; animation: pop .4s ease; }
     .blank.incorrect { background: #E8D0CE; border: 2px solid #9B2C2C; color: #9B2C2C; font-style: normal; font-weight: 600; animation: shake .4s ease; }
     @keyframes pop   { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
-    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
 
-    .bank-label { font-size: 12px; font-weight: 600; color: #7A8278; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
-    .bank { display: flex; flex-wrap: wrap; gap: 10px; }
+    /* ── word bank ── */
+    .bank-label { font-size: 12px; font-weight: 600; color: #7A8278; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+    .bank       { display: flex; flex-wrap: wrap; gap: 10px; }
     .chip {
-      padding: 12px 22px; background: #FFFCF5;
+      padding: 11px 20px; background: #FFFCF5;
       border: 1px solid rgba(31,41,32,.15); border-bottom: 3px solid rgba(31,41,32,.2); border-radius: 12px;
-      font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; color: #1F2920;
+      font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; color: #1F2920;
       cursor: pointer; transition: all .1s; user-select: none;
     }
     .chip:hover:not(.used) { border-color: #2D4A3A; background: #F5EFE0; transform: translateY(-1px); }
     .chip:active:not(.used) { transform: translateY(1px); border-bottom-width: 1px; }
     .chip.used { opacity: .25; cursor: not-allowed; border-bottom-width: 1px; }
 
+    /* ── feedback ── */
     .feedback {
-      border-radius: 16px; padding: 20px 24px; margin-bottom: 16px;
+      border-radius: 16px; padding: 18px 22px; margin-bottom: 16px;
       display: flex; align-items: center; gap: 14px; animation: slideUp .3s ease;
     }
-    @keyframes slideUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
     .feedback.success { background: #E1EBE5; border: 1px solid #5A7A65; }
     .feedback.error   { background: #E8D0CE; border: 1px solid #C5878A; }
-    .feedback-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-    .feedback.success .feedback-icon { background: #2D4A3A; color: #F0E1B8; }
-    .feedback.error   .feedback-icon { background: #9B2C2C; color: #F5EFE0; }
-    .feedback-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; margin-bottom: 2px; }
-    .feedback.success .feedback-title { color: #1B3024; }
-    .feedback.error   .feedback-title { color: #7E1F1F; }
-    .feedback-sub { font-size: 13px; color: #4A554A; }
+    .fb-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .feedback.success .fb-icon { background: #2D4A3A; color: #F0E1B8; }
+    .feedback.error   .fb-icon { background: #9B2C2C; color: #F5EFE0; }
+    .fb-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; margin-bottom: 2px; }
+    .feedback.success .fb-title { color: #1B3024; }
+    .feedback.error   .fb-title { color: #7E1F1F; }
+    .fb-sub { font-size: 13px; color: #4A554A; }
 
+    /* ── actions ── */
     .actions { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .skip { padding: 14px 22px; background: transparent; color: #7A8278; font-weight: 600; font-size: 14px; cursor: pointer; border-radius: 12px; }
+    .skip { padding: 14px 20px; color: #7A8278; font-weight: 600; font-size: 14px; cursor: pointer; border-radius: 12px; }
     .skip:hover { color: #1F2920; }
     .check-btn {
-      flex: 1; padding: 18px 28px; background: #2D4A3A; color: #F5EFE0;
+      flex: 1; padding: 16px 24px; background: #2D4A3A; color: #F5EFE0;
       border: none; border-bottom: 4px solid #1B3024; border-radius: 14px;
-      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 16px;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px;
       letter-spacing: .04em; text-transform: uppercase; cursor: pointer; transition: all .1s;
     }
     .check-btn:hover:not(:disabled) { background: #1B3024; }
     .check-btn:active:not(:disabled) { transform: translateY(2px); border-bottom-width: 2px; }
-    .check-btn:disabled { background: rgba(31,41,32,.08); color: rgba(31,41,32,.3); border-bottom-color: rgba(31,41,32,.1); cursor: not-allowed; }
+    .check-btn:disabled { background: rgba(31,41,32,.08); color: rgba(31,41,32,.3); border-bottom-color: transparent; cursor: not-allowed; }
     .check-btn.continue  { background: #B5481E; border-bottom-color: #7E2F11; }
     .check-btn.continue:hover { background: #7E2F11; }
     .check-btn.try-again { background: #9B2C2C; border-bottom-color: #6B1F1F; }
 
-    details { padding: 14px 18px; background: #FFFCF5; border: 1px solid rgba(31,41,32,.08); border-radius: 12px; font-size: 14px; }
+    /* ── proof text ── */
+    details { padding: 12px 16px; background: #FFFCF5; border: 1px solid rgba(31,41,32,.08); border-radius: 12px; font-size: 14px; }
     summary { cursor: pointer; color: #4A554A; font-weight: 500; list-style: none; display: flex; align-items: center; gap: 8px; }
     summary::-webkit-details-marker { display: none; }
     summary::before { content: '+'; font-weight: 600; color: #B5481E; }
     details[open] summary::before { content: '−'; }
-    details p { margin-top: 12px; font-family: 'Fraunces', serif; font-style: italic; color: #1F2920; line-height: 1.6; }
+    details p { margin-top: 10px; font-family: 'Fraunces', serif; font-style: italic; color: #1F2920; line-height: 1.6; }
+
+    /* ── loading / error / complete ── */
+    .center { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; gap: 16px; }
+    .spinner { width: 40px; height: 40px; border: 3px solid rgba(45,74,58,.15); border-top-color: #2D4A3A; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .complete-card {
+      background: #FFFCF5; border: 1px solid rgba(31,41,32,.08); border-radius: 20px;
+      padding: 48px 36px; text-align: center; box-shadow: 0 2px 4px rgba(31,41,32,.08), 0 4px 16px rgba(31,41,32,.06);
+    }
+    .complete-icon { font-size: 48px; color: #C89B3C; margin-bottom: 16px; }
+    .complete-title { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 500; color: #1B3024; margin-bottom: 8px; }
+    .complete-sub   { font-size: 15px; color: #4A554A; margin-bottom: 32px; }
+    .complete-stats { display: flex; justify-content: center; gap: 32px; margin-bottom: 36px; }
+    .cs-item { text-align: center; }
+    .cs-num  { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 600; color: #1B3024; line-height: 1; }
+    .cs-lbl  { font-size: 12px; color: #7A8278; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; margin-top: 4px; }
+    .error-msg { font-size: 15px; color: #7E1F1F; }
   `;
 
-  pickChip(idx: number) {
-    if (this.phase !== 'filling') return;
-    const chip = this.bank[idx];
-    if (chip.used || this.currentIdx >= this.blanks.length) return;
-    this.blanks[this.currentIdx].filled = chip.word;
-    this.blanks[this.currentIdx].chipIdx = idx;
-    this.bank[idx].used = true;
-    this.currentIdx++;
-    this.requestUpdate();
-  }
-
-  clearBlank(idx: number) {
-    if (this.phase !== 'filling') return;
-    const blank = this.blanks[idx];
-    if (!blank.filled || blank.chipIdx === null) return;
-    this.bank[blank.chipIdx].used = false;
-    blank.filled = null; blank.chipIdx = null;
-    this.currentIdx = this.blanks.findIndex(b => !b.filled);
-    if (this.currentIdx === -1) this.currentIdx = this.blanks.length;
-    this.requestUpdate();
-  }
-
-  check() {
-    const allCorrect = this.blanks.every(b => b.filled === b.word);
-    this.phase = allCorrect ? 'correct' : 'incorrect';
-    if (allCorrect) this.xp += 15;
-    else this.hearts = Math.max(0, this.hearts - 1);
-  }
-
-  reset() {
-    this.blanks.forEach(b => { b.filled = null; b.chipIdx = null; });
-    this.bank.forEach(c => c.used = false);
-    this.currentIdx = 0;
-    this.phase = 'filling';
-    this.requestUpdate();
-  }
-
-  renderBlank(idx: number) {
+  private renderBlank(idx: number): TemplateResult {
     const b = this.blanks[idx];
     const cls = this.phase === 'correct'   ? 'correct'
               : this.phase === 'incorrect' ? (b.filled === b.word ? 'correct' : 'incorrect')
@@ -166,68 +327,137 @@ export class CatechumenLesson extends LitElement {
     return html`<span class="blank ${cls}" @click=${() => this.clearBlank(idx)}>${b.filled || '______'}</span>`;
   }
 
-  render() {
+  private renderAnswer(): TemplateResult {
+    return html`${this.segments.map(s =>
+      s.type === 'text'
+        ? html`${s.text}`
+        : this.renderBlank(s.blankIdx!)
+    )}`;
+  }
+
+  private renderLoading(): TemplateResult {
+    return html`<div class="center"><div class="spinner"></div><div style="color:#7A8278;font-size:14px">Loading your questions…</div></div>`;
+  }
+
+  private renderError(): TemplateResult {
+    return html`
+      <div class="center">
+        <i class="ti ti-alert-circle" style="font-size:40px;color:#9B2C2C"></i>
+        <div class="error-msg">${this.errorMsg}</div>
+        <button class="check-btn" style="flex:unset;padding:14px 28px" @click=${this.loadQuestions}>Try again</button>
+      </div>
+    `;
+  }
+
+  private renderComplete(): TemplateResult {
+    return html`
+      <div class="lesson-frame">
+        <div class="complete-card">
+          <div class="complete-icon"><i class="ti ti-trophy"></i></div>
+          <div class="complete-title">Session complete!</div>
+          <div class="complete-sub">Great work — your progress has been saved.</div>
+          <div class="complete-stats">
+            <div class="cs-item">
+              <div class="cs-num">+${this.sessionXp}</div>
+              <div class="cs-lbl">XP earned</div>
+            </div>
+            <div class="cs-item">
+              <div class="cs-num">${this.sessionCorrect}</div>
+              <div class="cs-lbl">Correct</div>
+            </div>
+            <div class="cs-item">
+              <div class="cs-num">${this.questions.length}</div>
+              <div class="cs-lbl">Questions</div>
+            </div>
+          </div>
+          <button class="check-btn continue" style="max-width:280px;margin:0 auto;display:block"
+            @click=${this.loadQuestions}>
+            Keep going →
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  private renderLesson(): TemplateResult {
+    const q        = this.questions[this.qIdx];
     const allFilled = this.blanks.every(b => b.filled);
+    const progress  = ((this.qIdx + (this.phase === 'correct' ? 1 : 0)) / this.questions.length) * 100;
+    const proofText = q.proof_texts?.[0];
+
     return html`
       <div class="lesson-frame">
         <div class="top">
-          <div class="exit"><i class="ti ti-x"></i></div>
-          <div class="prog-bar"><div class="prog-fill"></div></div>
-          <div class="hearts-mini"><i class="ti ti-heart-filled"></i><span>${this.hearts}</span></div>
+          <div class="exit" @click=${this.loadQuestions}><i class="ti ti-x"></i></div>
+          <div class="prog-wrap">
+            <div class="prog-label">Question ${this.qIdx + 1} of ${this.questions.length}</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
+          </div>
+          <div class="xp-mini"><i class="ti ti-diamond"></i>${this.xp} XP</div>
+          <div class="hearts-mini"><i class="ti ti-heart-filled"></i>${this.hearts}</div>
         </div>
 
         <div class="lesson-card">
           <div class="meta">
-            <span class="pill"><i class="ti ti-bookmark"></i> Question 1 · Unit I</span>
-            <button class="hint-btn"><i class="ti ti-bulb"></i> Use a hint (5 gems)</button>
+            <span class="pill"><i class="ti ti-bookmark"></i> Question ${q.number}</span>
+            <span class="pill unit-pill">${q.unit_name}</span>
           </div>
           <div class="prompt">Fill in the blanks</div>
           <h2 class="instruction">Complete the answer using the words below.</h2>
           <div class="qa-label">Question</div>
-          <p class="question">What is the chief end of man?</p>
+          <p class="question">${q.question}</p>
           <div class="qa-label">Answer</div>
-          <p class="answer">
-            Man's chief end is to ${this.renderBlank(0)} God, and to ${this.renderBlank(1)} him for ever.
-          </p>
+          <p class="answer">${this.renderAnswer()}</p>
           <div class="bank-label">Tap the words in order</div>
           <div class="bank">
             ${this.bank.map((c, i) => html`
-              <button class="chip ${c.used ? 'used' : ''}" @click=${() => this.pickChip(i)} ?disabled=${c.used}>${c.word}</button>
+              <button class="chip ${c.used ? 'used' : ''}" @click=${() => this.pickChip(i)} ?disabled=${c.used}>
+                ${c.word}
+              </button>
             `)}
           </div>
         </div>
 
         ${this.phase === 'correct' ? html`
           <div class="feedback success">
-            <div class="feedback-icon"><i class="ti ti-check"></i></div>
+            <div class="fb-icon"><i class="ti ti-check"></i></div>
             <div>
-              <div class="feedback-title">Excellent!</div>
-              <div class="feedback-sub">+15 XP earned · Mastery on Q1 is growing</div>
+              <div class="fb-title">Excellent!</div>
+              <div class="fb-sub">+15 XP earned · Keep it up</div>
             </div>
           </div>
         ` : ''}
         ${this.phase === 'incorrect' ? html`
           <div class="feedback error">
-            <div class="feedback-icon"><i class="ti ti-x"></i></div>
+            <div class="fb-icon"><i class="ti ti-x"></i></div>
             <div>
-              <div class="feedback-title">Not quite — you lost a heart.</div>
-              <div class="feedback-sub">Take another look. Tap any filled blank to clear it.</div>
+              <div class="fb-title">Not quite — you lost a heart.</div>
+              <div class="fb-sub">Tap a filled blank to clear it and try again.</div>
             </div>
           </div>
         ` : ''}
 
         <div class="actions">
-          <button class="skip">Skip</button>
+          <button class="skip" @click=${this.advance}>Skip</button>
           ${this.phase === 'filling'   ? html`<button class="check-btn" @click=${this.check} ?disabled=${!allFilled}>Check answer</button>` : ''}
-          ${this.phase === 'correct'   ? html`<button class="check-btn continue"  @click=${this.reset}>Continue →</button>` : ''}
-          ${this.phase === 'incorrect' ? html`<button class="check-btn try-again" @click=${this.reset}>Try again</button>` : ''}
+          ${this.phase === 'correct'   ? html`<button class="check-btn continue"  @click=${this.advance}>Continue →</button>` : ''}
+          ${this.phase === 'incorrect' ? html`<button class="check-btn try-again" @click=${this.tryAgain}>Try again</button>` : ''}
         </div>
 
-        <details>
-          <summary>Scripture proof text</summary>
-          <p>"Whether therefore ye eat, or drink, or whatsoever ye do, do all to the glory of God." — 1 Corinthians 10:31</p>
-        </details>
+        ${proofText ? html`
+          <details>
+            <summary>Scripture proof text</summary>
+            <p>"${proofText.text}" — ${proofText.reference}</p>
+          </details>
+        ` : ''}
       </div>
     `;
+  }
+
+  render(): TemplateResult {
+    if (this.phase === 'loading')  return this.renderLoading();
+    if (this.phase === 'error')    return this.renderError();
+    if (this.phase === 'complete') return this.renderComplete();
+    return this.renderLesson();
   }
 }
