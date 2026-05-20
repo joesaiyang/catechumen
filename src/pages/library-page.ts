@@ -44,6 +44,12 @@ export class LibraryPage extends LitElement {
   @state() newQuizName = '';
   @state() newQuizDesc = '';
   @state() showNewQuizForm = false;
+  @state() openMenuId: string | null = null;
+  @state() showResetModal = false;
+  @state() resetTarget: Catechism | null = null;
+  @state() toastMsg = '';
+
+  private _toastTimer: ReturnType<typeof setTimeout> | null = null;
 
   connectedCallback() {
     super.connectedCallback();
@@ -103,6 +109,23 @@ export class LibraryPage extends LitElement {
         reviewMode: true,
       },
     }));
+  }
+
+  private async resetProgress(cat: Catechism) {
+    await apiFetch('/api/study-plans', {
+      method: 'DELETE',
+      body: JSON.stringify({ catechismId: cat.id }),
+    });
+    this.showResetModal = false;
+    this.resetTarget = null;
+    this._toast('Progress reset — all questions cleared.');
+    await this.loadData();
+  }
+
+  private _toast(msg: string) {
+    this.toastMsg = msg;
+    if (this._toastTimer) clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => { this.toastMsg = ''; }, 3000);
   }
 
   private async startBibleQuiz(mode: QuizMode) {
@@ -165,6 +188,7 @@ export class LibraryPage extends LitElement {
     .card.enrolled { border-color: rgba(45,74,58,.4); border-width: 2px; }
 
     .card-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+    .card-head-right { display: flex; align-items: center; gap: 8px; }
     .abbrev {
       font-family: 'Fraunces', serif; font-weight: 600; font-size: 13px;
       padding: 4px 10px; background: #E1EBE5; color: #1B3024; border-radius: 6px;
@@ -196,6 +220,35 @@ export class LibraryPage extends LitElement {
     .start-btn.configure { background: transparent; color: #2D4A3A; border: 1.5px solid rgba(45,74,58,.3); }
     .start-btn.configure:hover { background: rgba(45,74,58,.05); }
 
+    /* Kebab menu */
+    .menu-wrap { position: relative; }
+    .kebab-btn {
+      width: 30px; height: 30px; border-radius: 8px; border: none; background: none;
+      color: #4A554A; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; transition: all .15s; padding: 0; flex-shrink: 0;
+    }
+    .kebab-btn:hover { background: rgba(45,74,58,.1); color: #1B3024; }
+    .dropdown {
+      position: absolute; top: calc(100% + 6px); right: 0; min-width: 220px;
+      background: #FFFCF5; border: 1px solid rgba(31,41,32,.12);
+      border-radius: 12px; padding: 6px;
+      box-shadow: 0 4px 16px rgba(31,41,32,.18), 0 1px 4px rgba(31,41,32,.1);
+      z-index: 200;
+    }
+    .dropdown-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; color: #1F2920;
+      transition: background .1s; white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(45,74,58,.06); }
+    .dropdown-item.destructive { color: #9B2C2C; }
+    .dropdown-item.destructive:hover { background: rgba(155,44,44,.07); }
+    .dropdown-item i { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+    .dropdown-divider { height: 1px; background: rgba(31,41,32,.09); margin: 4px 6px; }
+
+    /* Click-away backdrop */
+    .menu-backdrop { position: fixed; inset: 0; z-index: 150; }
+
     /* Mode selection modal */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(31,41,32,.4); backdrop-filter: blur(4px);
@@ -221,9 +274,33 @@ export class LibraryPage extends LitElement {
     .mode-option.selected .radio { border-color: #2D4A3A; background: #2D4A3A; }
     .mode-option.selected .radio::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #F5EFE0; }
     .modal-actions { display: flex; gap: 10px; }
-    .btn-cancel { flex: 1; padding: 13px; background: transparent; border: 1.5px solid rgba(31,41,32,.15); border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; }
+    .btn-cancel  { flex: 1; padding: 13px; background: transparent; border: 1.5px solid rgba(31,41,32,.15); border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; }
     .btn-confirm { flex: 2; padding: 13px; background: #2D4A3A; color: #F5EFE0; border: none; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; }
     .btn-confirm:hover { background: #1B3024; }
+
+    /* Reset confirmation modal */
+    .reset-modal { max-width: 400px; }
+    .reset-modal .modal-title { color: #7E1F1F; }
+    .reset-warning {
+      background: rgba(155,44,44,.08); border: 1px solid rgba(155,44,44,.2);
+      border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #7E1F1F;
+      margin-bottom: 20px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.6;
+    }
+    .reset-warning i { margin-top: 2px; flex-shrink: 0; }
+    .btn-destroy {
+      flex: 2; padding: 13px; background: #9B2C2C; color: #FFF; border: none;
+      border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer;
+    }
+    .btn-destroy:hover { background: #7E1F1F; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      background: #1B3024; color: #F5EFE0; padding: 12px 22px;
+      border-radius: 10px; font-size: 14px; font-weight: 500;
+      box-shadow: 0 4px 16px rgba(31,41,32,.25); pointer-events: none; z-index: 400;
+      white-space: nowrap;
+    }
 
     /* Custom quiz */
     .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
@@ -285,6 +362,27 @@ export class LibraryPage extends LitElement {
     `;
   }
 
+  private renderResetModal(): TemplateResult {
+    if (!this.showResetModal || !this.resetTarget) return html``;
+    const cat = this.resetTarget;
+    return html`
+      <div class="modal-overlay" @click=${(e: Event) => { if (e.target === e.currentTarget) this.showResetModal = false; }}>
+        <div class="modal reset-modal">
+          <div class="modal-title">Reset progress?</div>
+          <div class="modal-sub">You're about to wipe all your answers for <strong>${cat.name}</strong>.</div>
+          <div class="reset-warning">
+            <i class="ti ti-alert-triangle"></i>
+            <span>All ${cat.question_count} questions will be marked as unanswered. Your spaced-repetition schedule and mastery data will be permanently lost. This cannot be undone.</span>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-cancel" @click=${() => this.showResetModal = false}>Cancel</button>
+            <button class="btn-destroy" @click=${() => this.resetProgress(cat)}>Yes, reset everything</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   private renderCatechisms(): TemplateResult {
     if (this.loading) return html`<div style="color:#7A8278;padding:40px 0;text-align:center">Loading library…</div>`;
     return html`
@@ -295,7 +393,38 @@ export class LibraryPage extends LitElement {
             <div class="card ${plan ? 'enrolled' : ''}">
               <div class="card-head">
                 <span class="abbrev">${cat.abbreviation}</span>
-                ${plan ? html`<span class="enrolled-badge"><i class="ti ti-check"></i> Enrolled</span>` : ''}
+                <div class="card-head-right">
+                  ${plan ? html`<span class="enrolled-badge"><i class="ti ti-check"></i> Enrolled</span>` : ''}
+                  ${plan ? html`
+                    <div class="menu-wrap">
+                      <button class="kebab-btn"
+                        @click=${(e: Event) => {
+                          e.stopPropagation();
+                          this.openMenuId = this.openMenuId === cat.id ? null : cat.id;
+                        }}
+                        title="Options">
+                        <i class="ti ti-dots-vertical"></i>
+                      </button>
+                      ${this.openMenuId === cat.id ? html`
+                        <div class="dropdown">
+                          <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.startReview(cat); }}>
+                            <i class="ti ti-repeat"></i> Review answered questions
+                          </div>
+                          <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.startOrConfigure(cat); }}>
+                            <i class="ti ti-settings"></i> Change mode
+                          </div>
+                          <div class="dropdown-divider"></div>
+                          <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this._toast('Reminders coming soon!'); }}>
+                            <i class="ti ti-bell"></i> Set reminder
+                          </div>
+                          <div class="dropdown-item destructive" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.resetTarget = cat; this.showResetModal = true; }}>
+                            <i class="ti ti-refresh-alert"></i> Reset progress
+                          </div>
+                        </div>
+                      ` : ''}
+                    </div>
+                  ` : ''}
+                </div>
               </div>
               <div class="card-name">${cat.name}</div>
               <div class="card-desc">${cat.description}</div>
@@ -314,14 +443,6 @@ export class LibraryPage extends LitElement {
                 <i class="ti ti-${plan ? 'player-play' : 'plus'}"></i>
                 ${plan ? 'Continue studying' : 'Start this catechism'}
               </button>
-              ${plan ? html`
-                <button class="start-btn configure" @click=${() => this.startReview(cat)} style="margin-top:8px">
-                  <i class="ti ti-repeat"></i> Review answered questions
-                </button>
-                <button class="start-btn configure" @click=${() => this.startOrConfigure(cat)} style="margin-top:8px">
-                  <i class="ti ti-settings"></i> Change mode
-                </button>
-              ` : ''}
             </div>
           `;
         })}
@@ -480,6 +601,9 @@ export class LibraryPage extends LitElement {
       ${this.tab === 'custom'     ? this.renderCustom()     : ''}
 
       ${this.renderModeModal()}
+      ${this.renderResetModal()}
+      ${this.openMenuId ? html`<div class="menu-backdrop" @click=${() => this.openMenuId = null}></div>` : ''}
+      ${this.toastMsg ? html`<div class="toast">${this.toastMsg}</div>` : ''}
     `;
   }
 }

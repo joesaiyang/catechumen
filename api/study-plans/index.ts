@@ -54,5 +54,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ plan });
   }
 
+  if (req.method === 'DELETE') {
+    const { catechismId } = req.body as { catechismId?: string };
+    if (!catechismId) return res.status(400).json({ error: 'Missing catechismId' });
+
+    await sql`
+      DELETE FROM user_progress
+      WHERE user_id = ${payload.userId}
+        AND content_type = 'catechism'
+        AND content_id IN (
+          SELECT id FROM catechism_questions WHERE catechism_id = ${catechismId}
+        )
+    `;
+    return res.status(200).json({ ok: true });
+  }
+
   return res.status(405).json({ error: 'Method not allowed' });
 }
