@@ -277,6 +277,19 @@ export class CatechumenPath extends LitElement {
     .verse-card cite { font-size: 12px; font-style: normal; color: rgba(245,239,224,.7); font-weight: 500; letter-spacing: .04em; }
   `;
 
+  private startFromNode(state: string) {
+    if (!this.selectedId || state.includes('locked') || state.startsWith('milestone')) return;
+    this.dispatchEvent(new CustomEvent('start-lesson', {
+      bubbles: true, composed: true,
+      detail: {
+        type: 'catechism',
+        source: this.selectedId,
+        mode: 'fill_blank',
+        reviewMode: state === 'done',
+      },
+    }));
+  }
+
   // ── render helpers ────────────────────────────────────────────────────────
 
   private renderPath(): TemplateResult {
@@ -316,6 +329,9 @@ export class CatechumenPath extends LitElement {
             const isDone      = n.state === 'done';
             const top  = `${(n.y / svgH  * 100).toFixed(3)}%`;
             const left = `${(n.x / SVG_W * 100).toFixed(3)}%`;
+            const title = isCurrent ? 'Start lesson'
+                        : isDone    ? 'Review this question'
+                        : undefined;
             return html`
               <div class="node-pos" style="top:${top};left:${left}">
                 <div class="node
@@ -323,7 +339,9 @@ export class CatechumenPath extends LitElement {
                   ${isLocked    ? 'locked'    : ''}
                   ${isCurrent   ? 'current'   : ''}
                   ${isDone      ? 'done'      : ''}"
-                  style="width:${n.r * 2}px;height:${n.r * 2}px">
+                  style="width:${n.r * 2}px;height:${n.r * 2}px"
+                  title=${title ?? ''}
+                  @click=${() => this.startFromNode(n.state)}>
                   ${isMilestone ? html`
                     <span class="trophy">★</span>
                     <span class="node-label">${n.label}</span>

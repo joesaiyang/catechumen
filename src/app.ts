@@ -95,7 +95,6 @@ export class CatechumenApp extends LitElement {
     const links: { id: Screen; label: string }[] = [
       { id: 'path',    label: 'Learn' },
       { id: 'library', label: 'Library' },
-      { id: 'lesson',  label: 'Lesson' },
       ...(user?.role === 'parent' ? [{ id: 'parent' as Screen, label: 'Family' }] : []),
     ];
     return html`
