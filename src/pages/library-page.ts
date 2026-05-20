@@ -95,10 +95,15 @@ export class LibraryPage extends LitElement {
       }),
     });
     this.showModeModal = false;
-    this.dispatchEvent(new CustomEvent('start-lesson', {
-      bubbles: true, composed: true,
-      detail: { type: 'catechism', source: this.modalCatechism.id, mode: this.selectedMode },
-    }));
+    if (this._changeMode) {
+      // Just update the pill — stay on the library page
+      await this.loadData();
+    } else {
+      this.dispatchEvent(new CustomEvent('start-lesson', {
+        bubbles: true, composed: true,
+        detail: { type: 'catechism', source: this.modalCatechism.id, mode: this.selectedMode },
+      }));
+    }
   }
 
   private startReview(cat: Catechism) {
