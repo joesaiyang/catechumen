@@ -160,8 +160,7 @@ export class CatechumenPath extends LitElement {
       const x1 = n.x,    y1 = n.y + n.r + GAP;
       const x2 = next.x, y2 = next.y - next.r - GAP;
       return svg`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
-        stroke="${stroke}" stroke-width="2.5"
-        stroke-dasharray="6 5" stroke-linecap="round"/>`;
+        stroke="${stroke}" stroke-width="1" stroke-linecap="round"/>`;
     });
     return html`
       <svg class="path-svg" viewBox="0 0 ${SVG_W} ${SVG_H}" xmlns="http://www.w3.org/2000/svg">
