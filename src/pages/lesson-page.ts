@@ -317,14 +317,15 @@ export class CatechumenLesson extends LitElement {
 
     /* ── blanks ── */
     .blank {
-      display: inline-block; min-width: 130px; padding: 4px 14px; margin: 0 3px;
-      background: #F5EFE0; border: 2px dashed rgba(45,74,58,.35); border-radius: 10px;
-      text-align: center; font-style: italic; color: rgba(31,41,32,.3);
+      display: inline-block; min-width: 90px; padding: 2px 6px; margin: 0 8px;
+      background: transparent; border: none;
+      border-bottom: 2px dashed rgba(45,74,58,.4);
+      text-align: center; font-style: italic; color: rgba(31,41,32,.35);
       cursor: pointer; transition: all .2s; vertical-align: middle;
     }
-    .blank.filled    { background: #E1EBE5; border: 2px solid #2D4A3A; color: #1B3024; font-style: normal; font-weight: 600; }
-    .blank.correct   { background: #E1EBE5; border: 2px solid #2D4A3A; color: #1B3024; font-style: normal; font-weight: 600; animation: pop .4s ease; }
-    .blank.incorrect { background: #E8D0CE; border: 2px solid #9B2C2C; color: #9B2C2C; font-style: normal; font-weight: 600; animation: shake .4s ease; }
+    .blank.filled    { border-bottom: 2px solid #2D4A3A; color: #1B3024; font-style: normal; font-weight: 600; }
+    .blank.correct   { border-bottom: 2px solid #2D4A3A; color: #1B3024; font-style: normal; font-weight: 600; animation: pop .4s ease; }
+    .blank.incorrect { border-bottom: 2px solid #9B2C2C; color: #9B2C2C; font-style: normal; font-weight: 600; animation: shake .4s ease; }
     @keyframes pop   { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
     @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
 
