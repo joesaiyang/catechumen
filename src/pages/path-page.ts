@@ -78,7 +78,9 @@ export class CatechumenPath extends LitElement {
   }
 
   private get currentSection(): string {
-    const first = this.allProgress.find(q => !q.mastered);
+    // Advance to the section of the first unseen question (repetitions IS NULL).
+    // Fall back to the last section if everything has been seen.
+    const first = this.allProgress.find(q => q.repetitions === null);
     return first?.section ?? this.allProgress.at(-1)?.section ?? '';
   }
 
@@ -92,14 +94,20 @@ export class CatechumenPath extends LitElement {
 
   private get pathNodes(): PathNode[] {
     const qs = this.sectionQs;
-    const currentNum = qs.find(q => !q.mastered)?.number ?? 0;
     const allMastered = qs.every(q => q.mastered);
+
+    // A question is "seen" if it has any user_progress record (repetitions !== null).
+    // "done" = seen (regardless of mastery — mastery adds the gold star badge).
+    // "current" = first unseen question (repetitions IS NULL).
+    // "locked" = unseen but not yet the next one.
+    const firstUnseenIdx = qs.findIndex(q => q.repetitions === null);
 
     const nodes: PathNode[] = qs.map((q, i) => {
       let nodeState: string;
-      if (q.mastered)              nodeState = 'done';
-      else if (q.number === currentNum) nodeState = 'current';
-      else                         nodeState = 'locked';
+      if (q.mastered)                nodeState = 'done';
+      else if (q.repetitions !== null) nodeState = 'done';   // seen, in SRS review
+      else if (i === firstUnseenIdx)  nodeState = 'current'; // next new question
+      else                           nodeState = 'locked';
 
       return {
         num: `Q${q.number}`, state: nodeState,
