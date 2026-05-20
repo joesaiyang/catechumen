@@ -475,9 +475,9 @@ export class CatechumenLesson extends LitElement {
     const q        = this.questions[this.qIdx];
     const progress = ((this.qIdx) / this.questions.length) * 100;
     const proofText = q.proof_texts?.[0];
-    const words    = q.answer.split(/\s+/).filter(Boolean);
-    const visible  = words.slice(0, this.studyReveal).join(' ');
-    const pct      = words.length > 0 ? (this.studyReveal / words.length) * 100 : 100;
+    const words = q.answer.split(/\s+/).filter(Boolean);
+    const pct   = words.length > 0 ? (this.studyReveal / words.length) * 100 : 100;
+    const allHidden = this.studyReveal === 0;
     return html`
       <div class="lesson-frame">
         <div class="top">
@@ -498,13 +498,15 @@ export class CatechumenLesson extends LitElement {
           <div class="qa-label">Question</div>
           <p class="question">${q.question}</p>
           <div class="qa-label">Answer</div>
-          <div class="study-answer">${visible}</div>
+          <div class="study-answer">${words.map((w, i) => html`<span style="opacity:${i < this.studyReveal ? '1' : '0'};transition:opacity .15s">${w} </span>`)}</div>
           <div class="reveal-wrap">
             <div class="reveal-label">
               <span>Reveal</span>
               <div style="display:flex;align-items:center;gap:10px">
                 <span>${this.studyReveal} of ${words.length} words</span>
-                <span class="hide-all-btn" @click=${() => { this.studyReveal = 0; }}>Hide all</span>
+                <span class="hide-all-btn" @click=${() => { this.studyReveal = allHidden ? words.length : 0; }}>
+                  ${allHidden ? 'Show all' : 'Hide all'}
+                </span>
               </div>
             </div>
             <input class="reveal-slider" type="range"
