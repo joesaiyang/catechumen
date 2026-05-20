@@ -156,15 +156,19 @@ export class CatechumenPath extends LitElement {
     .quest button:hover { background: #FFFCF5; }
 
     /* Catechism selector */
-    .path-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
-    .path-tab {
-      padding: 8px 16px; font-size: 13px; font-weight: 600; color: #4A554A;
-      border-radius: 999px; cursor: pointer; transition: all .15s;
-      border: 1.5px solid rgba(31,41,32,.15); background: none;
+    .path-selector { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .path-selector label { font-size: 13px; font-weight: 600; color: #4A554A; }
+    .path-select {
+      padding: 7px 12px; font-size: 13px; font-weight: 600; color: #1B3024;
+      border: 1.5px solid rgba(31,41,32,.2); border-radius: 10px;
+      background: #FFFCF5; cursor: pointer; outline: none;
       font-family: 'Plus Jakarta Sans', sans-serif;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234A554A' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+      padding-right: 30px;
     }
-    .path-tab:hover  { color: #1B3024; border-color: rgba(31,41,32,.35); }
-    .path-tab.active { background: #2D4A3A; color: #F5EFE0; border-color: #2D4A3A; }
+    .path-select:focus { border-color: #2D4A3A; }
 
     /* Unit header */
     .unit-header {
@@ -363,12 +367,16 @@ export class CatechumenPath extends LitElement {
         <div>
           ${this.plans.length > 1 ? html`
             <div class="path-selector">
-              ${this.plans.map(p => html`
-                <button class="path-tab ${this.selectedId === p.catechism_id ? 'active' : ''}"
-                  @click=${() => this.selectedId = p.catechism_id!}>
-                  ${p.abbreviation}
-                </button>
-              `)}
+              <label>Path</label>
+              <select class="path-select"
+                .value=${this.selectedId}
+                @change=${(e: Event) => this.selectedId = (e.target as HTMLSelectElement).value}>
+                ${this.plans.map(p => html`
+                  <option value=${p.catechism_id} ?selected=${p.catechism_id === this.selectedId}>
+                    ${p.abbreviation} — ${p.catechism_name}
+                  </option>
+                `)}
+              </select>
             </div>
           ` : ''}
 
