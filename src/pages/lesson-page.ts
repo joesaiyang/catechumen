@@ -450,21 +450,20 @@ export class CatechumenLesson extends LitElement {
     return html`
       <div class="lesson-frame">
         <div class="top">
-          <div class="exit" @click=${this.loadQuestions}><i class="ti ti-x"></i></div>
+          <div class="exit" @click=${this.loadQuestions}>✕</div>
           <div class="prog-wrap">
             <div class="prog-label">Question ${this.qIdx + 1} of ${this.questions.length}</div>
             <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
           </div>
-          <div class="xp-mini"><i class="ti ti-diamond"></i>${this.xp} XP</div>
-          <div class="hearts-mini"><i class="ti ti-heart-filled"></i>${this.hearts}</div>
+          <div class="xp-mini">◆${this.xp} XP</div>
+          <div class="hearts-mini">♥${this.hearts}</div>
         </div>
 
         <div class="lesson-card">
           <div class="meta">
-            <span class="pill"><i class="ti ti-bookmark"></i> ${q.number != null ? `Q${q.number}` : 'Question'}</span>
+            <span class="pill">${q.number != null ? `Q${q.number}` : 'Question'}</span>
             <span class="pill unit-pill">${q.section_name ?? q.unit_name ?? ''}</span>
           </div>
-          <div class="new-badge">✦ New question</div>
           <div class="qa-label">Question</div>
           <p class="question">${q.question}</p>
           <div class="qa-label">Answer</div>
@@ -494,7 +493,7 @@ export class CatechumenLesson extends LitElement {
   private renderError(): TemplateResult {
     return html`
       <div class="center">
-        <i class="ti ti-alert-circle" style="font-size:40px;color:#9B2C2C"></i>
+        ⚠
         <div class="error-msg">${this.errorMsg}</div>
         <button class="check-btn" style="flex:unset;padding:14px 28px" @click=${this.loadQuestions}>Try again</button>
       </div>
@@ -505,7 +504,7 @@ export class CatechumenLesson extends LitElement {
     return html`
       <div class="lesson-frame">
         <div class="complete-card">
-          <div class="complete-icon"><i class="ti ti-trophy"></i></div>
+          <div class="complete-icon">★</div>
           <div class="complete-title">${this.reviewMode ? 'Review complete!' : 'Session complete!'}</div>
           <div class="complete-sub">Great work — your progress has been saved.</div>
           <div class="complete-stats">
@@ -540,18 +539,18 @@ export class CatechumenLesson extends LitElement {
     return html`
       <div class="lesson-frame">
         <div class="top">
-          <div class="exit" @click=${this.loadQuestions}><i class="ti ti-x"></i></div>
+          <div class="exit" @click=${this.loadQuestions}>✕</div>
           <div class="prog-wrap">
             <div class="prog-label">${this.reviewMode ? 'Review' : 'Question'} ${this.qIdx + 1} of ${this.questions.length}</div>
             <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
           </div>
-          <div class="xp-mini"><i class="ti ti-diamond"></i>${this.xp} XP</div>
-          <div class="hearts-mini"><i class="ti ti-heart-filled"></i>${this.hearts}</div>
+          <div class="xp-mini">◆${this.xp} XP</div>
+          <div class="hearts-mini">♥${this.hearts}</div>
         </div>
 
         <div class="lesson-card">
           <div class="meta">
-            <span class="pill"><i class="ti ti-bookmark"></i> ${q.number != null ? `Q${q.number}` : 'Question'}</span>
+            <span class="pill">${q.number != null ? `Q${q.number}` : 'Question'}</span>
             <span class="pill unit-pill">${q.section_name ?? q.unit_name ?? ''}</span>
           </div>
           <div class="qa-label">Question</div>
@@ -570,7 +569,7 @@ export class CatechumenLesson extends LitElement {
 
         ${this.phase === 'correct' ? html`
           <div class="feedback success">
-            <div class="fb-icon"><i class="ti ti-check"></i></div>
+            <div class="fb-icon">✓</div>
             <div>
               <div class="fb-title">Excellent!</div>
               <div class="fb-sub">+15 XP earned · Keep it up</div>
@@ -579,7 +578,7 @@ export class CatechumenLesson extends LitElement {
         ` : ''}
         ${this.phase === 'incorrect' ? html`
           <div class="feedback error">
-            <div class="fb-icon"><i class="ti ti-x"></i></div>
+            <div class="fb-icon">✕</div>
             <div>
               <div class="fb-title">Not quite — you lost a heart.</div>
               <div class="fb-sub">Tap a filled blank to clear it and try again.</div>
