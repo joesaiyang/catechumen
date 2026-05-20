@@ -101,7 +101,7 @@ export class CatechumenApp extends LitElement {
     return html`
       <nav class="nav">
         <div class="logo" @click=${() => this.setScreen('path')}>
-          <div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%" style="display:block"><path fill="#F5EFE0" d="M 230,80 C 160,80 120,130 120,200 C 120,225 125,245 135,260 C 125,263 115,255 105,245 C 100,240 98,235 98,230 C 95,230 92,225 92,220 C 95,215 97,212 95,208 C 90,202 85,200 88,190 C 91,180 97,175 97,165 C 97,150 90,135 102,110 C 88,125 90,140 90,145 C 87,105 110,85 135,90 C 150,95 160,105 165,115 C 185,90 210,85 230,85 L 260,85 L 260,100 L 250,95 C 240,92 230,92 220,95 C 170,110 150,150 150,200 C 150,250 170,290 220,305 C 230,308 240,308 250,305 L 260,300 L 260,315 L 230,315 C 210,315 185,310 165,285 C 150,295 140,315 130,315 C 145,315 155,302 160,295 C 145,280 140,265 140,250 C 140,150 175,100 230,100 Z"/></svg></div>
+          <div class="logo-mark"><img src="/logo.png" alt="Catechumen" width="36" height="36" style="display:block;width:100%;height:100%;object-fit:contain"></div>
           <span>Catechumen</span>
         </div>
         <div class="nav-links">
