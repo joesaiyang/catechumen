@@ -32,7 +32,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (err: unknown) {
     const pg = err as { code?: string };
     if (pg.code === '23505') return res.status(409).json({ error: 'Email already in use' });
+    const msg = err instanceof Error ? err.message : String(err);
     console.error(err);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: msg });
   }
 }
