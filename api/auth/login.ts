@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import bcrypt from 'bcryptjs';
 import getDb from '../_lib/db.js';
 import { signToken } from '../_lib/auth.js';
+import { refreshHearts } from '../_lib/hearts.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -20,7 +21,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const ok = await bcrypt.compare(password, user.password_hash);
   if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
 
+  const { hearts, hearts_refill_at } = await refreshHearts(user.id, sql);
   const token = signToken({ userId: user.id, role: 'parent', familyId: user.family_id });
   const { password_hash: _, ...safeUser } = user;
-  return res.status(200).json({ token, user: safeUser });
+  return res.status(200).json({ token, user: { ...safeUser, hearts, hearts_refill_at } });
 }

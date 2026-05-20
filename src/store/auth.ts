@@ -9,6 +9,7 @@ export interface User {
   streak_days: number;
   gems: number;
   hearts: number;
+  hearts_refill_at?: string | null;
   league_tier: string;
 }
 

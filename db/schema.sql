@@ -260,3 +260,9 @@ INSERT INTO achievements (id, name, description, icon, xp_reward) VALUES
   ('verse_master',   'Word hidden',        'Memorize 10 Bible verses',                    'ti-book-2',  150),
   ('quiz_ace',       'Bible scholar',      'Answer 50 Bible quiz questions correctly',    'ti-school',  200)
 ON CONFLICT (id) DO NOTHING;
+
+
+-- =============================================================
+-- MIGRATIONS
+-- =============================================================
+ALTER TABLE users ADD COLUMN IF NOT EXISTS hearts_refill_at TIMESTAMPTZ;

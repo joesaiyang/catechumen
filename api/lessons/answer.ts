@@ -85,8 +85,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       WHERE id = ${payload.userId}
     `;
   } else {
-    await sql`UPDATE users SET hearts = GREATEST(0, hearts - 1) WHERE id = ${payload.userId}`;
+    // Deduct heart and start refill timer if not already running
+    await sql`
+      UPDATE users
+      SET hearts          = GREATEST(0, hearts - 1),
+          hearts_refill_at = COALESCE(hearts_refill_at, now() + INTERVAL '30 minutes')
+      WHERE id = ${payload.userId}
+    `;
   }
 
-  return res.status(200).json({ xpEarned, heartsLost, mastered, nextDue: dueAt });
+  const [{ hearts_refill_at }] = await sql`
+    SELECT hearts_refill_at FROM users WHERE id = ${payload.userId}
+  `;
+
+  return res.status(200).json({ xpEarned, heartsLost, mastered, nextDue: dueAt, heartsRefillAt: hearts_refill_at });
 }

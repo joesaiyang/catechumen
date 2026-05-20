@@ -153,18 +153,39 @@ export class CatechumenLesson extends LitElement {
   @state() dragChipIdx: number | null = null;
   @state() dragOverBlankIdx: number | null = null;
   @state() hearts = auth.user?.hearts ?? 5;
+  @state() heartsRefillAt: string | null = auth.user?.hearts_refill_at ?? null;
+  @state() _tick = 0;
   @state() xp = auth.user?.xp ?? 0;
   @state() sessionXp = 0;
   @state() sessionCorrect = 0;
   @state() startTime = 0;
   @state() errorMsg = '';
 
+  private get nextHeartLabel(): string {
+    if (this.hearts >= 5 || !this.heartsRefillAt) return '';
+    const ms = new Date(this.heartsRefillAt).getTime() - Date.now();
+    if (ms <= 0) return '';
+    const min = Math.ceil(ms / 60_000);
+    return min >= 60 ? `${Math.floor(min / 60)}h ${min % 60}m` : `${min}m`;
+  }
+
   private _loadedSource = '';
   private _loadedType   = '';
   private _loadedReview = false;
   private _loadedMode   = '';
   private _loadedKey    = -1;
-  private _loadSeq      = 0;  // guards against stale responses overwriting fresh ones
+  private _loadSeq      = 0;
+  private _tickInterval = 0;
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._tickInterval = window.setInterval(() => { this._tick++; }, 60_000);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    clearInterval(this._tickInterval);
+  }
 
   updated(changed: Map<string, unknown>) {
     const watched = ['contentSource', 'contentType', 'reviewMode', 'quizMode', 'sessionKey'];
@@ -288,7 +309,8 @@ export class CatechumenLesson extends LitElement {
           auth.patch({ xp: this.xp });
         } else {
           this.hearts = Math.max(0, this.hearts - 1);
-          auth.patch({ hearts: this.hearts });
+          this.heartsRefillAt = data.heartsRefillAt ?? this.heartsRefillAt;
+          auth.patch({ hearts: this.hearts, hearts_refill_at: this.heartsRefillAt });
           if (this.hearts === 0) this.phase = 'out_of_hearts';
         }
       }
@@ -515,7 +537,10 @@ export class CatechumenLesson extends LitElement {
             <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
           </div>
           <div class="xp-mini">◆${this.xp} XP</div>
-          <div class="hearts-mini">♥${this.hearts}</div>
+          <div class="hearts-mini">
+            ♥${this.hearts}
+            ${this.nextHeartLabel ? html`<span style="font-size:11px;font-weight:500;opacity:.75">+1 in ${this.nextHeartLabel}</span>` : ''}
+          </div>
         </div>
 
         <div class="lesson-card">
@@ -647,7 +672,10 @@ export class CatechumenLesson extends LitElement {
             <div class="prog-bar"><div class="prog-fill" style="width:${progress}%"></div></div>
           </div>
           <div class="xp-mini">◆${this.xp} XP</div>
-          <div class="hearts-mini">♥${this.hearts}</div>
+          <div class="hearts-mini">
+            ♥${this.hearts}
+            ${this.nextHeartLabel ? html`<span style="font-size:11px;font-weight:500;opacity:.75">+1 in ${this.nextHeartLabel}</span>` : ''}
+          </div>
         </div>
 
         <div class="lesson-card">
