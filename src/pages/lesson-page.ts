@@ -336,8 +336,7 @@ export class CatechumenLesson extends LitElement {
     }
     .study-answer {
       font-family: 'Fraunces', serif; font-size: 20px; line-height: 1.75; color: #1B3024;
-      background: rgba(45,74,58,.04); border-left: 3px solid #2D4A3A;
-      padding: 16px 20px; border-radius: 0 10px 10px 0; margin-bottom: 8px;
+      margin-bottom: 8px;
     }
 
     /* ── blanks ── */
