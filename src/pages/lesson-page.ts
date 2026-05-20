@@ -50,11 +50,9 @@ function clean(w: string): string {
 }
 
 function blankCount(answer: string): number {
-  const len = answer.length;
-  if (len < 30)  return 1;
-  if (len < 50)  return 2;
-  if (len < 300) return 3;
-  return 4;
+  if (answer.length < 30) return 1;
+  // Every 19 chars over 30 adds one blank, starting at 2
+  return Math.floor((answer.length - 30) / 19) + 2;
 }
 
 // Short but theologically important words that should be preferred as blanks
