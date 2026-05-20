@@ -51,9 +51,9 @@ function clean(w: string): string {
 
 function blankCount(answer: string): number {
   const len = answer.length;
-  if (len < 50)  return 1;
-  if (len < 200) return 2;
-  if (len < 400) return 3;
+  if (len < 30)  return 1;
+  if (len < 50)  return 2;
+  if (len < 300) return 3;
   return 4;
 }
 
