@@ -225,7 +225,8 @@ export class LibraryPage extends LitElement {
     .kebab-btn {
       width: 30px; height: 30px; border-radius: 8px; border: none; background: none;
       color: #4A554A; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 18px; transition: all .15s; padding: 0; flex-shrink: 0;
+      font-size: 20px; font-weight: 700; letter-spacing: 0; line-height: 1;
+      transition: all .15s; padding: 0; flex-shrink: 0;
     }
     .kebab-btn:hover { background: rgba(45,74,58,.1); color: #1B3024; }
     .dropdown {
@@ -403,7 +404,7 @@ export class LibraryPage extends LitElement {
                           this.openMenuId = this.openMenuId === cat.id ? null : cat.id;
                         }}
                         title="Options">
-                        <i class="ti ti-dots-vertical"></i>
+                        ⋮
                       </button>
                       ${this.openMenuId === cat.id ? html`
                         <div class="dropdown">
