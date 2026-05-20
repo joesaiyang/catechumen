@@ -5,20 +5,10 @@
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
--- Drop changed/new tables so they can be cleanly recreated
-DROP TABLE IF EXISTS league_entries      CASCADE;
-DROP TABLE IF EXISTS league_weeks        CASCADE;
-DROP TABLE IF EXISTS user_achievements   CASCADE;
-DROP TABLE IF EXISTS user_progress       CASCADE;
-DROP TABLE IF EXISTS lesson_sessions     CASCADE;
-DROP TABLE IF EXISTS user_study_plans    CASCADE;
-DROP TABLE IF EXISTS custom_quiz_items   CASCADE;
-DROP TABLE IF EXISTS custom_quizzes      CASCADE;
-DROP TABLE IF EXISTS catechism_questions CASCADE;
-DROP TABLE IF EXISTS catechisms          CASCADE;
-DROP TABLE IF EXISTS memory_verses       CASCADE;
-DROP TABLE IF EXISTS bible_quiz_questions CASCADE;
-DROP TABLE IF EXISTS questions           CASCADE;
+-- Only drop tables that need structural changes (never content/data tables)
+DROP TABLE IF EXISTS league_entries  CASCADE;
+DROP TABLE IF EXISTS league_weeks    CASCADE;
+DROP TABLE IF EXISTS questions       CASCADE;
 
 -- =============================================================
 -- FAMILIES & USERS
