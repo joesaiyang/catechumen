@@ -186,6 +186,10 @@ export class LibraryPage extends LitElement {
     }
     .card:hover { border-color: rgba(45,74,58,.3); transform: translateY(-2px); box-shadow: 0 2px 4px rgba(31,41,32,.08), 0 4px 16px rgba(31,41,32,.06); }
     .card.enrolled { border-color: rgba(45,74,58,.4); border-width: 2px; }
+    /* When a card's menu is open, neutralise the hover transform so the card doesn't
+       form an isolated stacking context that sits below the fixed backdrop (z-index:150) */
+    .card.menu-open,
+    .card.menu-open:hover { transform: none; position: relative; z-index: 200; }
 
     .card-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
     .card-head-right { display: flex; align-items: center; gap: 8px; }
@@ -239,7 +243,7 @@ export class LibraryPage extends LitElement {
     .dropdown-item {
       display: flex; align-items: center; gap: 10px; padding: 10px 12px;
       border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; color: #1F2920;
-      transition: background .1s; white-space: nowrap;
+      transition: background .1s; white-space: nowrap; user-select: none;
     }
     .dropdown-item:hover { background: rgba(45,74,58,.06); }
     .dropdown-item.destructive { color: #9B2C2C; }
@@ -391,7 +395,7 @@ export class LibraryPage extends LitElement {
         ${this.catechisms.map(cat => {
           const plan = this.getPlan(cat.id);
           return html`
-            <div class="card ${plan ? 'enrolled' : ''}">
+            <div class="card ${plan ? 'enrolled' : ''} ${this.openMenuId === cat.id ? 'menu-open' : ''}">
               <div class="card-head">
                 <span class="abbrev">${cat.abbreviation}</span>
                 <div class="card-head-right">
