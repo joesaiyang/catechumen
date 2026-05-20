@@ -144,6 +144,7 @@ export class CatechumenLesson extends LitElement {
   @state() phase: Phase = 'loading';
   @state() questions: ApiQuestion[] = [];
   @state() qIdx = 0;
+  @state() studyReveal = 0;
   @state() blanks: Blank[] = [];
   @state() bank: Chip[] = [];
   @state() segments: Segment[] = [];
@@ -205,8 +206,9 @@ export class CatechumenLesson extends LitElement {
     const q = this.questions[idx];
     if (q.is_new) {
       // New question — show the full answer first before quizzing
-      this.phase     = 'studying';
-      this.startTime = Date.now();
+      this.studyReveal = q.answer.split(/\s+/).filter(Boolean).length;
+      this.phase       = 'studying';
+      this.startTime   = Date.now();
     } else {
       this.beginQuiz(idx);
     }
@@ -336,8 +338,35 @@ export class CatechumenLesson extends LitElement {
     }
     .study-answer {
       font-family: 'Fraunces', serif; font-size: 20px; line-height: 1.75; color: #1B3024;
-      margin-bottom: 8px;
+      margin-bottom: 24px; min-height: 2em;
     }
+    .reveal-wrap { margin-bottom: 24px; }
+    .reveal-label {
+      font-size: 12px; font-weight: 600; color: #7A8278;
+      text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px;
+      display: flex; justify-content: space-between;
+    }
+    .reveal-slider {
+      width: 100%; height: 4px; appearance: none; -webkit-appearance: none;
+      background: linear-gradient(to right, #2D4A3A var(--pct, 100%), rgba(31,41,32,.15) var(--pct, 100%));
+      border-radius: 2px; outline: none; cursor: pointer;
+    }
+    .reveal-slider::-webkit-slider-thumb {
+      appearance: none; -webkit-appearance: none;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #2D4A3A; border: 3px solid #FFFCF5;
+      box-shadow: 0 1px 4px rgba(31,41,32,.3); cursor: pointer;
+    }
+    .reveal-slider::-moz-range-thumb {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #2D4A3A; border: 3px solid #FFFCF5;
+      box-shadow: 0 1px 4px rgba(31,41,32,.3); cursor: pointer; border: none;
+    }
+    .hide-all-btn {
+      font-size: 11px; font-weight: 700; color: #B5481E; cursor: pointer;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .hide-all-btn:hover { text-decoration: underline; }
 
     /* ── blanks ── */
     .blank {
@@ -446,6 +475,9 @@ export class CatechumenLesson extends LitElement {
     const q        = this.questions[this.qIdx];
     const progress = ((this.qIdx) / this.questions.length) * 100;
     const proofText = q.proof_texts?.[0];
+    const words    = q.answer.split(/\s+/).filter(Boolean);
+    const visible  = words.slice(0, this.studyReveal).join(' ');
+    const pct      = words.length > 0 ? (this.studyReveal / words.length) * 100 : 100;
     return html`
       <div class="lesson-frame">
         <div class="top">
@@ -466,7 +498,22 @@ export class CatechumenLesson extends LitElement {
           <div class="qa-label">Question</div>
           <p class="question">${q.question}</p>
           <div class="qa-label">Answer</div>
-          <div class="study-answer">${q.answer}</div>
+          <div class="study-answer">${visible}</div>
+          <div class="reveal-wrap">
+            <div class="reveal-label">
+              <span>Reveal</span>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span>${this.studyReveal} of ${words.length} words</span>
+                <span class="hide-all-btn" @click=${() => { this.studyReveal = 0; }}>Hide all</span>
+              </div>
+            </div>
+            <input class="reveal-slider" type="range"
+              min="0" max="${words.length}"
+              .value=${String(this.studyReveal)}
+              style="--pct:${pct}%"
+              @input=${(e: Event) => { this.studyReveal = parseInt((e.target as HTMLInputElement).value); }}
+            />
+          </div>
         </div>
 
         ${proofText ? html`
