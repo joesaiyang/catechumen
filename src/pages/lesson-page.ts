@@ -21,7 +21,7 @@ interface Blank   { word: string; filled: string | null; chipIdx: number | null;
 interface Chip    { word: string; used: boolean; }
 interface Segment { type: 'text' | 'blank'; text?: string; blankIdx?: number; }
 
-type Phase = 'loading' | 'error' | 'studying' | 'filling' | 'correct' | 'incorrect' | 'complete';
+type Phase = 'loading' | 'error' | 'studying' | 'filling' | 'correct' | 'incorrect' | 'complete' | 'out_of_hearts';
 
 const STOP = new Set([
   'a','an','the','and','or','but','if','in','on','at','to','for','of','with','by',
@@ -289,6 +289,7 @@ export class CatechumenLesson extends LitElement {
         } else {
           this.hearts = Math.max(0, this.hearts - 1);
           auth.patch({ hearts: this.hearts });
+          if (this.hearts === 0) this.phase = 'out_of_hearts';
         }
       }
     } catch { /* best-effort */ }
@@ -605,6 +606,32 @@ export class CatechumenLesson extends LitElement {
     `;
   }
 
+  private renderOutOfHearts(): TemplateResult {
+    return html`
+      <div class="lesson-frame">
+        <div class="complete-card">
+          <div class="complete-icon" style="color:#9B2C2C">♥</div>
+          <div class="complete-title">Out of hearts</div>
+          <div class="complete-sub">You've used all your hearts. Come back later to keep going.</div>
+          <div class="complete-stats">
+            <div class="cs-item">
+              <div class="cs-num">+${this.sessionXp}</div>
+              <div class="cs-lbl">XP earned</div>
+            </div>
+            <div class="cs-item">
+              <div class="cs-num">${this.sessionCorrect}</div>
+              <div class="cs-lbl">Correct</div>
+            </div>
+          </div>
+          <button class="check-btn continue" style="max-width:280px;margin:0 auto;display:block"
+            @click=${() => this.dispatchEvent(new CustomEvent('exit-lesson', { bubbles: true, composed: true }))}>
+            ← Back to home
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
   private renderLesson(): TemplateResult {
     const q         = this.questions[this.qIdx];
     const allFilled = this.blanks.every(b => b.filled);
@@ -683,10 +710,11 @@ export class CatechumenLesson extends LitElement {
   }
 
   render(): TemplateResult {
-    if (this.phase === 'loading')  return this.renderLoading();
-    if (this.phase === 'error')    return this.renderError();
-    if (this.phase === 'complete') return this.renderComplete();
-    if (this.phase === 'studying') return this.renderStudy();
+    if (this.phase === 'loading')       return this.renderLoading();
+    if (this.phase === 'error')         return this.renderError();
+    if (this.phase === 'complete')      return this.renderComplete();
+    if (this.phase === 'out_of_hearts') return this.renderOutOfHearts();
+    if (this.phase === 'studying')      return this.renderStudy();
     return this.renderLesson();
   }
 }
