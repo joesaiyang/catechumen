@@ -319,7 +319,7 @@ export class CatechumenLesson extends LitElement {
     .blank {
       display: inline-block; min-width: 90px; padding: 2px 6px; margin: 0 8px;
       background: transparent; border: none;
-      border-bottom: 2px dashed rgba(45,74,58,.4);
+      border-bottom: 2px solid rgba(45,74,58,.4);
       text-align: center; font-style: italic; color: rgba(31,41,32,.35);
       cursor: pointer; transition: all .2s; vertical-align: middle;
     }
@@ -407,7 +407,7 @@ export class CatechumenLesson extends LitElement {
     const cls = this.phase === 'correct'   ? 'correct'
               : this.phase === 'incorrect' ? (b.filled === b.word ? 'correct' : 'incorrect')
               : b.filled ? 'filled' : '';
-    return html`<span class="blank ${cls}" @click=${() => this.clearBlank(idx)}>${b.filled || '______'}</span>`;
+    return html`<span class="blank ${cls}" @click=${() => this.clearBlank(idx)}>${b.filled || '      '}</span>`;
   }
 
   private renderAnswer(): TemplateResult {
