@@ -119,6 +119,7 @@ export class CatechumenLesson extends LitElement {
   @property({ type: String,  attribute: 'content-source' }) contentSource = 'wsc';
   @property({ type: String,  attribute: 'quiz-mode'      }) quizMode      = 'fill_blank';
   @property({ type: Boolean, attribute: 'review-mode'    }) reviewMode    = false;
+  @property({ type: Number,  attribute: 'session-key'    }) sessionKey    = 0;
 
   @state() phase: Phase = 'loading';
   @state() questions: ApiQuestion[] = [];
@@ -139,17 +140,23 @@ export class CatechumenLesson extends LitElement {
   private _loadedSource = '';
   private _loadedType   = '';
   private _loadedReview = false;
+  private _loadedMode   = '';
+  private _loadedKey    = -1;
   private _loadSeq      = 0;  // guards against stale responses overwriting fresh ones
 
-  // Reload whenever content source or type changes (including first render)
   updated(changed: Map<string, unknown>) {
-    if (changed.has('contentSource') || changed.has('contentType') || changed.has('reviewMode')) {
+    const watched = ['contentSource', 'contentType', 'reviewMode', 'quizMode', 'sessionKey'];
+    if (watched.some(k => changed.has(k))) {
       if (this.contentSource !== this._loadedSource ||
           this.contentType   !== this._loadedType   ||
-          this.reviewMode    !== this._loadedReview) {
+          this.reviewMode    !== this._loadedReview  ||
+          this.quizMode      !== this._loadedMode    ||
+          this.sessionKey    !== this._loadedKey) {
         this._loadedSource = this.contentSource;
         this._loadedType   = this.contentType;
         this._loadedReview = this.reviewMode;
+        this._loadedMode   = this.quizMode;
+        this._loadedKey    = this.sessionKey;
         this.loadQuestions();
       }
     }
@@ -502,10 +509,6 @@ export class CatechumenLesson extends LitElement {
           <div class="meta">
             <span class="pill"><i class="ti ti-bookmark"></i> ${q.number != null ? `Q${q.number}` : 'Question'}</span>
             <span class="pill unit-pill">${q.section_name ?? q.unit_name ?? ''}</span>
-          </div>
-          <!-- DEBUG: remove after fix confirmed -->
-          <div style="font-size:11px;color:#9B2C2C;margin-bottom:8px">
-            blanks:${this.blanks.length} segs:${this.segments.length} src:${this.contentSource} ans-len:${q.answer.length}
           </div>
           ${this.quizMode === 'multiple_choice' ? html`
             <div class="prompt">Multiple choice</div>

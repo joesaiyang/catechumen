@@ -12,6 +12,7 @@ export class CatechumenApp extends LitElement {
   @state() screen: Screen = 'path';
   @state() loggedIn = auth.isLoggedIn;
   @state() lessonConfig: LessonConfig = { type: 'catechism', source: 'wsc', mode: 'fill_blank' };
+  @state() lessonKey = 0;
 
   private _unsub: () => void = () => {};
 
@@ -22,6 +23,7 @@ export class CatechumenApp extends LitElement {
     this.addEventListener('start-lesson', (e: Event) => {
       const detail = (e as CustomEvent<LessonConfig>).detail;
       this.lessonConfig = detail;
+      this.lessonKey++;
       this.screen = 'lesson';
     });
   }
@@ -144,6 +146,7 @@ export class CatechumenApp extends LitElement {
               content-source=${this.lessonConfig.source}
               quiz-mode=${this.lessonConfig.mode}
               ?review-mode=${this.lessonConfig.reviewMode ?? false}
+              session-key=${this.lessonKey}
             ></catechumen-lesson>
           </div>
           <div class="screen ${this.screen === 'parent'  ? 'active' : ''}">
