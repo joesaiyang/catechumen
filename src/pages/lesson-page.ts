@@ -206,6 +206,10 @@ export class CatechumenLesson extends LitElement {
   }
 
   async loadQuestions() {
+    // Sync hearts from auth store — may have regenerated since component init
+    this.hearts       = auth.user?.hearts       ?? this.hearts;
+    this.heartsRefillAt = auth.user?.hearts_refill_at ?? this.heartsRefillAt;
+    this.xp           = auth.user?.xp           ?? this.xp;
     if (this.hearts === 0) { this.phase = 'out_of_hearts'; return; }
     const seq = ++this._loadSeq;
     this.phase = 'loading';
@@ -618,14 +622,14 @@ export class CatechumenLesson extends LitElement {
               <div class="cs-num">${this.sessionCorrect}</div>
               <div class="cs-lbl">Correct</div>
             </div>
-            <div class="cs-item">
-              <div class="cs-num">${this.questions.length}</div>
-              <div class="cs-lbl">Questions</div>
-            </div>
           </div>
-          <button class="check-btn continue" style="max-width:280px;margin:0 auto;display:block"
+          <button class="check-btn continue" style="max-width:280px;margin:0 auto 12px;display:block"
             @click=${this.loadQuestions}>
             Keep going →
+          </button>
+          <button class="check-btn" style="max-width:280px;margin:0 auto;display:block;background:transparent;color:#4A554A;border:1px solid rgba(31,41,32,.2);border-bottom-width:1px"
+            @click=${() => this.dispatchEvent(new CustomEvent('exit-lesson', { bubbles: true, composed: true }))}>
+            ← Back to home
           </button>
         </div>
       </div>
