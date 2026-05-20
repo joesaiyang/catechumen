@@ -62,11 +62,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'PATCH') {
-    const { planId, quizMode, isActive } = req.body as {
-      planId: string; quizMode?: string; isActive?: boolean;
+    const { planId, catechismId, quizMode, isActive } = req.body as {
+      planId?: string; catechismId?: string; quizMode?: string; isActive?: boolean;
     };
-    if (!planId) return res.status(400).json({ error: 'Missing planId' });
 
+    // Unenroll by catechismId (sets is_active = false, preserves user_progress)
+    if (catechismId && isActive === false) {
+      await sql`
+        UPDATE user_study_plans SET is_active = false
+        WHERE user_id = ${payload.userId} AND catechism_id = ${catechismId}
+      `;
+      return res.status(200).json({ ok: true });
+    }
+
+    if (!planId) return res.status(400).json({ error: 'Missing planId or catechismId' });
     const [plan] = await sql`
       UPDATE user_study_plans SET
         quiz_mode = COALESCE(${quizMode ?? null}, quiz_mode),

@@ -25,6 +25,8 @@ export class LibraryPage extends LitElement {
   @state() plans: StudyPlan[] = [];
   @state() customQuizzes: CustomQuiz[] = [];
   @state() loading = true;
+  @state() unenrollTarget: Catechism | null = null;
+  @state() showUnenrollModal = false;
   @state() newQuizName = '';
   @state() newQuizDesc = '';
   @state() showNewQuizForm = false;
@@ -87,6 +89,17 @@ export class LibraryPage extends LitElement {
     } else {
       this._toast('Reset failed — please try again.');
     }
+    await this.loadData();
+  }
+
+  private async unenroll(cat: Catechism) {
+    await apiFetch('/api/study-plans', {
+      method: 'PATCH',
+      body: JSON.stringify({ catechismId: cat.id, isActive: false }),
+    });
+    this.showUnenrollModal = false;
+    this.unenrollTarget = null;
+    this._toast(`Unenrolled from ${cat.name}. Your progress is saved.`);
     await this.loadData();
   }
 
@@ -230,6 +243,9 @@ export class LibraryPage extends LitElement {
     .modal-actions { display: flex; gap: 10px; }
     .btn-cancel  { flex: 1; padding: 13px; background: transparent; border: 1.5px solid rgba(31,41,32,.15); border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; }
 
+    /* Unenroll modal */
+    .unenroll-modal { max-width: 400px; }
+
     /* Reset confirmation modal */
     .reset-modal { max-width: 400px; }
     .reset-modal .modal-title { color: #7E1F1F; }
@@ -300,6 +316,23 @@ export class LibraryPage extends LitElement {
     `;
   }
 
+  private renderUnenrollModal(): TemplateResult {
+    if (!this.showUnenrollModal || !this.unenrollTarget) return html``;
+    const cat = this.unenrollTarget;
+    return html`
+      <div class="modal-overlay" @click=${(e: Event) => { if (e.target === e.currentTarget) this.showUnenrollModal = false; }}>
+        <div class="modal unenroll-modal">
+          <div class="modal-title">Unenroll from ${cat.name}?</div>
+          <div class="modal-sub">This will remove it from your dashboard. Your progress and answers are kept — you can re-enroll any time.</div>
+          <div class="modal-actions">
+            <button class="btn-cancel" @click=${() => this.showUnenrollModal = false}>Cancel</button>
+            <button class="btn-confirm" @click=${() => this.unenroll(cat)}>Unenroll</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   private renderCatechisms(): TemplateResult {
     if (this.loading) return html`<div style="color:#7A8278;padding:40px 0;text-align:center">Loading library…</div>`;
     return html`
@@ -315,13 +348,8 @@ export class LibraryPage extends LitElement {
                   ${plan ? html`
                     <div class="menu-wrap">
                       <button class="kebab-btn"
-                        @click=${(e: Event) => {
-                          e.stopPropagation();
-                          this.openMenuId = this.openMenuId === cat.id ? null : cat.id;
-                        }}
-                        title="Options">
-                        ⋮
-                      </button>
+                        @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = this.openMenuId === cat.id ? null : cat.id; }}
+                        title="Options">⋮</button>
                       ${this.openMenuId === cat.id ? html`
                         <div class="dropdown">
                           <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.startReview(cat); }}>
@@ -330,6 +358,9 @@ export class LibraryPage extends LitElement {
                           <div class="dropdown-divider"></div>
                           <div class="dropdown-item" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this._toast('Reminders coming soon!'); }}>
                             <i class="ti ti-bell"></i> Set reminder
+                          </div>
+                          <div class="dropdown-item destructive" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.unenrollTarget = cat; this.showUnenrollModal = true; }}>
+                            <i class="ti ti-user-minus"></i> Unenroll
                           </div>
                           <div class="dropdown-item destructive" @click=${(e: Event) => { e.stopPropagation(); this.openMenuId = null; this.resetTarget = cat; this.showResetModal = true; }}>
                             <i class="ti ti-refresh-alert"></i> Reset progress
@@ -352,7 +383,7 @@ export class LibraryPage extends LitElement {
               ` : ''}
               <button class="start-btn" @click=${() => this.startLesson(cat)}>
                 <i class="ti ti-${plan ? 'player-play' : 'plus'}"></i>
-                ${plan ? 'Continue studying' : 'Start this catechism'}
+                ${plan ? 'Continue studying' : 'Enroll & Start'}
               </button>
             </div>
           `;
@@ -506,6 +537,7 @@ export class LibraryPage extends LitElement {
       ${this.tab === 'custom'     ? this.renderCustom()     : ''}
 
       ${this.renderResetModal()}
+      ${this.renderUnenrollModal()}
       ${this.openMenuId ? html`<div class="menu-backdrop" @click=${() => this.openMenuId = null}></div>` : ''}
       ${this.toastMsg ? html`<div class="toast">${this.toastMsg}</div>` : ''}
     `;
