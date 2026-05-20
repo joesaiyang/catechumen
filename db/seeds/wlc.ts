@@ -1197,6 +1197,714 @@ export default async function seedCatechism(sql: any): Promise<void> {
         { reference: 'Ps. 16:11', text: 'Thou wilt shew me the path of life: in thy presence is fulness of joy; at thy right hand there are pleasures for evermore.' }
       ]
     },
+
+    // ─── Section 6: The Moral Law and Commandments (Q91–148) ─────────────────
+    {
+      catechism_id: 'wlc', number: 91,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is the duty which God requireth of man?',
+      answer: 'The duty which God requireth of man, is obedience to his revealed will.',
+      proof_texts: [
+        { reference: 'Rom. 12:2', text: 'And be not conformed to this world: but be ye transformed by the renewing of your mind, that ye may prove what is that good, and acceptable, and perfect, will of God.' },
+        { reference: 'Mic. 6:8', text: 'He hath shewed thee, O man, what is good; and what doth the LORD require of thee, but to do justly, and to love mercy, and to walk humbly with thy God?' },
+        { reference: '1 Sam. 15:22', text: 'And Samuel said, Hath the LORD as great delight in burnt offerings and sacrifices, as in obeying the voice of the LORD? Behold, to obey is better than sacrifice, and to hearken than the fat of rams.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 92,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What did God at first reveal unto man as the rule of his obedience?',
+      answer: 'The rule of obedience revealed to Adam in the estate of innocence, and to all mankind in him, besides a special command not to eat of the fruit of the tree of the knowledge of good and evil, was the moral law.',
+      proof_texts: [
+        { reference: 'Gen. 1:26-27', text: 'And God said, Let us make man in our image, after our likeness... So God created man in his own image, in the image of God created he him.' },
+        { reference: 'Rom. 2:14-15', text: 'For when the Gentiles, which have not the law, do by nature the things contained in the law, these, having not the law, are a law unto themselves: Which shew the work of the law written in their hearts.' },
+        { reference: 'Gen. 2:17', text: 'But of the tree of the knowledge of good and evil, thou shalt not eat of it: for in the day that thou eatest thereof thou shalt surely die.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 93,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is the moral law?',
+      answer: 'The moral law is the declaration of the will of God to mankind, directing and binding every one to personal, perfect, and perpetual conformity and obedience thereunto, in the frame and disposition of the whole man, soul and body, and in performance of all those duties of holiness and righteousness which he oweth to God and man: promising life upon the fulfilling, and threatening death upon the breach of it.',
+      proof_texts: [
+        { reference: 'Deut. 5:1-3,31', text: 'And Moses called all Israel, and said unto them, Hear, O Israel, the statutes and judgments which I speak in your ears this day, that ye may learn them, and keep, and do them... But as for thee, stand thou here by me, and I will speak unto thee all the commandments.' },
+        { reference: 'Luke 10:26-27', text: 'He said unto him, What is written in the law? how readest thou? And he answering said, Thou shalt love the Lord thy God with all thy heart, and with all thy soul, and with all thy strength, and with all thy mind; and thy neighbour as thyself.' },
+        { reference: 'Gal. 3:10', text: 'For as many as are of the works of the law are under the curse: for it is written, Cursed is every one that continueth not in all things which are written in the book of the law to do them.' },
+        { reference: '1 Thess. 5:23', text: 'And the very God of peace sanctify you wholly; and I pray God your whole spirit and soul and body be preserved blameless unto the coming of our Lord Jesus Christ.' },
+        { reference: 'Gal. 3:12', text: 'And the law is not of faith: but, The man that doeth them shall live in them.' },
+        { reference: 'Rom. 6:23', text: 'For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 94,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Is there any use of the moral law to man since the fall?',
+      answer: 'Although no man, since the fall, can attain to righteousness and life by the moral law; yet there is great use thereof, as well common to all men, as peculiar either to the unregenerate, or the regenerate.',
+      proof_texts: [
+        { reference: 'Rom. 8:3', text: 'For what the law could not do, in that it was weak through the flesh, God sending his own Son in the likeness of sinful flesh, and for sin, condemned sin in the flesh.' },
+        { reference: 'Gal. 2:16', text: 'Knowing that a man is not justified by the works of the law, but by the faith of Jesus Christ... for by the works of the law shall no flesh be justified.' },
+        { reference: '1 Tim. 1:8', text: 'But we know that the law is good, if a man use it lawfully.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 95,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Of what use is the moral law to all men?',
+      answer: 'The moral law is of use to all men, to inform them of the holy nature and will of God, and of their duty, binding them to walk accordingly; to convince them of their disability to keep it, and of the sinful pollution of their nature, hearts, and lives; to humble them in the sense of their sin and misery, and thereby help them to a clearer sight of the need they have of Christ, and of the perfection of his obedience.',
+      proof_texts: [
+        { reference: 'Lev. 11:44-45', text: 'For I am the LORD your God: ye shall therefore sanctify yourselves, and ye shall be holy; for I am holy.' },
+        { reference: 'Rom. 7:12', text: 'Wherefore the law is holy, and the commandment holy, and just, and good.' },
+        { reference: 'Mic. 6:8', text: 'He hath shewed thee, O man, what is good; and what doth the LORD require of thee, but to do justly, and to love mercy, and to walk humbly with thy God?' },
+        { reference: 'Ps. 19:11-12', text: 'Moreover by them is thy servant warned: and in keeping of them there is great reward. Who can understand his errors? cleanse thou me from secret faults.' },
+        { reference: 'Rom. 3:20', text: 'Therefore by the deeds of the law there shall no flesh be justified in his sight: for by the law is the knowledge of sin.' },
+        { reference: 'Gal. 3:24', text: 'Wherefore the law was our schoolmaster to bring us unto Christ, that we might be justified by faith.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 96,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What particular use is there of the moral law to unregenerate men?',
+      answer: 'The moral law is of use to unregenerate men, to awaken their consciences to flee from wrath to come, and to drive them to Christ; or, upon their continuance in the estate and way of sin, to leave them inexcusable, and under the curse thereof.',
+      proof_texts: [
+        { reference: '1 Tim. 1:9-10', text: 'Knowing this, that the law is not made for a righteous man, but for the lawless and disobedient, for the ungodly and for sinners, for unholy and profane, for murderers of fathers and murderers of mothers, for manslayers.' },
+        { reference: 'Gal. 3:24', text: 'Wherefore the law was our schoolmaster to bring us unto Christ, that we might be justified by faith.' },
+        { reference: 'Rom. 1:20', text: 'For the invisible things of him from the creation of the world are clearly seen, being understood by the things that are made, even his eternal power and Godhead; so that they are without excuse.' },
+        { reference: 'Gal. 3:10', text: 'For as many as are of the works of the law are under the curse: for it is written, Cursed is every one that continueth not in all things which are written in the book of the law to do them.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 97,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What special use is there of the moral law to the regenerate?',
+      answer: 'Although they that are regenerate, and believe in Christ, be delivered from the moral law as a covenant of works, so as thereby they are neither justified nor condemned; yet, besides the general uses thereof common to them with all men, it is of special use, to shew them how much they are bound to Christ for his fulfilling it, and enduring the curse thereof in their stead, and for their good; and thereby to provoke them to more thankfulness, and to express the same in their greater care to conform themselves thereunto as the rule of their obedience.',
+      proof_texts: [
+        { reference: 'Rom. 6:14', text: 'For sin shall not have dominion over you: for ye are not under the law, but under grace.' },
+        { reference: 'Gal. 2:16', text: 'Knowing that a man is not justified by the works of the law, but by the faith of Jesus Christ.' },
+        { reference: 'Rom. 8:1', text: 'There is therefore now no condemnation to them which are in Christ Jesus, who walk not after the flesh, but after the Spirit.' },
+        { reference: 'Gal. 3:13-14', text: 'Christ hath redeemed us from the curse of the law, being made a curse for us... That the blessing of Abraham might come on the Gentiles through Jesus Christ.' },
+        { reference: 'Rom. 7:24-25', text: 'O wretched man that I am! who shall deliver me from the body of this death? I thank God through Jesus Christ our Lord.' },
+        { reference: '1 Pet. 2:21', text: 'For even hereunto were ye called: because Christ also suffered for us, leaving us an example, that ye should follow his steps.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 98,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Where is the moral law summarily comprehended?',
+      answer: 'The moral law is summarily comprehended in the ten commandments, which were delivered by the voice of God upon mount Sinai, and written by him in two tables of stone; and are recorded in the twentieth chapter of Exodus. The four first commandments containing our duty to God, and the other six our duty to man.',
+      proof_texts: [
+        { reference: 'Deut. 10:4', text: 'And he wrote on the tables, according to the first writing, the ten commandments, which the LORD spake unto you in the mount out of the midst of the fire in the day of the assembly.' },
+        { reference: 'Exod. 20:1-17', text: 'And God spake all these words, saying, I am the LORD thy God... Thou shalt have no other gods before me...' },
+        { reference: 'Matt. 22:37-40', text: 'Jesus said unto him, Thou shalt love the Lord thy God with all thy heart, and with all thy soul, and with all thy mind. This is the first and great commandment. And the second is like unto it, Thou shalt love thy neighbour as thyself. On these two commandments hang all the law and the prophets.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 99,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What rules are to be observed for the right understanding of the ten commandments?',
+      answer: 'For the right understanding of the ten commandments, these rules are to be observed: 1. That the law is perfect, and bindeth every one to the full conformity in the whole man unto the righteousness thereof, and unto entire obedience for ever; so as to require the utmost perfection of every duty, and to forbid the least degree of every sin. 2. That it is spiritual, and so reacheth the understanding, will, affections, and all other powers of the soul; as well as words, works, and gestures. 3. That one and the same thing, in divers respects, is required or forbidden in several commandments. 4. Where a duty is commanded, the contrary sin is forbidden; and, where a sin is forbidden, the contrary duty is commanded: so where a promise is annexed, the contrary threatening is included; and, where a threatening is annexed, the contrary promise is included. 5. That God in giving these commandments, is not to be limited to the express terms, but extends his will to all their just ends, uses, and applications, that may be gathered from them by good and necessary consequence. 6. That under one sin or duty, all of the same kind are forbidden or commanded; together with all the causes, means, occasions, and appearances thereof, and provocations thereunto. 7. That what is forbidden or commanded to ourselves, we are bound, according to our places, to endeavour that it may be avoided or performed by others, according to the duty of their places. 8. That in what is commanded to others, we are bound, according to our places and callings, to be helpful to them; and to take heed of partaking with others in what is forbidden them.',
+      proof_texts: [
+        { reference: 'Ps. 19:7', text: 'The law of the LORD is perfect, converting the soul: the testimony of the LORD is sure, making wise the simple.' },
+        { reference: 'James 2:10', text: 'For whosoever shall keep the whole law, and yet offend in one point, he is guilty of all.' },
+        { reference: 'Matt. 5:21-22', text: 'Ye have heard that it was said by them of old time, Thou shalt not kill; and whosoever shall kill shall be in danger of the judgment: But I say unto you, That whosoever is angry with his brother without a cause shall be in danger of the judgment.' },
+        { reference: 'Rom. 7:14', text: 'For we know that the law is spiritual: but I am carnal, sold under sin.' },
+        { reference: 'Col. 3:5', text: 'Mortify therefore your members which are upon the earth; fornication, uncleanness, inordinate affection, evil concupiscence, and covetousness, which is idolatry.' },
+        { reference: 'Isa. 1:16-17', text: 'Wash you, make you clean; put away the evil of your doings from before mine eyes; cease to do evil; Learn to do well; seek judgment, relieve the oppressed, judge the fatherless, plead for the widow.' },
+        { reference: 'Deut. 6:13', text: 'Thou shalt fear the LORD thy God, and serve him, and shalt swear by his name.' },
+        { reference: 'Matt. 15:4-6', text: 'For God commanded, saying, Honour thy father and mother... But ye say, Whosoever shall say to his father or his mother, It is a gift, by whatsoever thou mightest be profited by me; And honour not his father or his mother, he shall be free. Thus have ye made the commandment of God of none effect by your tradition.' },
+        { reference: 'Exod. 20:12', text: 'Honour thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 100,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What special things are we to consider in the ten commandments?',
+      answer: 'We are to consider in the ten commandments, the preface, the substance of the commandments themselves, and several reasons annexed to some of them, the more to enforce them.',
+      proof_texts: [
+        { reference: 'Exod. 20:1-17', text: 'And God spake all these words, saying, I am the LORD thy God, which have brought thee out of the land of Egypt, out of the house of bondage. Thou shalt have no other gods before me...' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 101,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is the preface to the ten commandments?',
+      answer: 'The preface to the ten commandments is contained in these words, I am the LORD thy God, which have brought thee out of the land of Egypt, out of the house of bondage. Wherein God manifesteth his sovereignty, as being JEHOVAH, the eternal, immutable, and almighty God; having his being in and of himself, and giving being to all his words and works: and that he is a God in covenant, as with Israel of old, so with all his people; who, as he brought them out of their bondage in Egypt, so he delivereth us from our spiritual thraldom; and that therefore we are bound to take him for our God alone, and to keep all his commandments.',
+      proof_texts: [
+        { reference: 'Exod. 20:2', text: 'I am the LORD thy God, which have brought thee out of the land of Egypt, out of the house of bondage.' },
+        { reference: 'Isa. 44:6', text: 'Thus saith the LORD the King of Israel, and his redeemer the LORD of hosts; I am the first, and I am the last; and beside me there is no God.' },
+        { reference: 'Exod. 3:14', text: 'And God said unto Moses, I AM THAT I AM: and he said, Thus shalt thou say unto the children of Israel, I AM hath sent me unto you.' },
+        { reference: 'Luke 1:74-75', text: 'That he would grant unto us, that we being delivered out of the hand of our enemies might serve him without fear, In holiness and righteousness before him, all the days of our life.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 102,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is the sum of the four commandments which contain our duty to God?',
+      answer: 'The sum of the four commandments containing our duty to God, is to love the Lord our God with all our heart, and with all our soul, and with all our strength, and with all our mind.',
+      proof_texts: [
+        { reference: 'Luke 10:27', text: 'And he answering said, Thou shalt love the Lord thy God with all thy heart, and with all thy soul, and with all thy strength, and with all thy mind; and thy neighbour as thyself.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 103,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Which is the first commandment?',
+      answer: 'The first commandment is, Thou shalt have no other gods before me.',
+      proof_texts: [
+        { reference: 'Exod. 20:3', text: 'Thou shalt have no other gods before me.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 104,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the duties required in the first commandment?',
+      answer: 'The duties required in the first commandment are, the knowing and acknowledging of God to be the only true God, and our God; and to worship and glorify him accordingly, by thinking, meditating, remembering, highly esteeming, honouring, adoring, choosing, loving, desiring, fearing of him; believing him; trusting, hoping, delighting, rejoicing in him; being zealous for him; calling upon him, giving all praise and thanks, and yielding all obedience and submission to him with the whole man; being careful in all things to please him, and sorrowful when in any thing he is offended; and walking humbly with him.',
+      proof_texts: [
+        { reference: '1 Chron. 28:9', text: 'And thou, Solomon my son, know thou the God of thy father, and serve him with a perfect heart and with a willing mind: for the LORD searcheth all hearts, and understandeth all the imaginations of the thoughts: if thou seek him, he will be found of thee.' },
+        { reference: 'Deut. 26:17', text: 'Thou hast avouched the LORD this day to be thy God, and to walk in his ways, and to keep his statutes, and his commandments, and his judgments, and to hearken unto his voice.' },
+        { reference: 'Ps. 95:6-7', text: 'O come, let us worship and bow down: let us kneel before the LORD our maker. For he is our God; and we are the people of his pasture, and the sheep of his hand.' },
+        { reference: 'Matt. 4:10', text: 'Then saith Jesus unto him, Get thee hence, Satan: for it is written, Thou shalt worship the Lord thy God, and him only shalt thou serve.' },
+        { reference: 'Ps. 18:1-3', text: 'I will love thee, O LORD, my strength. The LORD is my rock, and my fortress, and my deliverer; my God, my strength, in whom I will trust; my buckler, and the horn of my salvation, and my high tower. I will call upon the LORD, who is worthy to be praised.' },
+        { reference: 'Mic. 6:8', text: 'He hath shewed thee, O man, what is good; and what doth the LORD require of thee, but to do justly, and to love mercy, and to walk humbly with thy God?' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 105,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins forbidden in the first commandment?',
+      answer: 'The sins forbidden in the first commandment are, atheism, in denying or not having a God; idolatry, in having or worshipping more gods than one, or any with or instead of the true God; the not having and avouching him for God, and our God; the omission or neglect of any thing due to him, required in this commandment; ignorance, forgetfulness, misapprehensions, false opinions, unworthy and wicked thoughts of him; bold and curious searching into his secrets; all profaneness, hatred of God; self-love, self-seeking, and all other inordinate and immoderate setting of our mind, will, or affections upon other things, and taking them off from him in whole or in part; vain credulity, unbelief, heresy, misbelief, distrust, despair, incorrigibleness, and insensibleness under judgments, hardness of heart, pride, presumption, carnal security, tempting of God; using unlawful means, and trusting in lawful means; carnal delights and joys; corrupt, blind, and indiscreet zeal; lukewarmness, and deadness in the things of God; estranging ourselves, and apostatizing from God; praying, or giving any religious worship to saints, angels, or any other creatures; all compacts and consulting with the devil, and hearkening to his suggestions; making men the lords of our faith and conscience; slighting and despising God and his commands; resisting and grieving of his Spirit, discontent and impatience at his dispensations, charging him foolishly for the evils he inflicts on us.',
+      proof_texts: [
+        { reference: 'Ps. 14:1', text: 'The fool hath said in his heart, There is no God. They are corrupt, they have done abominable works, there is none that doeth good.' },
+        { reference: 'Eph. 2:12', text: 'That at that time ye were without Christ, being aliens from the commonwealth of Israel, and strangers from the covenants of promise, having no hope, and without God in the world.' },
+        { reference: 'Ps. 81:11', text: 'But my people would not hearken to my voice; and Israel would none of me.' },
+        { reference: 'Rom. 1:21', text: 'Because that, when they knew God, they glorified him not as God, neither were thankful; but became vain in their imaginations, and their foolish heart was darkened.' },
+        { reference: '1 John 2:15-16', text: 'Love not the world, neither the things that are in the world. If any man love the world, the love of the Father is not in him. For all that is in the world, the lust of the flesh, and the lust of the eyes, and the pride of life, is not of the Father, but is of the world.' },
+        { reference: 'Deut. 6:13-14', text: 'Thou shalt fear the LORD thy God, and serve him, and shalt swear by his name. Ye shall not go after other gods, of the gods of the people which are round about you.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 106,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are we especially taught by these words before me in the first commandment?',
+      answer: 'These words before me, or before my face, in the first commandment, teach us, that God, who seeth all things, taketh special notice of, and is much displeased with, the sin of having any other God: that so it may be an argument to dissuade from it, and to aggravate it as a most impudent provocation: as also to persuade us to do as in his sight, whatever we do in his service.',
+      proof_texts: [
+        { reference: 'Ezek. 8:5-6', text: 'Then said he unto me, Son of man, lift up thine eyes now the way toward the north. So I lifted up mine eyes the way toward the north, and behold northward at the gate of the altar this image of jealousy in the entry. He said furthermore unto me, Son of man, seest thou what they do? even the great abominations that the house of Israel committeth here, that I should go far off from my sanctuary?' },
+        { reference: 'Ps. 44:20-21', text: 'If we have forgotten the name of our God, or stretched out our hands to a strange god; Shall not God search this out? for he knoweth the secrets of the heart.' },
+        { reference: '1 Chron. 28:9', text: 'And thou, Solomon my son, know thou the God of thy father, and serve him with a perfect heart and with a willing mind: for the LORD searcheth all hearts, and understandeth all the imaginations of the thoughts.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 107,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Which is the second commandment?',
+      answer: 'The second commandment is, Thou shalt not make unto thee any graven image, or any likeness of any thing that is in heaven above, or that is in the earth beneath, or that is in the water under the earth: thou shalt not bow down thyself to them, nor serve them: for I the LORD thy God am a jealous God, visiting the iniquity of the fathers upon the children unto the third and fourth generation of them that hate me; and shewing mercy unto thousands of them that love me, and keep my commandments.',
+      proof_texts: [
+        { reference: 'Exod. 20:4-6', text: 'Thou shalt not make unto thee any graven image, or any likeness of any thing that is in heaven above, or that is in the earth beneath, or that is in the water under the earth: Thou shalt not bow down thyself to them, nor serve them: for I the LORD thy God am a jealous God.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 108,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the duties required in the second commandment?',
+      answer: 'The duties required in the second commandment are, the receiving, observing, and keeping pure and entire, all such religious worship and ordinances as God hath instituted in his word; particularly prayer and thanksgiving in the name of Christ; the reading, preaching, and hearing of the word; the administration and receiving of the sacraments; church government and discipline; the ministry and maintenance thereof; religious fasting; swearing by the name of God, and vowing unto him: as also the disapproving, detesting, opposing, all false worship; and, according to each one\'s place and calling, removing it, and all monuments of idolatry.',
+      proof_texts: [
+        { reference: 'Deut. 32:46-47', text: 'And he said unto them, Set your hearts unto all the words which I testify among you this day... For it is not a vain thing for you; because it is your life.' },
+        { reference: 'Matt. 28:20', text: 'Teaching them to observe all things whatsoever I have commanded you: and, lo, I am with you alway, even unto the end of the world. Amen.' },
+        { reference: 'Acts 2:42', text: 'And they continued stedfastly in the apostles\' doctrine and fellowship, and in breaking of bread, and in prayers.' },
+        { reference: 'Phil. 4:6', text: 'Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God.' },
+        { reference: '1 Tim. 2:1-3', text: 'I exhort therefore, that, first of all, supplications, prayers, intercessions, and giving of thanks, be made for all men... For this is good and acceptable in the sight of God our Saviour.' },
+        { reference: 'Deut. 12:32', text: 'What thing soever I command you, observe to do it: thou shalt not add thereto, nor diminish from it.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 109,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins forbidden in the second commandment?',
+      answer: 'The sins forbidden in the second commandment are, all devising, counselling, commanding, using, and anywise approving, any religious worship not instituted by God himself; tolerating a false religion; the making any representation of God, of all or of any of the three persons, either inwardly in our mind, or outwardly in any kind of image or likeness of any creature whatsoever; all worshipping of it, or God in it or by it; the making of any representation of feigned deities, and all worship of them, or service belonging to them; all superstitious devices, corrupting the worship of God, adding to it, or taking from it, whether invented and taken up of ourselves, or received by tradition from others, though under the title of antiquity, custom, devotion, good intent, or any other pretence whatsoever; simony; sacrilege; all neglect, contempt, hindering, and opposing the worship and ordinances which God hath appointed.',
+      proof_texts: [
+        { reference: 'Num. 15:39', text: 'And it shall be unto you for a fringe, that ye may look upon it, and remember all the commandments of the LORD, and do them; and that ye seek not after your own heart and your own eyes, after which ye use to go a whoring.' },
+        { reference: 'Deut. 13:6-8', text: 'If thy brother, the son of thy mother, or thy son, or thy daughter, or the wife of thy bosom, or thy friend, which is as thine own soul, entice thee secretly, saying, Let us go and serve other gods... Thou shalt not consent unto him.' },
+        { reference: 'Isa. 44:9-10', text: 'They that make a graven image are all of them vanity; and their delectable things shall not profit; and they are their own witnesses; they see not, nor know; that they may be ashamed. Who hath formed a god, or molten a graven image that is profitable for nothing?' },
+        { reference: 'Exod. 32:5,8', text: 'And when Aaron saw it, he built an altar before it... They have turned aside quickly out of the way which I commanded them: they have made them a molten calf, and have worshipped it, and have sacrificed thereunto.' },
+        { reference: 'Col. 2:18,23', text: 'Let no man beguile you of your reward in a voluntary humility and worshipping of angels... Which things have indeed a shew of wisdom in will worship, and humility, and neglecting of the body.' },
+        { reference: 'Acts 8:18', text: 'And when Simon saw that through laying on of the apostles\' hands the Holy Ghost was given, he offered them money.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 110,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the reasons annexed to the second commandment, the more to enforce it?',
+      answer: 'The reasons annexed to the second commandment, the more to enforce it, contained in these words, For I the LORD thy God am a jealous God, visiting the iniquity of the fathers upon the children unto the third and fourth generation of them that hate me; and shewing mercy unto thousands of them that love me, and keep my commandments; are, besides God\'s sovereignty over us, and propriety in us, his fervent zeal for his own worship, and his revengeful indignation against all false worship, as being a spiritual whoredom; accounting the breakers of this commandment such as hate him, and threatening to punish them unto divers generations; and esteeming the observers of it such as love him and keep his commandments, and promising mercy to them unto many generations.',
+      proof_texts: [
+        { reference: 'Exod. 20:5-6', text: 'For I the LORD thy God am a jealous God, visiting the iniquity of the fathers upon the children unto the third and fourth generation of them that hate me; And shewing mercy unto thousands of them that love me, and keep my commandments.' },
+        { reference: 'Ps. 45:11', text: 'So shall the king greatly desire thy beauty: for he is thy Lord; and worship thou him.' },
+        { reference: 'Exod. 34:13-14', text: 'But ye shall destroy their altars, break their images, and cut down their groves... For thou shalt worship no other god: for the LORD, whose name is Jealous, is a jealous God.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 111,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Which is the third commandment?',
+      answer: 'The third commandment is, Thou shalt not take the name of the LORD thy God in vain: for the LORD will not hold him guiltless that taketh his name in vain.',
+      proof_texts: [
+        { reference: 'Exod. 20:7', text: 'Thou shalt not take the name of the LORD thy God in vain; for the LORD will not hold him guiltless that taketh his name in vain.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 112,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is required in the third commandment?',
+      answer: 'The third commandment requires, that the name of God, his titles, attributes, ordinances, the word, sacraments, prayer, oaths, vows, lots, his works, and any thing else whereby he makes himself known, be holily and reverently used in thought, meditation, word, and writing; by an holy profession, and answerable conversation, to the glory of God, and the good of ourselves, and others.',
+      proof_texts: [
+        { reference: 'Matt. 6:9', text: 'After this manner therefore pray ye: Our Father which art in heaven, Hallowed be thy name.' },
+        { reference: 'Ps. 29:2', text: 'Give unto the LORD the glory due unto his name; worship the LORD in the beauty of holiness.' },
+        { reference: 'Deut. 28:58', text: 'If thou wilt not observe to do all the words of this law that are written in this book, that thou mayest fear this glorious and fearful name, THE LORD THY GOD.' },
+        { reference: 'Ps. 68:4', text: 'Sing unto God, sing praises to his name: extol him that rideth upon the heavens by his name JAH, and rejoice before him.' },
+        { reference: 'Eccl. 5:1-2', text: 'Keep thy foot when thou goest to the house of God, and be more ready to hear, than to give the sacrifice of fools: for they consider not that they do evil. Be not rash with thy mouth, and let not thine heart be hasty to utter any thing before God: for God is in heaven, and thou upon earth: therefore let thy words be few.' },
+        { reference: 'Rev. 15:3-4', text: 'And they sing the song of Moses the servant of God, and the song of the Lamb, saying, Great and marvellous are thy works, Lord God Almighty; just and true are thy ways, thou King of saints. Who shall not fear thee, O Lord, and glorify thy name? for thou only art holy.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 113,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins forbidden in the third commandment?',
+      answer: 'The sins forbidden in the third commandment are, the not using of God\'s name as is required; and the abuse of it in an ignorant, vain, irreverent, profane, superstitious or wicked mentioning or otherwise using his titles, attributes, ordinances, or works, by blasphemy, perjury; all sinful cursings, oaths, vows, and lots; violating of our oaths and vows, if lawful; and fulfilling them, if of things unlawful; murmuring and quarrelling at, curious prying into, and misapplying of God\'s decrees and providences; misinterpreting, misapplying, or any way perverting the word, or any part of it, to profane jests, curious or unprofitable questions, vain janglings, or the maintaining of false doctrines; abusing it, the creatures, or any thing contained under the name of God, to charms, or sinful lusts and practices; the maligning, scorning, reviling, or any wise opposing of God\'s truth, grace, and ways; making profession of religion in hypocrisy, or for sinister ends; being ashamed of it, or a shame to it, by unconformable, unwise, unfruitful, and offensive walking, or backsliding from it.',
+      proof_texts: [
+        { reference: 'Mal. 2:2', text: 'If ye will not hear, and if ye will not lay it to heart, to give glory unto my name, saith the LORD of hosts, I will even send a curse upon you, and I will curse your blessings.' },
+        { reference: 'Acts 17:23', text: 'For as I passed by, and beheld your devotions, I found an altar with this inscription, TO THE UNKNOWN GOD. Whom therefore ye ignorantly worship, him declare I unto you.' },
+        { reference: 'Prov. 30:9', text: 'Lest I be full, and deny thee, and say, Who is the LORD? or lest I be poor, and steal, and take the name of my God in vain.' },
+        { reference: 'Mal. 3:14', text: 'Ye have said, It is vain to serve God: and what profit is it that we have kept his ordinance, and that we have walked mournfully before the LORD of hosts?' },
+        { reference: 'Matt. 5:37', text: 'But let your communication be, Yea, yea; Nay, nay: for whatsoever is more than these cometh of evil.' },
+        { reference: '2 Pet. 3:16', text: 'As also in all his epistles, speaking in them of these things; in which are some things hard to be understood, which they that are unlearned and unstable wrest, as they do also the other scriptures, unto their own destruction.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 114,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What reasons are annexed to the third commandment?',
+      answer: 'The reasons annexed to the third commandment, in these words, The LORD thy God, and, For the LORD will not hold him guiltless that taketh his name in vain, are, because he is the Lord and our God, therefore his name is not to be profaned, or any way abused by us; especially because he will be so far from acquitting and sparing the transgressors of this commandment, as that he will not suffer them to escape his righteous judgment, albeit many such escape the censures and punishments of men.',
+      proof_texts: [
+        { reference: 'Exod. 20:7', text: 'Thou shalt not take the name of the LORD thy God in vain; for the LORD will not hold him guiltless that taketh his name in vain.' },
+        { reference: 'Deut. 28:58-59', text: 'If thou wilt not observe to do all the words of this law... that thou mayest fear this glorious and fearful name, THE LORD THY GOD; Then the LORD will make thy plagues wonderful, and the plagues of thy seed, even great plagues, and of long continuance, and sore sicknesses.' },
+        { reference: '1 Sam. 2:12,17', text: 'Now the sons of Eli were sons of Belial; they knew not the LORD... Wherefore the sin of the young men was very great before the LORD: for men abhorred the offering of the LORD.' },
+        { reference: '1 Sam. 3:13', text: 'For I have told him that I will judge his house for ever for the iniquity which he knoweth; because his sons made themselves vile, and he restrained them not.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 115,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Which is the fourth commandment?',
+      answer: 'The fourth commandment is, Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: but the seventh day is the sabbath of the LORD thy God: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates: for in six days the LORD made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore the LORD blessed the sabbath day, and hallowed it.',
+      proof_texts: [
+        { reference: 'Exod. 20:8-11', text: 'Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: But the seventh day is the sabbath of the LORD thy God: in it thou shalt not do any work... For in six days the LORD made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore the LORD blessed the sabbath day, and hallowed it.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 116,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is required in the fourth commandment?',
+      answer: 'The fourth commandment requireth of all men the sanctifying or keeping holy to God such set times as he hath appointed in his word, expressly one whole day in seven; which was the seventh from the beginning of the world to the resurrection of Christ, and the first day of the week ever since, and so to continue to the end of the world; which is the Christian sabbath, and in the New Testament called The Lord\'s day.',
+      proof_texts: [
+        { reference: 'Deut. 5:12-14', text: 'Keep the sabbath day to sanctify it, as the LORD thy God hath commanded thee. Six days thou shalt labour, and do all thy work: But the seventh day is the sabbath of the LORD thy God.' },
+        { reference: 'Gen. 2:2-3', text: 'And on the seventh day God ended his work which he had made; and he rested on the seventh day from all his work which he had made. And God blessed the seventh day, and sanctified it.' },
+        { reference: 'Rev. 1:10', text: 'I was in the Spirit on the Lord\'s day, and heard behind me a great voice, as of a trumpet.' },
+        { reference: 'Mark 2:27-28', text: 'And he said unto them, The sabbath was made for man, and not man for the sabbath: Therefore the Son of man is Lord also of the sabbath.' },
+        { reference: 'Acts 20:7', text: 'And upon the first day of the week, when the disciples came together to break bread, Paul preached unto them.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 117,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'How is the sabbath or the Lord\'s day to be sanctified?',
+      answer: 'The sabbath or Lord\'s day is to be sanctified by a holy resting all the day, not only from such works as are at all times sinful, but even from such worldly employments and recreations as are on other days lawful; and making it our delight to spend the whole time (except so much of it as is to be taken up in works of necessity and mercy) in the public and private exercises of God\'s worship: and, to that end, we are to prepare our hearts, and with such foresight, diligence, and moderation, to dispose and seasonably dispatch our worldly business, that we may be the more free and fit for the duties of that day.',
+      proof_texts: [
+        { reference: 'Exod. 20:8', text: 'Remember the sabbath day, to keep it holy.' },
+        { reference: 'Isa. 58:13-14', text: 'If thou turn away thy foot from the sabbath, from doing thy pleasure on my holy day; and call the sabbath a delight, the holy of the LORD, honourable; and shalt honour him, not doing thine own ways, nor finding thine own pleasure, nor speaking thine own words: Then shalt thou delight thyself in the LORD.' },
+        { reference: 'Luke 4:16', text: 'And he came to Nazareth, where he had been brought up: and, as his custom was, he went into the synagogue on the sabbath day, and stood up for to read.' },
+        { reference: 'Acts 20:7', text: 'And upon the first day of the week, when the disciples came together to break bread, Paul preached unto them.' },
+        { reference: 'Ps. 92:1-2', text: 'It is a good thing to give thanks unto the LORD, and to sing praises unto thy name, O most High: To shew forth thy lovingkindness in the morning, and thy faithfulness every night.' },
+        { reference: 'Neh. 13:19', text: 'And it came to pass, that when the gates of Jerusalem began to be dark before the sabbath, I commanded that the gates should be shut, and charged that they should not be opened till after the sabbath.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 118,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Why is the charge of keeping the sabbath more specially directed to governors of families, and other superiors?',
+      answer: 'The charge of keeping the sabbath is more specially directed to governors of families, and other superiors, because they are bound not only to keep it themselves, but to see that it be observed by all those that are under their charge; and because they are prone ofttimes to hinder them by employments of their own.',
+      proof_texts: [
+        { reference: 'Exod. 20:10', text: 'But the seventh day is the sabbath of the LORD thy God: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates.' },
+        { reference: 'Josh. 24:15', text: 'And if it seem evil unto you to serve the LORD, choose you this day whom ye will serve... but as for me and my house, we will serve the LORD.' },
+        { reference: 'Neh. 13:15,17', text: 'In those days saw I in Judah some treading wine presses on the sabbath... Then I contended with the nobles of Judah, and said unto them, What evil thing is this that ye do, and profane the sabbath day?' },
+        { reference: 'Amos 8:5', text: 'Saying, When will the new moon be gone, that we may sell corn? and the sabbath, that we may set forth wheat, making the ephah small, and the shekel great, and falsifying the balances by deceit?' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 119,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins forbidden in the fourth commandment?',
+      answer: 'The sins forbidden in the fourth commandment are, all omissions of the duties required, all careless, negligent, and unprofitable performing of them, and being weary of them; all profaning the day by idleness, and doing that which is in itself sinful; and by all needless works, words, and thoughts, about our worldly employments and recreations.',
+      proof_texts: [
+        { reference: 'Ezek. 22:26', text: 'Her priests have violated my law, and have profaned mine holy things: they have put no difference between the holy and profane, neither have they shewed difference between the unclean and the clean, and have hid their eyes from my sabbaths, and I am profaned among them.' },
+        { reference: 'Acts 20:7,9', text: 'And upon the first day of the week, when the disciples came together to break bread, Paul preached unto them... And there sat in a window a certain young man named Eutychus, being fallen into a deep sleep: and as Paul was long preaching, he sunk down with sleep.' },
+        { reference: 'Isa. 58:13', text: 'If thou turn away thy foot from the sabbath, from doing thy pleasure on my holy day; and call the sabbath a delight, the holy of the LORD, honourable; and shalt honour him, not doing thine own ways, nor finding thine own pleasure, nor speaking thine own words.' },
+        { reference: 'Neh. 13:15-17,19,21-22', text: 'In those days saw I in Judah some treading wine presses on the sabbath, and bringing in sheaves, and lading asses; as also wine, grapes, and figs, and all manner of burdens, which they brought into Jerusalem on the sabbath day... Then I contended with the nobles of Judah.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 120,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the reasons annexed to the fourth commandment, the more to enforce it?',
+      answer: 'The reasons annexed to the fourth commandment, the more to enforce it, are taken from the equity of it, God allowing us six days of seven for our own affairs, and reserving but one for himself, in these words, Six days shalt thou labour, and do all thy work: from God\'s challenging a special propriety in that day, The seventh day is the sabbath of the LORD thy God: from the example of God, who in six days made heaven and earth, the sea, and all that in them is, and rested the seventh day: and from that blessing which God put upon that day, not only in sanctifying it to be a day for his service, but in ordaining it to be a means of blessing to us in our sanctifying it; Wherefore the LORD blessed the sabbath day, and hallowed it.',
+      proof_texts: [
+        { reference: 'Exod. 20:9-11', text: 'Six days shalt thou labour, and do all thy work: But the seventh day is the sabbath of the LORD thy God: in it thou shalt not do any work... For in six days the LORD made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore the LORD blessed the sabbath day, and hallowed it.' },
+        { reference: 'Gen. 2:2', text: 'And on the seventh day God ended his work which he had made; and he rested on the seventh day from all his work which he had made.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 121,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Why is the word Remember set in the beginning of the fourth commandment?',
+      answer: 'The word Remember is set in the beginning of the fourth commandment, partly, because of the great benefit of remembering it, we being thereby helped in our preparation to keep it, and, in keeping it, better enabled to keep all the rest of the commandments, and to continue a thankful remembrance of the two great benefits of creation and redemption, which contain a short abridgment of religion; and partly, because we are very ready to forget it, for that there is less light of nature for it, and yet it restraineth our natural liberty in things at other times lawful; that it cometh but once in seven days, and many worldly businesses come between, and too often take off our minds from thinking of it, either to prepare for it, or to sanctify it; and that Satan with his instruments much labour to blot out the glory, and even the memory of it, to bring in all irreligion and impiety.',
+      proof_texts: [
+        { reference: 'Exod. 20:8', text: 'Remember the sabbath day, to keep it holy.' },
+        { reference: 'Neh. 13:22', text: 'And I commanded the Levites that they should cleanse themselves, and that they should come and keep the gates, to sanctify the sabbath day. Remember me, O my God, concerning this also, and spare me according to the greatness of thy mercy.' },
+        { reference: 'Ps. 92:1-6', text: 'It is a good thing to give thanks unto the LORD, and to sing praises unto thy name, O most High: To shew forth thy lovingkindness in the morning, and thy faithfulness every night.' },
+        { reference: 'Gen. 2:2-3', text: 'And on the seventh day God ended his work which he had made; and he rested on the seventh day from all his work which he had made. And God blessed the seventh day, and sanctified it.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 122,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is the sum of the six commandments which contain our duty to man?',
+      answer: 'The sum of the six commandments which contain our duty to man, is to love our neighbour as ourselves, and to do to others what we would have them to do to us.',
+      proof_texts: [
+        { reference: 'Matt. 22:39', text: 'And the second is like unto it, Thou shalt love thy neighbour as thyself.' },
+        { reference: 'Matt. 7:12', text: 'Therefore all things whatsoever ye would that men should do to you, do ye even so to them: for this is the law and the prophets.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 123,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Which is the fifth commandment?',
+      answer: 'The fifth commandment is, Honour thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee.',
+      proof_texts: [
+        { reference: 'Exod. 20:12', text: 'Honour thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 124,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Who are meant by father and mother in the fifth commandment?',
+      answer: 'By father and mother, in the fifth commandment, are meant, not only natural parents, but all superiors in age and gifts; and especially such as, by God\'s ordinance, are over us in place of authority, whether in family, church, or commonwealth.',
+      proof_texts: [
+        { reference: 'Prov. 23:22,25', text: 'Hearken unto thy father that begat thee, and despise not thy mother when she is old... Thy father and thy mother shall be glad, and she that bare thee shall rejoice.' },
+        { reference: 'Eph. 6:1-2', text: 'Children, obey your parents in the Lord: for this is right. Honour thy father and mother; which is the first commandment with promise.' },
+        { reference: '1 Tim. 5:1-2', text: 'Rebuke not an elder, but intreat him as a father; and the younger men as brethren; The elder women as mothers; the younger as sisters, with all purity.' },
+        { reference: 'Gen. 4:20-22', text: 'And Adah bare Jabal: he was the father of such as dwell in tents... And his brother\'s name was Jubal: he was the father of all such as handle the harp and organ.' },
+        { reference: 'Rom. 13:1-2', text: 'Let every soul be subject unto the higher powers. For there is no power but of God: the powers that be are ordained of God. Whosoever therefore resisteth the power, resisteth the ordinance of God.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 125,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Why are superiors styled Father and Mother?',
+      answer: 'Superiors are styled Father and Mother, both to teach them in all duties toward their inferiors, like natural parents, to express love and tenderness to them, according to their several relations; and to work inferiors to a greater willingness and cheerfulness in performing their duties to their superiors, as to their parents.',
+      proof_texts: [
+        { reference: 'Eph. 6:4', text: 'And, ye fathers, provoke not your children to wrath: but bring them up in the nurture and admonition of the Lord.' },
+        { reference: '2 Tim. 3:10-12', text: 'But thou hast fully known my doctrine, manner of life, purpose, faith, longsuffering, charity, patience, Persecutions, afflictions... Yea, and all that will live godly in Christ Jesus shall suffer persecution.' },
+        { reference: '1 Thess. 2:7-8,11-12', text: 'But we were gentle among you, even as a nurse cherisheth her children... As ye know how we exhorted and comforted and charged every one of you, as a father doth his children.' },
+        { reference: 'Num. 11:11-12', text: 'And Moses said unto the LORD, Wherefore hast thou afflicted thy servant? and wherefore have I not found favour in thy sight, that thou layest the burden of all this people upon me? Have I conceived all this people? have I begotten them, that thou shouldest say unto me, Carry them in thy bosom, as a nursing father beareth the sucking child?' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 126,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is the general scope of the fifth commandment?',
+      answer: 'The general scope of the fifth commandment is, the performance of those duties which we mutually owe in our several relations, as inferiors, superiors, or equals.',
+      proof_texts: [
+        { reference: 'Eph. 5:21', text: 'Submitting yourselves one to another in the fear of God.' },
+        { reference: 'Rom. 12:10', text: 'Be kindly affectioned one to another with brotherly love; in honour preferring one another.' },
+        { reference: '1 Pet. 2:17', text: 'Honour all men. Love the brotherhood. Fear God. Honour the king.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 127,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is the honour that inferiors owe to their superiors?',
+      answer: 'The honour which inferiors owe to their superiors is, all due reverence in heart, word, and behaviour; prayer and thanksgiving for them; imitation of their virtues and graces; willing obedience to their lawful commands and counsels; due submission to their corrections; fidelity to, defence and maintenance of their persons and authority, according to their several ranks, and the nature of their places; bearing with their infirmities, and covering them in love, that so they may be an honour to them and to their government.',
+      proof_texts: [
+        { reference: 'Mal. 1:6', text: 'A son honoureth his father, and a servant his master: if then I be a father, where is mine honour? and if I be a master, where is my fear? saith the LORD of hosts unto you, O priests, that despise my name.' },
+        { reference: 'Lev. 19:3', text: 'Ye shall fear every man his mother, and his father, and keep my sabbaths: I am the LORD your God.' },
+        { reference: '1 Tim. 2:1-2', text: 'I exhort therefore, that, first of all, supplications, prayers, intercessions, and giving of thanks, be made for all men; For kings, and for all that are in authority; that we may lead a quiet and peaceable life in all godliness and honesty.' },
+        { reference: 'Heb. 13:7', text: 'Remember them which have the rule over you, who have spoken unto you the word of God: whose faith follow, considering the end of their conversation.' },
+        { reference: 'Eph. 6:1-2,5-7', text: 'Children, obey your parents in the Lord: for this is right. Honour thy father and mother... Servants, be obedient to them that are your masters according to the flesh, with fear and trembling, in singleness of your heart, as unto Christ.' },
+        { reference: 'Rom. 13:1-5', text: 'Let every soul be subject unto the higher powers. For there is no power but of God: the powers that be are ordained of God.' },
+        { reference: '1 Pet. 2:13-14', text: 'Submit yourselves to every ordinance of man for the Lord\'s sake: whether it be to the king, as supreme; Or unto governors, as unto them that are sent by him.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 128,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins of inferiors against their superiors?',
+      answer: 'The sins of inferiors against their superiors are, all neglect of the duties required toward them; envying at, contemning of, and rebellion against, their persons and places, in their lawful counsels, commands, and corrections; cursing, mocking, and all such refractory and scandalous carriage, as proves a shame and dishonour to them and their government.',
+      proof_texts: [
+        { reference: 'Matt. 15:4-6', text: 'For God commanded, saying, Honour thy father and mother: and, He that curseth father or mother, let him die the death. But ye say, Whosoever shall say to his father or his mother, It is a gift, by whatsoever thou mightest be profited by me; And honour not his father or his mother, he shall be free. Thus have ye made the commandment of God of none effect by your tradition.' },
+        { reference: 'Prov. 30:11,17', text: 'There is a generation that curseth their father, and doth not bless their mother... The eye that mocketh at his father, and despiseth to obey his mother, the ravens of the valley shall pick it out.' },
+        { reference: '2 Sam. 15:1-12', text: 'And it came to pass after this, that Absalom prepared him chariots and horses, and fifty men to run before him... Absalom stole the hearts of the men of Israel.' },
+        { reference: '1 Sam. 8:7', text: 'And the LORD said unto Samuel, Hearken unto the voice of the people in all that they say unto thee: for they have not rejected thee, but they have rejected me, that I should not reign over them.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 129,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is required of superiors towards their inferiors?',
+      answer: 'It is required of superiors, according to that power they receive from God, and that relation wherein they stand, to love, pray for, and bless their inferiors; to instruct, counsel, and admonish them; countenancing, commending, and rewarding such as do well; and discountenancing, reproving, and chastising such as do ill; protecting, and providing for them all things necessary for soul and body: and, by grave, wise, holy, and exemplary carriage, to procure glory to God, honour to themselves, and so to preserve that authority which God hath put upon them.',
+      proof_texts: [
+        { reference: 'Col. 3:19', text: 'Husbands, love your wives, and be not bitter against them.' },
+        { reference: 'Titus 2:4', text: 'That they may teach the young women to be sober, to love their husbands, to love their children.' },
+        { reference: '1 Sam. 12:23', text: 'Moreover as for me, God forbid that I should sin against the LORD in ceasing to pray for you: but I will teach you the good and the right way.' },
+        { reference: 'Job 29:12-17', text: 'Because I delivered the poor that cried, and the fatherless, and him that had none to help him. The blessing of him that was ready to perish came upon me: and I caused the widow\'s heart to sing for joy.' },
+        { reference: 'Eph. 6:4', text: 'And, ye fathers, provoke not your children to wrath: but bring them up in the nurture and admonition of the Lord.' },
+        { reference: 'Rom. 13:3-4', text: 'For rulers are not a terror to good works, but to the evil. Wilt thou then not be afraid of the power? do that which is good, and thou shalt have praise of the same.' },
+        { reference: '1 Tim. 5:17-18', text: 'Let the elders that rule well be counted worthy of double honour, especially they who labour in the word and doctrine. For the scripture saith, Thou shalt not muzzle the ox that treadeth out the corn.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 130,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins of superiors?',
+      answer: 'The sins of superiors are, besides the neglect of the duties required of them, an inordinate seeking of themselves, their own glory, ease, profit, or pleasure; commanding things unlawful, or not in the power of inferiors to perform; counselling, encouraging, or favouring them in that which is evil; dissuading, discouraging, or discountenancing them in that which is good; correcting them unduly; careless exposing, or leaving them to wrong, temptation, and danger; provoking them to wrath; or any way dishonouring themselves, or lessening their authority, by an unjust, indiscreet, rigorous, or remiss behaviour.',
+      proof_texts: [
+        { reference: 'Ezek. 34:2-4', text: 'Son of man, prophesy against the shepherds of Israel, prophesy, and say unto them, Thus saith the Lord GOD unto the shepherds; Woe be to the shepherds of Israel that do feed themselves! should not the shepherds feed the flocks? Ye eat the fat, and ye clothe you with the wool, ye kill them that are fed: but ye feed not the flock.' },
+        { reference: 'Phil. 2:21', text: 'For all seek their own, not the things which are Jesus Christ\'s.' },
+        { reference: 'Dan. 3:4-6', text: 'Then an herald cried aloud, To you it is commanded, O people, nations, and languages, That at what time ye hear the sound of the cornet, flute, harp, sackbut, psaltery, dulcimer, and all kinds of musick, ye fall down and worship the golden image that Nebuchadnezzar the king hath set up: And whoso falleth not down and worshippeth shall the same hour be cast into the midst of a burning fiery furnace.' },
+        { reference: 'Eph. 6:4', text: 'And, ye fathers, provoke not your children to wrath: but bring them up in the nurture and admonition of the Lord.' },
+        { reference: 'Col. 3:21', text: 'Fathers, provoke not your children to anger, lest they be discouraged.' },
+        { reference: '1 Pet. 5:3', text: 'Neither as being lords over God\'s heritage, but being ensamples to the flock.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 131,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the duties of equals?',
+      answer: 'The duties of equals are, to regard the dignity and worth of each other, in giving honour to go one before another; and to rejoice in each other\'s gifts and advancement, as their own.',
+      proof_texts: [
+        { reference: 'Rom. 12:10', text: 'Be kindly affectioned one to another with brotherly love; in honour preferring one another.' },
+        { reference: '1 Pet. 2:17', text: 'Honour all men. Love the brotherhood. Fear God. Honour the king.' },
+        { reference: '1 Cor. 12:25-26', text: 'That there should be no schism in the body; but that the members should have the same care one for another. And whether one member suffer, all the members suffer with it; or one member be honoured, all the members rejoice with it.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 132,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins of equals?',
+      answer: 'The sins of equals are, besides the neglect of the duties required, the undervaluing of the worth, envying the gifts, grieving at the advancement or good of others, and usurping pre-eminence over equals.',
+      proof_texts: [
+        { reference: 'Num. 12:2', text: 'And they said, Hath the LORD indeed spoken only by Moses? hath he not spoken also by us? And the LORD heard it.' },
+        { reference: 'Esther 6:12-13', text: 'And Mordecai came again to the king\'s gate. But Haman hasted to his house mourning, and having his head covered. And Haman told Zeresh his wife and all his friends every thing that had befallen him.' },
+        { reference: '3 John 1:9', text: 'I wrote unto the church: but Diotrephes, who loveth to have the preeminence among them, receiveth us not.' },
+        { reference: 'Luke 22:24', text: 'And there was also a strife among them, which of them should be accounted the greatest.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 133,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What is the reason annexed to the fifth commandment, the more to enforce it?',
+      answer: 'The reason annexed to the fifth commandment, in these words, That thy days may be long upon the land which the LORD thy God giveth thee, is an express promise of long life and prosperity, as far as it shall serve for God\'s glory and their own good, to all such as keep this commandment.',
+      proof_texts: [
+        { reference: 'Eph. 6:2-3', text: 'Honour thy father and mother; which is the first commandment with promise; That it may be well with thee, and thou mayest live long on the earth.' },
+        { reference: 'Exod. 20:12', text: 'Honour thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee.' },
+        { reference: '1 Kings 8:25', text: 'Therefore now, LORD God of Israel, keep with thy servant David my father that thou promisedst him, saying, There shall not fail thee a man in my sight to sit on the throne of Israel; so that thy children take heed to their way, that they walk before me as thou hast walked before me.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 134,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Which is the sixth commandment?',
+      answer: 'The sixth commandment is, Thou shalt not kill.',
+      proof_texts: [
+        { reference: 'Exod. 20:13', text: 'Thou shalt not kill.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 135,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the duties required in the sixth commandment?',
+      answer: 'The duties required in the sixth commandment are, all careful studies, and lawful endeavours, to preserve the life of ourselves and others by resisting all thoughts and purposes, subduing all passions, and avoiding all occasions, temptations, and practices, which tend to the unjust taking away the life of any; by just defence thereof against violence, patient bearing of the hand of God, quietness of mind, cheerfulness of spirit; a sober use of meat, drink, physic, sleep, labour, and recreations; by charitable thoughts, love, compassion, meekness, gentleness, kindness; peaceable, mild and courteous speeches and behaviour; forbearance, readiness to be reconciled, patient bearing and forgiving of injuries, and requiting good for evil; comforting and succouring the distressed, and protecting and defending the innocent.',
+      proof_texts: [
+        { reference: 'Eph. 5:28-29', text: 'So ought men to love their wives as their own bodies. He that loveth his wife loveth himself. For no man ever yet hated his own flesh; but nourisheth and cherisheth it, even as the Lord the church.' },
+        { reference: 'Acts 16:28', text: 'But Paul cried with a loud voice, saying, Do thyself no harm: for we are all here.' },
+        { reference: 'Matt. 5:29-30', text: 'And if thy right eye offend thee, pluck it out, and cast it from thee: for it is profitable for thee that one of thy members should perish, and not that thy whole body should be cast into hell.' },
+        { reference: 'James 5:7-11', text: 'Be patient therefore, brethren, unto the coming of the Lord... Behold, we count them happy which endure. Ye have heard of the patience of Job, and have seen the end of the Lord; that the Lord is very pitiful, and of tender mercy.' },
+        { reference: 'Prov. 25:16', text: 'Hast thou found honey? eat so much as is sufficient for thee, lest thou be filled therewith, and vomit it.' },
+        { reference: '1 Thess. 4:11', text: 'And that ye study to be quiet, and to do your own business, and to work with your own hands, as we commanded you.' },
+        { reference: 'Matt. 5:44-45', text: 'But I say unto you, Love your enemies, bless them that curse you, do good to them that hate you, and pray for them which despitefully use you, and persecute you; That ye may be the children of your Father which is in heaven.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 136,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins forbidden in the sixth commandment?',
+      answer: 'The sins forbidden in the sixth commandment are, all taking away the life of ourselves, or of others, except in case of public justice, lawful war, or necessary defence; the neglecting or withdrawing the lawful and necessary means of preservation of life; sinful anger, hatred, envy, desire of revenge; all excessive passions, distracting cares; immoderate use of meat, drink, labour, and recreations; provoking words, oppression, quarrelling, striking, wounding, and whatsoever else tends to the destruction of the life of any.',
+      proof_texts: [
+        { reference: 'Acts 16:28', text: 'But Paul cried with a loud voice, saying, Do thyself no harm: for we are all here.' },
+        { reference: 'Gen. 9:6', text: 'Whoso sheddeth man\'s blood, by man shall his blood be shed: for in the image of God made he man.' },
+        { reference: 'Matt. 25:42-43', text: 'For I was an hungred, and ye gave me no meat: I was thirsty, and ye gave me no drink: I was a stranger, and ye took me not in: naked, and ye clothed me not: sick, and in prison, and ye visited me not.' },
+        { reference: 'Matt. 5:22', text: 'But I say unto you, That whosoever is angry with his brother without a cause shall be in danger of the judgment: and whosoever shall say to his brother, Raca, shall be in danger of the council: but whosoever shall say, Thou fool, shall be in danger of hell fire.' },
+        { reference: '1 John 3:15', text: 'Whosoever hateth his brother is a murderer: and ye know that no murderer hath eternal life abiding in him.' },
+        { reference: 'Prov. 24:11-12', text: 'If thou forbear to deliver them that are drawn unto death, and those that are ready to be slain; If thou sayest, Behold, we knew it not; doth not he that pondereth the heart consider it? and he that keepeth thy soul, doth not he know it?' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 137,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Which is the seventh commandment?',
+      answer: 'The seventh commandment is, Thou shalt not commit adultery.',
+      proof_texts: [
+        { reference: 'Exod. 20:14', text: 'Thou shalt not commit adultery.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 138,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the duties required in the seventh commandment?',
+      answer: 'The duties required in the seventh commandment are, chastity in body, mind, affections, words, and behaviour; and the preservation of it in ourselves and others; watchfulness over the eyes and all the senses; temperance, keeping of chaste company, modesty in apparel; marriage by those that have not the gift of continency, conjugal love, and cohabitation; diligent labour in our callings; shunning all occasions of uncleanness, and resisting temptations thereunto.',
+      proof_texts: [
+        { reference: '1 Thess. 4:4', text: 'That every one of you should know how to possess his vessel in sanctification and honour.' },
+        { reference: 'Job 31:1', text: 'I made a covenant with mine eyes; why then should I think upon a maid?' },
+        { reference: '1 Cor. 7:2,9', text: 'Nevertheless, to avoid fornication, let every man have his own wife, and let every woman have her own husband... But if they cannot contain, let them marry: for it is better to marry than to burn.' },
+        { reference: 'Prov. 2:16-20', text: 'To deliver thee from the strange woman, even from the stranger which flattereth with her words... That thou mayest walk in the way of good men, and keep the paths of the righteous.' },
+        { reference: '1 Pet. 3:2', text: 'While they behold your chaste conversation coupled with fear.' },
+        { reference: 'Titus 2:4-5', text: 'That they may teach the young women to be sober, to love their husbands, to love their children, To be discreet, chaste, keepers at home, good, obedient to their own husbands, that the word of God be not blasphemed.' },
+        { reference: 'Prov. 5:19-20', text: 'Let her be as the loving hind and pleasant roe; let her breasts satisfy thee at all times; and be thou ravished always with her love. And why wilt thou, my son, be ravished with a strange woman, and embrace the bosom of a stranger?' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 139,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins forbidden in the seventh commandment?',
+      answer: 'The sins forbidden in the seventh commandment, besides the neglect of the duties required, are, adultery, fornication, rape, incest, sodomy, and all unnatural lusts; all unclean imaginations, thoughts, purposes, and affections; all corrupt or filthy communications, or listening thereunto; wanton looks, impudent or light behaviour, immodest apparel; prohibiting of lawful, and dispensing with unlawful marriages; allowing, tolerating, keeping of stews, and resorting to them; entangling vows of single life, undue delay of marriage; having more wives or husbands than one at the same time; unjust divorce, or desertion; idleness, gluttony, drunkenness, unchaste company; lascivious songs, books, pictures, dancings, stage plays; and all other provocations to, or acts of uncleanness, either in ourselves or others.',
+      proof_texts: [
+        { reference: 'Matt. 5:28', text: 'But I say unto you, That whosoever looketh on a woman to lust after her hath committed adultery with her already in his heart.' },
+        { reference: 'Eph. 5:3-4', text: 'But fornication, and all uncleanness, or covetousness, let it not be once named among you, as becometh saints; Neither filthiness, nor foolish talking, nor jesting, which are not convenient: but rather giving of thanks.' },
+        { reference: 'Col. 4:6', text: 'Let your speech be alway with grace, seasoned with salt, that ye may know how ye ought to answer every man.' },
+        { reference: '1 Pet. 3:3', text: 'Whose adorning let it not be that outward adorning of plaiting the hair, and of wearing of gold, or of putting on of apparel.' },
+        { reference: 'Prov. 7:10,13', text: 'And, behold, there met him a woman with the attire of an harlot, and subtil of heart... So she caught him, and kissed him, and with an impudent face said unto him.' },
+        { reference: '1 Tim. 4:3', text: 'Forbidding to marry, and commanding to abstain from meats, which God hath created to be received with thanksgiving of them which believe and know the truth.' },
+        { reference: 'Matt. 19:9', text: 'And I say unto you, Whosoever shall put away his wife, except it be for fornication, and shall marry another, committeth adultery: and whoso marrieth her which is put away doth commit adultery.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 140,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Which is the eighth commandment?',
+      answer: 'The eighth commandment is, Thou shalt not steal.',
+      proof_texts: [
+        { reference: 'Exod. 20:15', text: 'Thou shalt not steal.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 141,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the duties required in the eighth commandment?',
+      answer: 'The duties required in the eighth commandment are, truth, faithfulness, and justice in contracts and commerce between man and man; rendering to every one his due; restitution of goods unlawfully detained from the right owners thereof; giving and lending freely, according to our abilities, and the necessities of others; moderation of our judgments, wills, and affections concerning worldly goods; a provident care and study to get, keep, use, and dispose these things which are necessary and convenient for the sustentation of our nature, and suitable to our condition; a lawful calling, and diligence in it; frugality; avoiding unnecessary suits at law, and suretiship, or other like engagements; and an endeavour, by all just and lawful means, to procure, preserve, and further the wealth and outward estate of others, as well as our own.',
+      proof_texts: [
+        { reference: 'Ps. 15:2', text: 'He that walketh uprightly, and worketh righteousness, and speaketh the truth in his heart.' },
+        { reference: 'Rom. 13:7', text: 'Render therefore to all their dues: tribute to whom tribute is due; custom to whom custom; fear to whom fear; honour to whom honour.' },
+        { reference: 'Lev. 6:2-5', text: 'If a soul sin, and commit a trespass against the LORD, and lie unto his neighbour in that which was delivered him to keep, or in fellowship, or in a thing taken away by violence, or hath deceived his neighbour... Then it shall be, because he hath sinned, and is guilty, that he shall restore that which he took violently away.' },
+        { reference: 'Luke 16:10', text: 'He that is faithful in that which is least is faithful also in much: and he that is unjust in the least is unjust also in much.' },
+        { reference: 'Eph. 4:28', text: 'Let him that stole steal no more: but rather let him labour, working with his hands the thing which is good, that he may have to give to him that needeth.' },
+        { reference: '1 Tim. 5:8', text: 'But if any provide not for his own, and specially for those of his own house, he hath denied the faith, and is worse than an infidel.' },
+        { reference: 'Prov. 27:23-27', text: 'Be thou diligent to know the state of thy flocks, and look well to thy herds... And thou shalt have goats\' milk enough for thy food, for the food of thy household.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 142,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins forbidden in the eighth commandment?',
+      answer: 'The sins forbidden in the eighth commandment, besides the neglect of the duties required, are, theft, robbery, man-stealing, and receiving any thing that is stolen; fraudulent dealing, false weights and measures, removing land marks, injustice and unfaithfulness in contracts between man and man, or in matters of trust; oppression, extortion, usury, bribery, vexatious suits, unjust inclosures and depopulations; engrossing commodities to enhance the price; unlawful callings, and all other unjust or sinful ways of taking or withholding from our neighbour what belongs to him, or of enriching ourselves; covetousness; inordinate prizing and affecting worldly goods; distrustful and distracting cares and studies in getting, keeping, and using them; envying at the prosperity of others; as likewise prodigality, wasteful gaming; and all other ways whereby we do unduly prejudice our own outward estate, and defrauding ourselves of the due use and comfort of that estate which God hath given us.',
+      proof_texts: [
+        { reference: 'Eph. 4:28', text: 'Let him that stole steal no more: but rather let him labour, working with his hands the thing which is good, that he may have to give to him that needeth.' },
+        { reference: 'Ps. 62:10', text: 'Trust not in oppression, and become not vain in robbery: if riches increase, set not your heart upon them.' },
+        { reference: 'Prov. 11:1', text: 'A false balance is abomination to the LORD: but a just weight is his delight.' },
+        { reference: 'Luke 16:10-12', text: 'He that is faithful in that which is least is faithful also in much: and he that is unjust in the least is unjust also in much. If therefore ye have not been faithful in the unrighteous mammon, who will commit to your trust the true riches?' },
+        { reference: '1 Tim. 6:9-10', text: 'But they that will be rich fall into temptation and a snare, and into many foolish and hurtful lusts, which drown men in destruction and perdition. For the love of money is the root of all evil: which while some coveted after, they have erred from the faith.' },
+        { reference: 'Col. 3:5', text: 'Mortify therefore your members which are upon the earth; fornication, uncleanness, inordinate affection, evil concupiscence, and covetousness, which is idolatry.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 143,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Which is the ninth commandment?',
+      answer: 'The ninth commandment is, Thou shalt not bear false witness against thy neighbour.',
+      proof_texts: [
+        { reference: 'Exod. 20:16', text: 'Thou shalt not bear false witness against thy neighbour.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 144,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the duties required in the ninth commandment?',
+      answer: 'The duties required in the ninth commandment are, the preserving and promoting of truth between man and man, and the good name of our neighbour, as well as our own; appearing and standing for the truth; and from the heart, sincerely, freely, clearly, and fully, speaking the truth, and only the truth, in matters of judgment and justice, and in all other things whatsoever; a charitable esteem of our neighbours; loving, desiring, and rejoicing in their good name; sorrowing for, and covering of their infirmities; freely acknowledging of their gifts and graces, defending their innocency; a ready receiving of a good report, and unwillingness to admit of an evil report, concerning them; discouraging tale-bearers, flatterers, and slanderers; love and care of our own good name, and defending it when needfully; keeping of lawful promises; studying and practising of whatsoever things are true, honest, lovely, and of good report.',
+      proof_texts: [
+        { reference: 'Zech. 8:16', text: 'These are the things that ye shall do; Speak ye every man the truth to his neighbour; execute the judgment of truth and peace in your gates.' },
+        { reference: 'Eph. 4:15', text: 'But speaking the truth in love, may grow up into him in all things, which is the head, even Christ.' },
+        { reference: 'Ps. 15:2', text: 'He that walketh uprightly, and worketh righteousness, and speaketh the truth in his heart.' },
+        { reference: '2 Cor. 2:17', text: 'For we are not as many, which corrupt the word of God: but as of sincerity, but as of God, in the sight of God speak we in Christ.' },
+        { reference: 'Phil. 4:8', text: 'Finally, brethren, whatsoever things are true, whatsoever things are honest, whatsoever things are just, whatsoever things are pure, whatsoever things are lovely, whatsoever things are of good report; if there be any virtue, and if there be any praise, think on these things.' },
+        { reference: '1 Pet. 3:16', text: 'Having a good conscience; that, whereas they speak evil of you, as of evildoers, they may be ashamed that falsely accuse your good conversation in Christ.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 145,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins forbidden in the ninth commandment?',
+      answer: 'The sins forbidden in the ninth commandment are, all prejudicing the truth, and the good name of our neighbours or ourselves, all bearing of false witness, suborning false witnesses, wittingly appearing and pleading for an evil cause, outright lying, disguising the truth, equivocating, and in any wise depraving truth in its nature, use, and effects, that the credit and reputation of any, whether innocent or guilty, be unjustly impaired; raising false rumours, receiving and countenancing evil reports, and stopping our ears against just defence; evil suspicion; envying or grieving at the deserved credit of any; endeavouring or desiring to impair it, rejoicing in their disgrace and infamy; scornful contempt, fond admiration; breach of lawful promises; neglecting such things as are of good report, and practising, or not avoiding ourselves, or not hindering what we can in others, such things as procure an ill name.',
+      proof_texts: [
+        { reference: 'Matt. 5:37', text: 'But let your communication be, Yea, yea; Nay, nay: for whatsoever is more than these cometh of evil.' },
+        { reference: 'Ps. 15:3', text: 'He that backbiteth not with his tongue, nor doeth evil to his neighbour, nor taketh up a reproach against his neighbour.' },
+        { reference: 'Prov. 19:5', text: 'A false witness shall not be unpunished, and he that speaketh lies shall not escape.' },
+        { reference: 'Prov. 6:16-19', text: 'These six things doth the LORD hate: yea, seven are an abomination unto him: A proud look, a lying tongue... A false witness that speaketh lies, and he that soweth discord among brethren.' },
+        { reference: 'Rev. 21:8', text: 'But the fearful, and unbelieving, and the abominable, and murderers, and whoremongers, and sorcerers, and idolaters, and all liars, shall have their part in the lake which burneth with fire and brimstone.' },
+        { reference: '1 Pet. 4:15', text: 'But let none of you suffer as a murderer, or as a thief, or as an evildoer, or as a busybody in other men\'s matters.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 146,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'Which is the tenth commandment?',
+      answer: 'The tenth commandment is, Thou shalt not covet thy neighbour\'s house, thou shalt not covet thy neighbour\'s wife, nor his manservant, nor his maidservant, nor his ox, nor his ass, nor any thing that is thy neighbour\'s.',
+      proof_texts: [
+        { reference: 'Exod. 20:17', text: 'Thou shalt not covet thy neighbour\'s house, thou shalt not covet thy neighbour\'s wife, nor his manservant, nor his maidservant, nor his ox, nor his ass, nor any thing that is thy neighbour\'s.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 147,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the duties required in the tenth commandment?',
+      answer: 'The duties required in the tenth commandment are, such a full contentment with our own condition, and such a charitable frame of the whole soul toward our neighbour, as that all our inward motions and affections touching him, tend unto, and further all that good which is his.',
+      proof_texts: [
+        { reference: 'Heb. 13:5', text: 'Let your conversation be without covetousness; and be content with such things as ye have: for he hath said, I will never leave thee, nor forsake thee.' },
+        { reference: 'Phil. 4:11', text: 'Not that I speak in respect of want: for I have learned, in whatsoever state I am, therewith to be content.' },
+        { reference: '1 Tim. 6:6', text: 'But godliness with contentment is great gain.' },
+        { reference: 'Job 31:29', text: 'If I rejoiced at the destruction of him that hated me, or lifted up myself when evil found him.' },
+        { reference: 'Ps. 122:7-9', text: 'Peace be within thy walls, and prosperity within thy palaces. For my brethren and companions\' sakes, I will now say, Peace be within thee. Because of the house of the LORD our God I will seek thy good.' },
+        { reference: '1 Tim. 1:5', text: 'Now the end of the commandment is charity out of a pure heart, and of a good conscience, and of faith unfeigned.' }
+      ]
+    },
+    {
+      catechism_id: 'wlc', number: 148,
+      section: 'The Moral Law and Commandments', section_name: 'The Moral Law and Commandments',
+      question: 'What are the sins forbidden in the tenth commandment?',
+      answer: 'The sins forbidden in the tenth commandment are, discontentment with our own estate; envying and grieving at the good of our neighbour, together with all inordinate motions and affections to any thing that is his.',
+      proof_texts: [
+        { reference: '1 Kings 21:4', text: 'And Ahab came into his house heavy and displeased because of the word which Naboth the Jezreelite had spoken to him: for he had said, I will not give thee the inheritance of my fathers. And he laid him down upon his bed, and turned away his face, and would eat no bread.' },
+        { reference: 'Esther 5:13', text: 'Yet all this availeth me nothing, so long as I see Mordecai the Jew sitting at the king\'s gate.' },
+        { reference: '1 Cor. 10:10', text: 'Neither murmur ye, as some of them also murmured, and were destroyed of the destroyer.' },
+        { reference: 'Gal. 5:26', text: 'Let us not be desirous of vain glory, provoking one another, envying one another.' },
+        { reference: 'Col. 3:5', text: 'Mortify therefore your members which are upon the earth; fornication, uncleanness, inordinate affection, evil concupiscence, and covetousness, which is idolatry.' },
+        { reference: 'Rom. 7:7-8', text: 'What shall we say then? Is the law sin? God forbid. Nay, I had not known sin, but by the law: for I had not known lust, except the law had said, Thou shalt not covet. But sin, taking occasion by the commandment, wrought in me all manner of concupiscence.' }
+      ]
+    },
   ];
 
   for (const q of questions) {

@@ -49,15 +49,24 @@ function clean(w: string): string {
   return w.replace(/[^a-zA-Z]/g, '').toLowerCase();
 }
 
+function blankCount(answer: string): number {
+  const len = answer.length;
+  if (len < 80)  return 1;
+  if (len < 200) return 2;
+  if (len < 400) return 3;
+  return 4;
+}
+
 function buildExercise(answer: string) {
   const tokens = answer.split(/(\s+)/);
+  const count  = blankCount(answer);
 
   const candidates = tokens
     .map((t, i) => ({ i, c: clean(t) }))
-    .filter(({ c }) => c.length >= 5 && !STOP.has(c));
+    .filter(({ c }) => c.length >= 4 && !STOP.has(c));
 
   candidates.sort((a, b) => b.c.length - a.c.length);
-  const chosen = new Set(candidates.slice(0, 2).map(x => x.i));
+  const chosen = new Set(candidates.slice(0, count).map(x => x.i));
 
   const segments: Segment[] = [];
   const blanks: Blank[] = [];
@@ -81,7 +90,7 @@ function buildExercise(answer: string) {
   const distractors = DISTRACTORS
     .filter(w => !chosenSet.has(w) && !ansLower.includes(w))
     .sort(() => Math.random() - 0.5)
-    .slice(0, 3);
+    .slice(0, Math.max(3, chosenWords.length + 2));
 
   const bank: Chip[] = [...chosenWords, ...distractors]
     .sort(() => Math.random() - 0.5)
@@ -109,6 +118,8 @@ export class CatechumenLesson extends LitElement {
   @state() sessionCorrect = 0;
   @state() startTime = 0;
   @state() errorMsg = '';
+  @state() mcOptions: string[] = [];   // multiple choice answer options
+  @state() mcSelected: string | null = null;
 
   private _loadedSource = '';
   private _loadedType   = '';
@@ -141,13 +152,37 @@ export class CatechumenLesson extends LitElement {
   }
 
   setupQuestion(idx: number) {
-    const { segments, blanks, bank } = buildExercise(this.questions[idx].answer);
-    this.segments = segments;
-    this.blanks   = blanks;
-    this.bank     = bank;
-    this.currentIdx = 0;
-    this.phase    = 'filling';
+    const q = this.questions[idx];
+    this.mcSelected = null;
+
+    if (this.quizMode === 'multiple_choice') {
+      // Build 4 options: correct answer + 3 other answers from the loaded set
+      const correct = q.answer;
+      const others  = this.questions
+        .filter((_, i) => i !== idx)
+        .map(x => x.answer)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+      // Pad with short distractors if we don't have enough other questions
+      while (others.length < 3) {
+        others.push(DISTRACTORS[Math.floor(Math.random() * DISTRACTORS.length)]);
+      }
+      this.mcOptions = [correct, ...others].sort(() => Math.random() - 0.5);
+      this.phase = 'filling';
+    } else {
+      const { segments, blanks, bank } = buildExercise(q.answer);
+      this.segments = segments;
+      this.blanks   = blanks;
+      this.bank     = bank;
+      this.currentIdx = 0;
+      this.phase    = 'filling';
+    }
     this.startTime = Date.now();
+  }
+
+  pickMcOption(option: string) {
+    if (this.phase !== 'filling') return;
+    this.mcSelected = option;
   }
 
   pickChip(idx: number) {
@@ -173,7 +208,9 @@ export class CatechumenLesson extends LitElement {
   }
 
   async check() {
-    const correct = this.blanks.every(b => b.filled === b.word);
+    const correct = this.quizMode === 'multiple_choice'
+      ? this.mcSelected === this.questions[this.qIdx].answer
+      : this.blanks.every(b => b.filled === b.word);
     const timeMs  = Date.now() - this.startTime;
     const q       = this.questions[this.qIdx];
     this.phase    = correct ? 'correct' : 'incorrect';
@@ -208,9 +245,13 @@ export class CatechumenLesson extends LitElement {
   }
 
   tryAgain() {
-    this.blanks.forEach(b => { b.filled = null; b.chipIdx = null; });
-    this.bank.forEach(c => c.used = false);
-    this.currentIdx = 0;
+    if (this.quizMode === 'multiple_choice') {
+      this.mcSelected = null;
+    } else {
+      this.blanks.forEach(b => { b.filled = null; b.chipIdx = null; });
+      this.bank.forEach(c => c.used = false);
+      this.currentIdx = 0;
+    }
     this.phase = 'filling';
     this.startTime = Date.now();
     this.requestUpdate();
@@ -337,6 +378,19 @@ export class CatechumenLesson extends LitElement {
     .cs-num  { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 600; color: #1B3024; line-height: 1; }
     .cs-lbl  { font-size: 12px; color: #7A8278; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; margin-top: 4px; }
     .error-msg { font-size: 15px; color: #7E1F1F; }
+
+    /* ── multiple choice ── */
+    .mc-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .mc-option {
+      padding: 16px 20px; border-radius: 12px; cursor: pointer; transition: all .15s;
+      font-family: 'Fraunces', Georgia, serif; font-size: 16px; line-height: 1.5; color: #1F2920;
+      border: 2px solid rgba(31,41,32,.12); background: #FFFCF5; text-align: left;
+    }
+    .mc-option:hover:not(.revealed) { border-color: #2D4A3A; background: #F0F5F2; }
+    .mc-option.selected { border-color: #2D4A3A; background: rgba(45,74,58,.06); }
+    .mc-option.correct  { border-color: #2D4A3A; background: #E1EBE5; color: #1B3024; font-weight: 600; }
+    .mc-option.wrong    { border-color: #9B2C2C; background: #E8D0CE; color: #7E1F1F; }
+    .mc-option.dim      { opacity: .45; cursor: default; }
   `;
 
   private renderBlank(idx: number): TemplateResult {
@@ -400,8 +454,10 @@ export class CatechumenLesson extends LitElement {
   }
 
   private renderLesson(): TemplateResult {
-    const q        = this.questions[this.qIdx];
-    const allFilled = this.blanks.every(b => b.filled);
+    const q         = this.questions[this.qIdx];
+    const allFilled = this.quizMode === 'multiple_choice'
+      ? this.mcSelected !== null
+      : this.blanks.every(b => b.filled);
     const progress  = ((this.qIdx + (this.phase === 'correct' ? 1 : 0)) / this.questions.length) * 100;
     const proofText = q.proof_texts?.[0];
 
@@ -422,20 +478,49 @@ export class CatechumenLesson extends LitElement {
             <span class="pill"><i class="ti ti-bookmark"></i> ${q.number != null ? `Q${q.number}` : 'Question'}</span>
             <span class="pill unit-pill">${q.section_name ?? q.unit_name ?? ''}</span>
           </div>
-          <div class="prompt">Fill in the blanks</div>
-          <h2 class="instruction">Complete the answer using the words below.</h2>
-          <div class="qa-label">Question</div>
-          <p class="question">${q.question}</p>
-          <div class="qa-label">Answer</div>
-          <p class="answer">${this.renderAnswer()}</p>
-          <div class="bank-label">Tap the words in order</div>
-          <div class="bank">
-            ${this.bank.map((c, i) => html`
-              <button class="chip ${c.used ? 'used' : ''}" @click=${() => this.pickChip(i)} ?disabled=${c.used}>
-                ${c.word}
-              </button>
-            `)}
-          </div>
+          ${this.quizMode === 'multiple_choice' ? html`
+            <div class="prompt">Multiple choice</div>
+            <h2 class="instruction">Choose the correct answer.</h2>
+            <div class="qa-label">Question</div>
+            <p class="question">${q.question}</p>
+            <div class="mc-options">
+              ${this.mcOptions.map(opt => {
+                const revealed = this.phase === 'correct' || this.phase === 'incorrect';
+                const isCorrect = opt === q.answer;
+                const isSelected = opt === this.mcSelected;
+                let cls = '';
+                if (revealed) {
+                  if (isCorrect) cls = 'correct';
+                  else if (isSelected) cls = 'wrong';
+                  else cls = 'dim';
+                } else if (isSelected) {
+                  cls = 'selected';
+                }
+                return html`
+                  <button class="mc-option ${cls} ${revealed ? 'revealed' : ''}"
+                    @click=${() => this.pickMcOption(opt)}
+                    ?disabled=${revealed}>
+                    ${opt}
+                  </button>
+                `;
+              })}
+            </div>
+          ` : html`
+            <div class="prompt">Fill in the blanks</div>
+            <h2 class="instruction">Complete the answer using the words below.</h2>
+            <div class="qa-label">Question</div>
+            <p class="question">${q.question}</p>
+            <div class="qa-label">Answer</div>
+            <p class="answer">${this.renderAnswer()}</p>
+            <div class="bank-label">Tap the words in order</div>
+            <div class="bank">
+              ${this.bank.map((c, i) => html`
+                <button class="chip ${c.used ? 'used' : ''}" @click=${() => this.pickChip(i)} ?disabled=${c.used}>
+                  ${c.word}
+                </button>
+              `)}
+            </div>
+          `}
         </div>
 
         ${this.phase === 'correct' ? html`
