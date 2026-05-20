@@ -13,6 +13,7 @@ export class CatechumenApp extends LitElement {
   @state() loggedIn = auth.isLoggedIn;
   @state() lessonConfig: LessonConfig = { type: 'catechism', source: 'wsc', mode: 'fill_blank' };
   @state() lessonKey = 0;
+  @state() pathKey = 0;
 
   private _unsub: () => void = () => {};
 
@@ -26,7 +27,7 @@ export class CatechumenApp extends LitElement {
       this.lessonKey++;
       this.screen = 'lesson';
     });
-    this.addEventListener('exit-lesson', () => { this.screen = 'path'; });
+    this.addEventListener('exit-lesson', () => { this.screen = 'path'; this.pathKey++; });
   }
 
   disconnectedCallback() {
@@ -134,6 +135,7 @@ export class CatechumenApp extends LitElement {
             <catechumen-path
               name=${user.display_name} streak=${user.streak_days}
               xp=${user.xp} hearts=${user.hearts} gems=${user.gems}
+              path-key=${this.pathKey}
             ></catechumen-path>
           </div>
           <div class="screen ${this.screen === 'library' ? 'active' : ''}">

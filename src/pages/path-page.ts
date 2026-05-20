@@ -33,6 +33,7 @@ export class CatechumenPath extends LitElement {
   @property({ type: Number }) xp = 0;
   @property({ type: Number }) hearts = 5;
   @property({ type: Number }) gems = 0;
+  @property({ type: Number, attribute: 'path-key' }) pathKey = 0;
 
   @state() plans: StudyPlan[] = [];
   @state() selectedId = '';
@@ -47,6 +48,7 @@ export class CatechumenPath extends LitElement {
 
   updated(changed: Map<string, unknown>) {
     if (changed.has('selectedId') && this.selectedId) this.loadProgress();
+    if (changed.has('pathKey') && this.selectedId)    this.loadProgress();
   }
 
   async loadPlans() {
