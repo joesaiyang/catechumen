@@ -26,12 +26,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ questions });
     }
 
+    // DISTINCT ON deduplicates rows where the same catechism_id was inserted
+    // multiple times (ON CONFLICT fails to deduplicate when custom_quiz_id IS NULL
+    // because NULL != NULL in Postgres unique constraints).
+    // Keep the most-recent row per (plan_type, catechism_id) pair.
     const plans = await sql`
-      SELECT sp.*, c.name AS catechism_name, c.abbreviation, c.question_count
+      SELECT DISTINCT ON (sp.plan_type, sp.catechism_id)
+        sp.*, c.name AS catechism_name, c.abbreviation, c.question_count
       FROM user_study_plans sp
       LEFT JOIN catechisms c ON c.id = sp.catechism_id
       WHERE sp.user_id = ${payload.userId} AND sp.is_active = true
-      ORDER BY sp.started_at ASC
+      ORDER BY sp.plan_type, sp.catechism_id, sp.started_at DESC
     `;
     return res.status(200).json({ plans });
   }
