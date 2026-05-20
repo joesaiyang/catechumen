@@ -26,6 +26,7 @@ export class CatechumenApp extends LitElement {
       this.lessonKey++;
       this.screen = 'lesson';
     });
+    this.addEventListener('exit-lesson', () => { this.screen = 'path'; });
   }
 
   disconnectedCallback() {
