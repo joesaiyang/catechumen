@@ -149,6 +149,8 @@ export class CatechumenLesson extends LitElement {
   @state() bank: Chip[] = [];
   @state() segments: Segment[] = [];
   @state() currentIdx = 0;
+  @state() dragChipIdx: number | null = null;
+  @state() dragOverBlankIdx: number | null = null;
   @state() hearts = auth.user?.hearts ?? 5;
   @state() xp = auth.user?.xp ?? 0;
   @state() sessionXp = 0;
@@ -242,6 +244,21 @@ export class CatechumenLesson extends LitElement {
     if (!b.filled || b.chipIdx === null) return;
     this.bank[b.chipIdx].used = false;
     b.filled = null; b.chipIdx = null;
+    this.currentIdx = this.blanks.findIndex(x => !x.filled);
+    if (this.currentIdx === -1) this.currentIdx = this.blanks.length;
+    this.requestUpdate();
+  }
+
+  dropOnBlank(blankIdx: number) {
+    if (this.phase !== 'filling' || this.dragChipIdx === null) return;
+    const b = this.blanks[blankIdx];
+    // Return the previous chip if the blank was already filled
+    if (b.chipIdx !== null) this.bank[b.chipIdx].used = false;
+    b.filled = this.bank[this.dragChipIdx].word;
+    b.chipIdx = this.dragChipIdx;
+    this.bank[this.dragChipIdx].used = true;
+    this.dragChipIdx = null;
+    this.dragOverBlankIdx = null;
     this.currentIdx = this.blanks.findIndex(x => !x.filled);
     if (this.currentIdx === -1) this.currentIdx = this.blanks.length;
     this.requestUpdate();
@@ -394,6 +411,8 @@ export class CatechumenLesson extends LitElement {
     .chip:hover:not(.used) { border-color: #2D4A3A; background: #F5EFE0; transform: translateY(-1px); }
     .chip:active:not(.used) { transform: translateY(1px); border-bottom-width: 1px; }
     .chip.used { opacity: .25; cursor: not-allowed; border-bottom-width: 1px; }
+    .chip.dragging { opacity: .35; }
+    .blank.drag-over { border-bottom: 2px solid #2D4A3A; background: rgba(45,74,58,.08); }
 
     /* ── feedback ── */
     .feedback {
@@ -460,7 +479,14 @@ export class CatechumenLesson extends LitElement {
     const cls = this.phase === 'correct'   ? 'correct'
               : this.phase === 'incorrect' ? (b.filled === b.word ? 'correct' : 'incorrect')
               : b.filled ? 'filled' : '';
-    return html`<span class="blank ${cls}" @click=${() => this.clearBlank(idx)}>${b.filled || '      '}</span>`;
+    const dropCls = this.dragOverBlankIdx === idx ? 'drag-over' : '';
+    return html`<span
+      class="blank ${cls} ${dropCls}"
+      @click=${() => this.clearBlank(idx)}
+      @dragover=${(e: DragEvent) => { e.preventDefault(); this.dragOverBlankIdx = idx; }}
+      @dragleave=${() => { if (this.dragOverBlankIdx === idx) this.dragOverBlankIdx = null; }}
+      @drop=${(e: DragEvent) => { e.preventDefault(); this.dropOnBlank(idx); }}
+    >${b.filled || '      '}</span>`;
   }
 
   private renderAnswer(): TemplateResult {
@@ -608,9 +634,13 @@ export class CatechumenLesson extends LitElement {
           <div class="bank-label">Tap the words in order</div>
           <div class="bank">
             ${this.bank.map((c, i) => html`
-              <button class="chip ${c.used ? 'used' : ''}" @click=${() => this.pickChip(i)} ?disabled=${c.used}>
-                ${c.word}
-              </button>
+              <button class="chip ${c.used ? 'used' : ''} ${this.dragChipIdx === i ? 'dragging' : ''}"
+                @click=${() => this.pickChip(i)}
+                ?disabled=${c.used}
+                draggable="true"
+                @dragstart=${(e: DragEvent) => { e.dataTransfer?.setData('text/plain', String(i)); this.dragChipIdx = i; }}
+                @dragend=${() => { this.dragChipIdx = null; this.dragOverBlankIdx = null; }}
+              >${c.word}</button>
             `)}
           </div>
         </div>
