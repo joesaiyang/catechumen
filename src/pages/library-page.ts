@@ -63,10 +63,16 @@ export class LibraryPage extends LitElement {
   }
 
   private async startLesson(cat: Catechism) {
-    await apiFetch('/api/study-plans', {
+    const res = await apiFetch('/api/study-plans', {
       method: 'POST',
       body: JSON.stringify({ planType: 'catechism', catechismId: cat.id, quizMode: 'fill_blank' }),
     });
+    if (res.ok) {
+      const data = await res.json();
+      // Update local plans immediately so the Enrolled badge shows when the
+      // user navigates back to the library without a full reload.
+      this.plans = [...this.plans.filter(p => p.catechism_id !== cat.id), data.plan];
+    }
     this.dispatchEvent(new CustomEvent('start-lesson', {
       bubbles: true, composed: true,
       detail: { type: 'catechism', source: cat.id, mode: 'fill_blank' },
@@ -410,7 +416,7 @@ export class LibraryPage extends LitElement {
               ` : ''}
               <button class="start-btn" @click=${() => this.startLesson(cat)}>
                 <i class="ti ti-${plan ? 'player-play' : 'plus'}"></i>
-                ${plan ? 'Continue studying' : 'Enroll & Start'}
+                ${plan ? 'Continue studying' : 'Enroll & start studying'}
               </button>
             </div>
     `;
