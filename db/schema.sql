@@ -5,6 +5,21 @@
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+-- Drop changed/new tables so they can be cleanly recreated
+DROP TABLE IF EXISTS league_entries      CASCADE;
+DROP TABLE IF EXISTS league_weeks        CASCADE;
+DROP TABLE IF EXISTS user_achievements   CASCADE;
+DROP TABLE IF EXISTS user_progress       CASCADE;
+DROP TABLE IF EXISTS lesson_sessions     CASCADE;
+DROP TABLE IF EXISTS user_study_plans    CASCADE;
+DROP TABLE IF EXISTS custom_quiz_items   CASCADE;
+DROP TABLE IF EXISTS custom_quizzes      CASCADE;
+DROP TABLE IF EXISTS catechism_questions CASCADE;
+DROP TABLE IF EXISTS catechisms          CASCADE;
+DROP TABLE IF EXISTS memory_verses       CASCADE;
+DROP TABLE IF EXISTS bible_quiz_questions CASCADE;
+DROP TABLE IF EXISTS questions           CASCADE;
+
 -- =============================================================
 -- FAMILIES & USERS
 -- =============================================================
@@ -224,7 +239,6 @@ CREATE INDEX IF NOT EXISTS idx_custom_quiz_items_quiz   ON custom_quiz_items(qui
 -- =============================================================
 INSERT INTO catechisms (id, name, abbreviation, description, year, tradition, question_count) VALUES
   ('wsc',        'Westminster Shorter Catechism',  'WSC',  'The foundational catechism of the Westminster Standards, covering essential Christian doctrine in 107 questions.',       1647, 'Reformed Presbyterian', 107),
-  ('wlc',        'Westminster Larger Catechism',   'WLC',  'The more detailed companion to the WSC, with 196 questions covering doctrine and duty in greater depth.',               1647, 'Reformed Presbyterian', 196),
   ('heidelberg', 'Heidelberg Catechism',           'HC',   'A warm, personal catechism organized around comfort, misery, deliverance, and gratitude. 129 questions.',              1563, 'Reformed',              129),
   ('baptist1695','The Baptist Catechism (1695)',   'BC',   'Benjamin Keach''s catechism for Baptist churches, closely following the WSC with distinctions on baptism. 107 questions.', 1695, 'Reformed Baptist',  107)
 ON CONFLICT (id) DO NOTHING;

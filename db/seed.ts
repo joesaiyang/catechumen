@@ -1,7 +1,6 @@
 // Master seed runner — npm run db:seed
 import postgres from 'postgres';
 import seedWsc        from './seeds/wsc.js';
-import seedWlc        from './seeds/wlc.js';
 import seedHeidel     from './seeds/heidelberg.js';
 import seedBaptist    from './seeds/baptist1695.js';
 import seedVerses     from './seeds/memory-verses.js';
@@ -14,9 +13,6 @@ async function main() {
 
   console.log('📖 Westminster Shorter Catechism (107 questions)...');
   await seedWsc(sql);
-
-  console.log('📖 Westminster Larger Catechism (196 questions)...');
-  await seedWlc(sql);
 
   console.log('📖 Heidelberg Catechism (129 questions)...');
   await seedHeidel(sql);
