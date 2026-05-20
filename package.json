@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "db:seed": "dotenv -e .env -- tsx db/seed-catechism.ts",
-    "db:migrate": "dotenv -e .env -- psql $DATABASE_URL -f db/schema.sql"
+    "db:migrate": "dotenv -e .env -- sh -c 'psql $DATABASE_URL -f db/schema.sql'"
   },
   "dependencies": {
     "@lit/reactive-element": "^2.0.4",

@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import '../components/stats-bar.js';
 
 const NODES = [
@@ -15,6 +15,11 @@ const NODES = [
 
 @customElement('catechumen-path')
 export class CatechumenPath extends LitElement {
+  @property({ type: String }) name = 'Samuel';
+  @property({ type: Number }) streak = 0;
+  @property({ type: Number }) xp = 0;
+  @property({ type: Number }) hearts = 5;
+  @property({ type: Number }) gems = 0;
   static styles = css`
     .layout { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
     @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
@@ -159,7 +164,7 @@ export class CatechumenPath extends LitElement {
 
   render() {
     return html`
-      <stats-bar></stats-bar>
+      <stats-bar name=${this.name} streak=${this.streak} xp=${this.xp} hearts=${this.hearts} gems=${this.gems}></stats-bar>
 
       <div class="quest">
         <div class="quest-icon"><i class="ti ti-target-arrow"></i></div>
