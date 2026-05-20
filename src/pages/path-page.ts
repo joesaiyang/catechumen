@@ -1,4 +1,4 @@
-import { LitElement, html, svg, css, TemplateResult, SVGTemplateResult } from 'lit';
+import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import '../components/stats-bar.js';
 
@@ -150,22 +150,8 @@ export class CatechumenPath extends LitElement {
   `;
 
   private renderTrack(): TemplateResult {
-    const GAP = 4;
-    // Must use svg`` (not html``) so <line> elements are created in SVG namespace.
-    // html`` creates elements in HTML namespace — SVG presentation attributes are ignored.
-    const lines: SVGTemplateResult[] = NODES.slice(0, -1).map((n, i) => {
-      const next  = NODES[i + 1];
-      const dim   = n.state.includes('locked');
-      const stroke = dim ? 'rgba(31,41,32,.2)' : n.state === 'current' ? 'rgba(181,72,30,.35)' : '#2D4A3A';
-      const x1 = n.x,    y1 = n.y + n.r + GAP;
-      const x2 = next.x, y2 = next.y - next.r - GAP;
-      return svg`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
-        stroke="${stroke}" stroke-width="1" stroke-linecap="round"/>`;
-    });
     return html`
-      <svg class="path-svg" viewBox="0 0 ${SVG_W} ${SVG_H}" xmlns="http://www.w3.org/2000/svg">
-        ${lines}
-      </svg>
+      <svg class="path-svg" viewBox="0 0 ${SVG_W} ${SVG_H}" xmlns="http://www.w3.org/2000/svg"></svg>
     `;
   }
 
