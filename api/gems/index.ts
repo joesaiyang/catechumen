@@ -84,7 +84,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'PATCH') {
     if (payload.role !== 'parent') return res.status(403).json({ error: 'Parents only' });
-    const { redemptionId, approved } = req.body as { redemptionId: string; approved: boolean };
+    const body = req.body as Record<string, unknown>;
+
+    // Award gems directly to a child
+    if (body.childId) {
+      const { childId, amount } = body as { childId: string; amount: number };
+      if (!amount || amount < 1) return res.status(400).json({ error: 'amount must be at least 1' });
+      const [child] = await sql`
+        SELECT id FROM users WHERE id = ${childId} AND family_id = ${payload.familyId} AND role = 'child'
+      `;
+      if (!child) return res.status(404).json({ error: 'Child not found' });
+      const [{ gems }] = await sql`UPDATE users SET gems = gems + ${amount} WHERE id = ${childId} RETURNING gems`;
+      return res.status(200).json({ gems });
+    }
+
+    // Approve / decline a redemption
+    const { redemptionId, approved } = body as { redemptionId: string; approved: boolean };
     if (!redemptionId || approved === undefined) return res.status(400).json({ error: 'Missing fields' });
     await sql`
       UPDATE gem_redemptions SET status = ${approved ? 'approved' : 'declined'}

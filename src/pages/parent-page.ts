@@ -57,6 +57,11 @@ export class CatechumenParent extends LitElement {
   // Assign catechism modal
   @state() assignTarget: Child | null = null;
 
+  // Award gems
+  @state() awardTargetId: string | null = null;
+  @state() awardAmount = 10;
+  @state() awarding = false;
+
   // Gem store
   @state() storeItems: StoreItem[] = [];
   @state() redemptions: Redemption[] = [];
@@ -135,6 +140,18 @@ export class CatechumenParent extends LitElement {
     await apiFetch(`/api/family/children?childId=${this.deleteTarget.id}`, { method: 'DELETE' });
     this.deleteSubmitting = false;
     this.deleteTarget = null;
+    await this.loadChildren();
+  }
+
+  async awardGems(childId: string) {
+    this.awarding = true;
+    await apiFetch('/api/gems', {
+      method: 'PATCH',
+      body: JSON.stringify({ childId, amount: this.awardAmount }),
+    });
+    this.awarding = false;
+    this.awardTargetId = null;
+    this.awardAmount = 10;
     await this.loadChildren();
   }
 
@@ -272,6 +289,16 @@ export class CatechumenParent extends LitElement {
       border-radius: 999px; font-size: 12px; font-weight: 600; color: #8A6620;
     }
     .no-badges { font-size: 12px; color: #B0B8AE; font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(31,41,32,.1); }
+    .award-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(31,41,32,.1); }
+    .award-input { width: 70px; padding: 7px 10px; box-sizing: border-box; border: 1.5px solid rgba(31,41,32,.2); border-radius: 8px; font-size: 14px; font-weight: 600; color: #1B3024; background: #F5EFE0; outline: none; text-align: center; }
+    .award-input:focus { border-color: #2D4A3A; }
+    .award-btn { padding: 7px 14px; background: #2D4A3A; color: #F5EFE0; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; white-space: nowrap; }
+    .award-btn:hover { background: #1B3024; }
+    .award-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .award-cancel { font-size: 13px; color: #7A8278; cursor: pointer; padding: 4px; }
+    .award-cancel:hover { color: #1B3024; }
+    .gem-award-link { font-size: 12px; color: #2D4A3A; font-weight: 600; cursor: pointer; margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(31,41,32,.1); display: inline-block; }
+    .gem-award-link:hover { text-decoration: underline; }
 
     /* Kebab menu */
     .card-head-right { display: flex; align-items: center; gap: 8px; }
@@ -447,6 +474,25 @@ export class CatechumenParent extends LitElement {
             })}
           </div>
         ` : html`<div class="no-badges">No badges earned yet</div>`}
+
+        ${this.awardTargetId === c.id ? html`
+          <div class="award-row">
+            <span style="font-size:13px;font-weight:600;color:#1B3024">💎 Award</span>
+            <input class="award-input" type="number" min="1" max="9999"
+              .value=${String(this.awardAmount)}
+              @input=${(e: Event) => this.awardAmount = parseInt((e.target as HTMLInputElement).value) || 1} />
+            <span style="font-size:13px;color:#4A554A">gems</span>
+            <button class="award-btn" ?disabled=${this.awarding} @click=${() => this.awardGems(c.id)}>
+              ${this.awarding ? '…' : 'Give'}
+            </button>
+            <span class="award-cancel" @click=${() => this.awardTargetId = null}>✕</span>
+          </div>
+        ` : html`
+          <span class="gem-award-link" @click=${() => { this.awardTargetId = c.id; this.awardAmount = 10; }}>
+            💎 Award gems
+          </span>
+        `}
+
         <div class="plans">
           ${c.plans.length === 0 ? html`<div class="no-plans">Not enrolled in any catechism yet</div>` :
             c.plans.map(p => {
