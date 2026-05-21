@@ -16,6 +16,7 @@ export interface User {
 interface AuthState {
   token: string | null;
   user: User | null;
+  earnedAchievements: string[];
 }
 
 const STORAGE_KEY = 'catechumen_auth';
@@ -25,25 +26,33 @@ function load(): AuthState {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw) as AuthState;
   } catch { /* ignore */ }
-  return { token: null, user: null };
+  return { token: null, user: null, earnedAchievements: [] };
 }
 
 let _state = load();
 const _listeners = new Set<() => void>();
 
 export const auth = {
-  get token() { return _state.token; },
-  get user()  { return _state.user; },
-  get isLoggedIn() { return !!_state.token && !!_state.user; },
+  get token()              { return _state.token; },
+  get user()               { return _state.user; },
+  get isLoggedIn()         { return !!_state.token && !!_state.user; },
+  get earnedAchievements() { return _state.earnedAchievements; },
 
-  login(token: string, user: User) {
-    _state = { token, user };
+  login(token: string, user: User, earnedAchievements: string[] = []) {
+    _state = { token, user, earnedAchievements };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(_state));
+    _listeners.forEach(fn => fn());
+  },
+
+  addAchievements(ids: string[]) {
+    if (!ids.length) return;
+    _state = { ..._state, earnedAchievements: [...new Set([..._state.earnedAchievements, ...ids])] };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(_state));
     _listeners.forEach(fn => fn());
   },
 
   logout() {
-    _state = { token: null, user: null };
+    _state = { token: null, user: null, earnedAchievements: [] };
     localStorage.removeItem(STORAGE_KEY);
     _listeners.forEach(fn => fn());
   },

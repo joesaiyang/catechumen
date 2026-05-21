@@ -126,7 +126,7 @@ export class AuthPage extends LitElement {
       });
       const data = await res.json();
       if (!res.ok) { this.error = data.error ?? 'Login failed'; return; }
-      auth.login(data.token, data.user);
+      auth.login(data.token, data.user, data.earnedAchievements ?? []);
     } catch { this.error = 'Network error — please try again.'; }
     finally { this.loading = false; }
   }
@@ -145,7 +145,7 @@ export class AuthPage extends LitElement {
       });
       const data = await res.json();
       if (!res.ok) { this.error = data.error ?? 'Registration failed'; return; }
-      auth.login(data.token, data.user);
+      auth.login(data.token, data.user, data.earnedAchievements ?? []);
     } catch { this.error = 'Network error — please try again.'; }
     finally { this.loading = false; }
   }
@@ -179,7 +179,7 @@ export class AuthPage extends LitElement {
       });
       const data = await res.json();
       if (!res.ok) { this.error = data.error ?? 'Login failed'; return; }
-      auth.login(data.token, data.user);
+      auth.login(data.token, data.user, data.earnedAchievements ?? []);
     } catch { this.error = 'Network error — please try again.'; }
     finally { this.loading = false; }
   }

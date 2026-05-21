@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import getDb from '../_lib/db.js';
 import { requireAuth } from '../_lib/auth.js';
 import { refreshHearts } from '../_lib/hearts.js';
+import { earnedIds } from '../_lib/achievements.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -18,5 +19,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (!user) return res.status(404).json({ error: 'User not found' });
   const { hearts, hearts_refill_at } = await refreshHearts(user.id, sql);
-  return res.status(200).json({ user: { ...user, hearts, hearts_refill_at } });
+  const badges = await earnedIds(user.id, sql);
+  return res.status(200).json({ user: { ...user, hearts, hearts_refill_at }, earnedAchievements: badges });
 }

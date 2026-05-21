@@ -1,6 +1,7 @@
 import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { apiFetch } from '../store/auth.js';
+import { apiFetch, auth } from '../store/auth.js';
+import { BADGES } from '../data/achievements.js';
 import '../components/stats-bar.js';
 
 interface StudyPlan {
@@ -281,6 +282,28 @@ export class CatechumenPath extends LitElement {
     }
     .node.current .node-label { color: #B5481E; }
 
+    /* ── Badge shelf (child mode) ── */
+    .badge-shelf { margin-top: 32px; }
+    .badge-shelf-title {
+      font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600;
+      color: #1B3024; margin-bottom: 14px;
+    }
+    .badge-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .badge-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 12px 14px; border-radius: 14px; min-width: 72px; text-align: center;
+      transition: transform .15s;
+    }
+    .badge-item.earned {
+      background: #F0E1B8; border: 1.5px solid #C89B3C;
+      box-shadow: 0 2px 8px rgba(200,155,60,.2);
+    }
+    .badge-item.earned:hover { transform: translateY(-2px); }
+    .badge-item.locked { background: rgba(31,41,32,.04); border: 1.5px dashed rgba(31,41,32,.12); }
+    .badge-emoji  { font-size: 28px; line-height: 1; }
+    .badge-name   { font-size: 11px; font-weight: 700; color: #1B3024; }
+    .badge-locked-emoji { font-size: 24px; line-height: 1; filter: grayscale(1); opacity: .35; }
+
     /* Loading skeleton */
     .skeleton { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 12px 0; }
     .skel-node { border-radius: 50%; background: rgba(31,41,32,.07); animation: shimmer 1.4s infinite; }
@@ -329,6 +352,28 @@ export class CatechumenPath extends LitElement {
   }
 
   // ── render helpers ────────────────────────────────────────────────────────
+
+  private renderBadgeShelf(): TemplateResult {
+    const earned = new Set(auth.earnedAchievements);
+    return html`
+      <div class="badge-shelf">
+        <div class="badge-shelf-title">🏅 My Badges</div>
+        <div class="badge-grid">
+          ${BADGES.map(b => earned.has(b.id) ? html`
+            <div class="badge-item earned" title="${b.desc}">
+              <span class="badge-emoji">${b.emoji}</span>
+              <span class="badge-name">${b.name}</span>
+            </div>
+          ` : html`
+            <div class="badge-item locked" title="${b.desc}">
+              <span class="badge-locked-emoji">${b.emoji}</span>
+              <span class="badge-name" style="color:rgba(31,41,32,.3)">${b.name}</span>
+            </div>
+          `)}
+        </div>
+      </div>
+    `;
+  }
 
   private renderPath(): TemplateResult {
     if (this.progressLoading || (this.plansLoading && !this.allProgress.length)) {
@@ -450,6 +495,8 @@ export class CatechumenPath extends LitElement {
               <p>Head to the <strong>${this.childMode ? 'Books' : 'Library'}</strong> to get started.</p>
             </div>
           ` : this.renderPath()}
+
+          ${this.childMode ? this.renderBadgeShelf() : ''}
         </div>
 
         ${this.childMode ? '' : html`<aside class="side">

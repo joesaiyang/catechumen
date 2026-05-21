@@ -1,6 +1,7 @@
 import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { auth, apiFetch } from '../store/auth.js';
+import { BADGES } from '../data/achievements.js';
 
 interface ApiQuestion {
   id: string;
@@ -161,6 +162,7 @@ export class CatechumenLesson extends LitElement {
   @state() sessionCorrect = 0;
   @state() startTime = 0;
   @state() errorMsg = '';
+  @state() newBadges: { id: string; name: string; emoji: string }[] = [];
 
   private get nextHeartLabel(): string {
     if (this.hearts >= 5 || !this.heartsRefillAt) return '';
@@ -313,10 +315,24 @@ export class CatechumenLesson extends LitElement {
           this.sessionXp += data.xpEarned;
           this.sessionCorrect++;
           auth.patch({ xp: this.xp });
+          if (data.newAchievements?.length) {
+            auth.addAchievements(data.newAchievements.map((a: { id: string }) => a.id));
+            this.newBadges = data.newAchievements.map((a: { id: string; name: string }) => ({
+              ...a, emoji: BADGES.find(b => b.id === a.id)?.emoji ?? '🏅',
+            }));
+            setTimeout(() => { this.newBadges = []; }, 4000);
+          }
         } else {
           this.hearts = Math.max(0, this.hearts - 1);
           this.heartsRefillAt = data.heartsRefillAt ?? this.heartsRefillAt;
           auth.patch({ hearts: this.hearts, hearts_refill_at: this.heartsRefillAt });
+          if (data.newAchievements?.length) {
+            auth.addAchievements(data.newAchievements.map((a: { id: string }) => a.id));
+            this.newBadges = data.newAchievements.map((a: { id: string; name: string }) => ({
+              ...a, emoji: BADGES.find(b => b.id === a.id)?.emoji ?? '🏅',
+            }));
+            setTimeout(() => { this.newBadges = []; }, 4000);
+          }
           if (this.hearts === 0) this.phase = 'out_of_hearts';
         }
       }
@@ -484,6 +500,26 @@ export class CatechumenLesson extends LitElement {
     summary::before { content: '+'; font-weight: 600; color: #B5481E; }
     details[open] summary::before { content: '−'; }
     details p { margin-top: 10px; font-family: 'Fraunces', serif; font-style: italic; color: #1F2920; line-height: 1.6; }
+
+    /* ── badge pop-up ── */
+    .badge-toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; gap: 8px; z-index: 500; pointer-events: none;
+    }
+    .badge-pop {
+      display: flex; align-items: center; gap: 12px;
+      background: #1B3024; color: #F5EFE0;
+      padding: 14px 20px; border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(31,41,32,.3);
+      animation: badgeIn .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    .badge-pop-emoji { font-size: 28px; }
+    .badge-pop-name  { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; }
+    .badge-pop-sub   { font-size: 12px; color: rgba(245,239,224,.7); margin-top: 1px; }
+    @keyframes badgeIn {
+      from { opacity: 0; transform: translateY(20px) scale(.9); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
 
     /* ── loading / error / complete ── */
     .center { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; gap: 16px; }
@@ -811,6 +847,20 @@ export class CatechumenLesson extends LitElement {
           </details>
         ` : ''}
       </div>
+
+      ${this.newBadges.length ? html`
+        <div class="badge-toast">
+          ${this.newBadges.map(b => html`
+            <div class="badge-pop">
+              <span class="badge-pop-emoji">${b.emoji}</span>
+              <div>
+                <div class="badge-pop-name">Badge unlocked: ${b.name}</div>
+                <div class="badge-pop-sub">Check your home screen to see all badges</div>
+              </div>
+            </div>
+          `)}
+        </div>
+      ` : ''}
     `;
   }
 

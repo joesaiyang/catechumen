@@ -2,6 +2,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import getDb from '../_lib/db.js';
 import { requireAuth } from '../_lib/auth.js';
+import { checkAndAward } from '../_lib/achievements.js';
 
 function sm2(ef: number, n: number, intervalDays: number, quality: number) {
   const newEf = Math.max(1.3, ef + 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
@@ -94,9 +95,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     `;
   }
 
-  const [{ hearts_refill_at }] = await sql`
-    SELECT hearts_refill_at FROM users WHERE id = ${payload.userId}
-  `;
+  const [user] = await sql`SELECT hearts_refill_at, streak_days FROM users WHERE id = ${payload.userId}`;
 
-  return res.status(200).json({ xpEarned, heartsLost, mastered, nextDue: dueAt, heartsRefillAt: hearts_refill_at });
+  const newAchievements = correct ? await checkAndAward(payload.userId, sql, {
+    streakDays:    user.streak_days,
+    newlyMastered: mastered,
+    timeMs:        timeMs ?? 0,
+  }) : [];
+
+  return res.status(200).json({
+    xpEarned, heartsLost, mastered, nextDue: dueAt,
+    heartsRefillAt: user.hearts_refill_at,
+    newAchievements,
+  });
 }
