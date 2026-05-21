@@ -608,6 +608,41 @@ export class CatechumenLesson extends LitElement {
   }
 
   private renderComplete(): TemplateResult {
+    const total = this.questions.length || this.sessionCorrect;
+    if (this.childMode) {
+      const stars = '⭐'.repeat(Math.min(this.sessionCorrect, 5));
+      return html`
+        <div class="lesson-frame">
+          <div class="complete-card" style="text-align:center">
+            <div style="font-size:56px;margin-bottom:8px">🎉</div>
+            <div class="complete-title" style="font-size:30px">
+              ${this.sessionCorrect === total && total > 0 ? 'Perfect round!' : 'Great job!'}
+            </div>
+            <div style="font-size:42px;margin:16px 0 4px;letter-spacing:4px">${stars}</div>
+            <div style="font-family:'Fraunces',serif;font-size:52px;font-weight:700;color:#10B981;line-height:1;margin-bottom:4px">
+              ${this.sessionCorrect}
+            </div>
+            <div style="font-size:15px;font-weight:700;color:#4A554A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:${total > 0 ? '4' : '20'}px">
+              ${this.sessionCorrect === 1 ? 'question right' : 'questions right'}
+            </div>
+            ${total > 0 ? html`<div style="font-size:13px;color:#7A8278;margin-bottom:20px">out of ${total}</div>` : ''}
+            <div style="display:flex;justify-content:center;gap:16px;margin-bottom:20px">
+              <div style="text-align:center;padding:12px 20px;background:#F0E1B8;border-radius:12px">
+                <div style="font-size:22px;font-weight:700;color:#8A6620;font-family:'Fraunces',serif">+${this.sessionXp}</div>
+                <div style="font-size:11px;font-weight:700;color:#8A6620;text-transform:uppercase;letter-spacing:.06em">⭐ XP</div>
+              </div>
+            </div>
+            <button class="check-btn continue" style="max-width:260px;margin:0 auto 10px;display:block;font-size:16px;padding:18px"
+              @click=${this.loadQuestions}>Keep going! →</button>
+            <button class="check-btn" style="max-width:260px;margin:0 auto;display:block;background:transparent;color:#4A554A;border:1px solid rgba(31,41,32,.2);border-bottom-width:1px"
+              @click=${() => this.dispatchEvent(new CustomEvent('exit-lesson', { bubbles: true, composed: true }))}>
+              🏠 Go home
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
     return html`
       <div class="lesson-frame">
         <div class="complete-card">

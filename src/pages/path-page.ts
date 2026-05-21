@@ -354,7 +354,14 @@ export class CatechumenPath extends LitElement {
           <div class="unit-number">${this.childMode ? sectionName : `${sectionLabel} · Questions ${firstQ}–${lastQ}`}</div>
           ${this.childMode ? '' : html`<div class="unit-title">${sectionName}</div>`}
         </div>
-        <div class="unit-status">${this.masteredCount} of ${qs.length} ${this.childMode ? '⭐ mastered' : 'mastered'}</div>
+        ${this.childMode ? html`
+          <div style="text-align:right">
+            <div style="font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:#10B981;line-height:1">${this.masteredCount}</div>
+            <div style="font-size:11px;font-weight:700;color:#7A8278;text-transform:uppercase;letter-spacing:.06em">⭐ mastered</div>
+          </div>
+        ` : html`
+          <div class="unit-status">${this.masteredCount} of ${qs.length} mastered</div>
+        `}
       </div>
 
       <div class="path-wrap ${this.childMode ? 'child-mode' : ''}">
