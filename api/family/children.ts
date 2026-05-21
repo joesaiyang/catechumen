@@ -66,9 +66,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       plansByChild[p.user_id].push(p);
     }
 
+    const badges = await sql`
+      SELECT user_id, achievement_id
+      FROM user_achievements
+      WHERE user_id = ANY(${childIds})
+    `;
+    const badgesByChild: Record<string, string[]> = {};
+    for (const b of badges as any[]) {
+      if (!badgesByChild[b.user_id]) badgesByChild[b.user_id] = [];
+      badgesByChild[b.user_id].push(b.achievement_id);
+    }
+
     const result = (children as any[]).map((c: any) => ({
       ...c,
-      plans: plansByChild[c.id] ?? [],
+      plans:            plansByChild[c.id]  ?? [],
+      earnedAchievements: badgesByChild[c.id] ?? [],
     }));
 
     return res.status(200).json({ children: result });

@@ -1,6 +1,7 @@
 import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { apiFetch } from '../store/auth.js';
+import { BADGES } from '../data/achievements.js';
 
 interface ChildPlan {
   catechism_id: string; catechism_name: string; abbreviation: string;
@@ -16,6 +17,7 @@ interface Child {
   xp: number; streak_days: number; hearts: number;
   mastered_count: number; last_active_at: string | null;
   plans: ChildPlan[];
+  earnedAchievements: string[];
 }
 
 @customElement('catechumen-parent')
@@ -210,6 +212,13 @@ export class CatechumenParent extends LitElement {
     .plan-bar  { height: 6px; background: rgba(31,41,32,.07); border-radius: 3px; overflow: hidden; }
     .plan-fill { height: 100%; background: linear-gradient(90deg, #5A7A65, #2D4A3A); border-radius: 3px; transition: width .4s; }
     .no-plans  { font-size: 12px; color: #B0B8AE; font-style: italic; }
+    .badges-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(31,41,32,.1); }
+    .badge-chip {
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 10px; background: #F0E1B8; border: 1px solid #C89B3C;
+      border-radius: 999px; font-size: 12px; font-weight: 600; color: #8A6620;
+    }
+    .no-badges { font-size: 12px; color: #B0B8AE; font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(31,41,32,.1); }
 
     /* Kebab menu */
     .card-head-right { display: flex; align-items: center; gap: 8px; }
@@ -348,6 +357,14 @@ export class CatechumenParent extends LitElement {
           <div class="cs"><div class="cs-num">${c.xp}</div><div class="cs-lbl">XP</div></div>
         </div>
         <div class="last-active">${this.lastActiveLabel(c.last_active_at)}</div>
+        ${c.earnedAchievements.length ? html`
+          <div class="badges-row">
+            ${c.earnedAchievements.map(id => {
+              const def = BADGES.find(b => b.id === id);
+              return def ? html`<span class="badge-chip">${def.emoji} ${def.name}</span>` : '';
+            })}
+          </div>
+        ` : html`<div class="no-badges">No badges earned yet</div>`}
         <div class="plans">
           ${c.plans.length === 0 ? html`<div class="no-plans">Not enrolled in any catechism yet</div>` :
             c.plans.map(p => {
