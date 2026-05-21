@@ -24,9 +24,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'GET') {
     const children = await sql`
-      SELECT u.id, u.display_name, u.username, u.xp, u.streak_days, u.gems, u.hearts, u.league_tier, u.created_at,
+      SELECT u.id, u.display_name, u.username, u.xp, u.streak_days, u.hearts, u.created_at,
              COUNT(up.id) FILTER (WHERE up.mastered) AS mastered_count,
-             COUNT(up.id) AS total_attempted,
              MAX(ls.created_at) AS last_active_at
       FROM users u
       LEFT JOIN user_progress up ON up.user_id = u.id
@@ -35,7 +34,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       GROUP BY u.id
       ORDER BY u.created_at ASC
     `;
-    return res.status(200).json({ children });
+
+    if (children.length === 0) return res.status(200).json({ children: [] });
+
+    const childIds = (children as any[]).map((c: any) => c.id);
+    const plans = await sql`
+      SELECT
+        sp.user_id,
+        sp.catechism_id,
+        c.name        AS catechism_name,
+        c.abbreviation,
+        c.question_count,
+        COUNT(up.id)                            AS answered,
+        COUNT(up.id) FILTER (WHERE up.mastered) AS mastered
+      FROM user_study_plans sp
+      JOIN catechisms c ON c.id = sp.catechism_id
+      LEFT JOIN user_progress up
+        ON up.user_id = sp.user_id
+        AND up.content_type = 'catechism'
+        AND up.content_id IN (
+          SELECT id FROM catechism_questions WHERE catechism_id = sp.catechism_id
+        )
+      WHERE sp.user_id = ANY(${childIds}) AND sp.is_active = true
+      GROUP BY sp.user_id, sp.catechism_id, c.name, c.abbreviation, c.question_count
+      ORDER BY sp.user_id, c.name
+    `;
+
+    const plansByChild: Record<string, any[]> = {};
+    for (const p of plans as any[]) {
+      if (!plansByChild[p.user_id]) plansByChild[p.user_id] = [];
+      plansByChild[p.user_id].push(p);
+    }
+
+    const result = (children as any[]).map((c: any) => ({
+      ...c,
+      plans: plansByChild[c.id] ?? [],
+    }));
+
+    return res.status(200).json({ children: result });
   }
 
   if (req.method === 'POST') {

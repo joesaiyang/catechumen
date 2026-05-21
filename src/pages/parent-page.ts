@@ -2,10 +2,16 @@ import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { apiFetch } from '../store/auth.js';
 
+interface ChildPlan {
+  catechism_id: string; catechism_name: string; abbreviation: string;
+  question_count: number; answered: number; mastered: number;
+}
+
 interface Child {
   id: string; display_name: string; username: string;
-  xp: number; streak_days: number; hearts: number; gems: number;
-  mastered_count: number; total_attempted: number; last_active_at: string | null;
+  xp: number; streak_days: number; hearts: number;
+  mastered_count: number; last_active_at: string | null;
+  plans: ChildPlan[];
 }
 
 @customElement('catechumen-parent')
@@ -167,7 +173,15 @@ export class CatechumenParent extends LitElement {
     .cs     { text-align: center; padding: 10px 6px; background: #F5EFE0; border-radius: 10px; }
     .cs-num { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: #1B3024; }
     .cs-lbl { font-size: 10px; color: #7A8278; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; margin-top: 2px; }
-    .last-active { font-size: 12px; color: #7A8278; }
+    .last-active { font-size: 12px; color: #7A8278; margin-bottom: 14px; }
+    .plans { display: flex; flex-direction: column; gap: 10px; border-top: 1px dashed rgba(31,41,32,.12); padding-top: 14px; }
+    .plan-row { display: flex; flex-direction: column; gap: 4px; }
+    .plan-top { display: flex; justify-content: space-between; align-items: baseline; }
+    .plan-name { font-size: 12px; font-weight: 600; color: #1B3024; }
+    .plan-pos  { font-size: 11px; color: #7A8278; }
+    .plan-bar  { height: 6px; background: rgba(31,41,32,.07); border-radius: 3px; overflow: hidden; }
+    .plan-fill { height: 100%; background: linear-gradient(90deg, #5A7A65, #2D4A3A); border-radius: 3px; transition: width .4s; }
+    .no-plans  { font-size: 12px; color: #B0B8AE; font-style: italic; }
 
     /* Kebab menu */
     .card-head-right { display: flex; align-items: center; gap: 8px; }
@@ -290,6 +304,23 @@ export class CatechumenParent extends LitElement {
           <div class="cs"><div class="cs-num">${c.xp}</div><div class="cs-lbl">XP</div></div>
         </div>
         <div class="last-active">${this.lastActiveLabel(c.last_active_at)}</div>
+        <div class="plans">
+          ${c.plans.length === 0 ? html`<div class="no-plans">Not enrolled in any catechism yet</div>` :
+            c.plans.map(p => {
+              const pct = p.question_count > 0 ? Math.round((Number(p.answered) / p.question_count) * 100) : 0;
+              const pos = Number(p.answered) + 1;
+              return html`
+                <div class="plan-row">
+                  <div class="plan-top">
+                    <span class="plan-name">${p.abbreviation} — ${p.catechism_name}</span>
+                    <span class="plan-pos">Q${pos} of ${p.question_count} · ${Number(p.mastered)} mastered</span>
+                  </div>
+                  <div class="plan-bar"><div class="plan-fill" style="width:${pct}%"></div></div>
+                </div>
+              `;
+            })
+          }
+        </div>
       </div>
     `;
   }
