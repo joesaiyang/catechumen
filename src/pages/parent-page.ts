@@ -7,6 +7,10 @@ interface ChildPlan {
   question_count: number; answered: number; mastered: number;
 }
 
+interface Catechism {
+  id: string; name: string; abbreviation: string; question_count: number;
+}
+
 interface Child {
   id: string; display_name: string; username: string;
   xp: number; streak_days: number; hearts: number;
@@ -40,9 +44,15 @@ export class CatechumenParent extends LitElement {
   @state() deleteTarget: Child | null = null;
   @state() deleteSubmitting = false;
 
+  // Assign catechism modal
+  @state() assignTarget: Child | null = null;
+  @state() catechisms: Catechism[] = [];
+  @state() assigning: string | null = null; // catechism_id being assigned
+
   connectedCallback() {
     super.connectedCallback();
     this.loadChildren();
+    this.loadCatechisms();
   }
 
   async loadChildren() {
@@ -105,6 +115,24 @@ export class CatechumenParent extends LitElement {
     this.deleteSubmitting = false;
     this.deleteTarget = null;
     await this.loadChildren();
+  }
+
+  async loadCatechisms() {
+    const res = await apiFetch('/api/content/catechisms');
+    if (res.ok) { const d = await res.json(); this.catechisms = d.catechisms ?? []; }
+  }
+
+  async assignCatechism(catechismId: string) {
+    if (!this.assignTarget) return;
+    this.assigning = catechismId;
+    await apiFetch('/api/study-plans', {
+      method: 'POST',
+      body: JSON.stringify({ planType: 'catechism', catechismId, childId: this.assignTarget.id }),
+    });
+    this.assigning = null;
+    await this.loadChildren();
+    // Refresh the assignTarget's plans from the freshly loaded kids
+    this.assignTarget = this.kids.find(k => k.id === this.assignTarget!.id) ?? null;
   }
 
   private lastActiveLabel(iso: string | null): string {
@@ -226,6 +254,19 @@ export class CatechumenParent extends LitElement {
     .btn-destroy { padding: 11px 22px; background: #9B2C2C; color: #fff; border: none; border-bottom: 3px solid #6B1F1F; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; flex: 2; }
     .btn-destroy:disabled { opacity: .5; cursor: not-allowed; }
     .delete-warning { background: rgba(155,44,44,.08); border: 1px solid rgba(155,44,44,.2); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #7E1F1F; margin-bottom: 4px; }
+    .catechism-list { display: flex; flex-direction: column; gap: 8px; }
+    .catechism-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 14px; border: 1px solid rgba(31,41,32,.1); border-radius: 10px;
+    }
+    .catechism-row.enrolled { background: rgba(45,74,58,.05); border-color: rgba(45,74,58,.25); }
+    .cat-info { display: flex; flex-direction: column; gap: 2px; }
+    .cat-name { font-size: 14px; font-weight: 600; color: #1B3024; }
+    .cat-meta { font-size: 12px; color: #7A8278; }
+    .cat-badge { font-size: 11px; font-weight: 700; color: #2D4A3A; background: rgba(45,74,58,.1); padding: 3px 9px; border-radius: 999px; }
+    .cat-enroll { padding: 7px 14px; background: #2D4A3A; color: #F5EFE0; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; white-space: nowrap; }
+    .cat-enroll:hover { background: #1B3024; }
+    .cat-enroll:disabled { opacity: .5; cursor: not-allowed; }
 
     /* Empty / loading */
     .empty { text-align: center; padding: 60px 24px; border: 1.5px dashed rgba(31,41,32,.15); border-radius: 16px; color: #7A8278; }
@@ -287,6 +328,9 @@ export class CatechumenParent extends LitElement {
             </button>
             ${menuOpen ? html`
               <div class="dropdown">
+                <div class="dropdown-item" @click=${() => { this.assignTarget = c; this.openMenuId = null; }}>
+                  + Assign catechism
+                </div>
                 <div class="dropdown-item" @click=${() => this.openEdit(c)}>
                   ✎ Edit
                 </div>
@@ -363,6 +407,41 @@ export class CatechumenParent extends LitElement {
     `;
   }
 
+  private renderAssignModal(): TemplateResult {
+    if (!this.assignTarget) return html``;
+    const enrolled = new Set(this.assignTarget.plans.map(p => p.catechism_id));
+    return html`
+      <div class="modal-overlay" @click=${(e: Event) => { if (e.target === e.currentTarget) this.assignTarget = null; }}>
+        <div class="modal" style="max-width:500px">
+          <div class="modal-title">Assign catechism to ${this.assignTarget.display_name}</div>
+          <div class="catechism-list">
+            ${this.catechisms.map(cat => {
+              const isEnrolled = enrolled.has(cat.id);
+              const isAssigning = this.assigning === cat.id;
+              return html`
+                <div class="catechism-row ${isEnrolled ? 'enrolled' : ''}">
+                  <div class="cat-info">
+                    <div class="cat-name">${cat.name}</div>
+                    <div class="cat-meta">${cat.question_count} questions</div>
+                  </div>
+                  ${isEnrolled
+                    ? html`<span class="cat-badge">✓ Enrolled</span>`
+                    : html`<button class="cat-enroll" ?disabled=${!!this.assigning} @click=${() => this.assignCatechism(cat.id)}>
+                        ${isAssigning ? 'Adding…' : 'Enroll'}
+                      </button>`
+                  }
+                </div>
+              `;
+            })}
+          </div>
+          <div class="modal-actions">
+            <button class="btn-cancel" style="flex:unset" @click=${() => this.assignTarget = null}>Done</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   private renderDeleteModal(): TemplateResult {
     if (!this.deleteTarget) return html``;
     return html`
@@ -408,6 +487,7 @@ export class CatechumenParent extends LitElement {
         `
       }
 
+      ${this.renderAssignModal()}
       ${this.renderEditModal()}
       ${this.renderDeleteModal()}
     `;

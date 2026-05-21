@@ -42,15 +42,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'POST') {
-    const { planType, catechismId, customQuizId, quizMode } = req.body as {
-      planType: string; catechismId?: string; customQuizId?: string; quizMode?: string;
+    const { planType, catechismId, customQuizId, quizMode, childId } = req.body as {
+      planType: string; catechismId?: string; customQuizId?: string;
+      quizMode?: string; childId?: string;
     };
     if (!planType) return res.status(400).json({ error: 'Missing planType' });
+
+    let targetUserId = payload.userId;
+    if (childId) {
+      if (payload.role !== 'parent') return res.status(403).json({ error: 'Only parents can assign catechisms to children' });
+      const [child] = await sql`
+        SELECT id FROM users WHERE id = ${childId} AND family_id = ${payload.familyId} AND role = 'child'
+      `;
+      if (!child) return res.status(404).json({ error: 'Child not found' });
+      targetUserId = childId;
+    }
 
     const [plan] = await sql`
       INSERT INTO user_study_plans (user_id, plan_type, catechism_id, custom_quiz_id, quiz_mode)
       VALUES (
-        ${payload.userId}, ${planType},
+        ${targetUserId}, ${planType},
         ${catechismId ?? null}, ${customQuizId ?? null},
         ${quizMode ?? 'fill_blank'}
       )
