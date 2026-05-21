@@ -28,12 +28,13 @@ function nodeY(i: number) { return FIRST_Y + i * SPACING; }
 
 @customElement('catechumen-path')
 export class CatechumenPath extends LitElement {
-  @property({ type: String }) name = 'Samuel';
-  @property({ type: Number }) streak = 0;
-  @property({ type: Number }) xp = 0;
-  @property({ type: Number }) hearts = 5;
-  @property({ type: Number }) gems = 0;
-  @property({ type: Number, attribute: 'path-key' }) pathKey = 0;
+  @property({ type: String })  name      = 'Samuel';
+  @property({ type: Number })  streak    = 0;
+  @property({ type: Number })  xp        = 0;
+  @property({ type: Number })  hearts    = 5;
+  @property({ type: Number })  gems      = 0;
+  @property({ type: Number, attribute: 'path-key' })   pathKey   = 0;
+  @property({ type: Boolean, attribute: 'child-mode' }) childMode = false;
 
   @state() plans: StudyPlan[] = [];
   @state() selectedId = '';
@@ -109,10 +110,11 @@ export class CatechumenPath extends LitElement {
       else if (i === firstUnseenIdx)  nodeState = 'current'; // next new question
       else                           nodeState = 'locked';
 
+      const r = this.childMode ? 40 : 34;
       return {
         num: `Q${q.number}`, state: nodeState,
-        x: nodeX(i), y: nodeY(i), r: 34,
-        label: nodeState === 'current' ? 'Up next' : null,
+        x: nodeX(i), y: nodeY(i), r,
+        label: nodeState === 'current' ? (this.childMode ? '⚡ Go!' : 'Up next') : null,
       };
     });
 
@@ -120,8 +122,8 @@ export class CatechumenPath extends LitElement {
     nodes.push({
       num: 'REVIEW',
       state: allMastered ? 'milestone' : 'milestone-locked',
-      x: CENTER_X, y: nodeY(qs.length), r: 42,
-      label: 'Unit review',
+      x: CENTER_X, y: nodeY(qs.length), r: this.childMode ? 50 : 42,
+      label: this.childMode ? (allMastered ? 'Level up! 🏆' : 'Unit review') : 'Unit review',
     });
 
     return nodes;
@@ -246,6 +248,32 @@ export class CatechumenPath extends LitElement {
     }
     .node.milestone .trophy { font-size: 26px; line-height: 1; }
 
+    /* ── Child / game-mode node overrides ── */
+    .child-mode .node.done {
+      background: linear-gradient(135deg, #10B981, #059669);
+      box-shadow: 0 4px 16px rgba(16,185,129,.35);
+    }
+    .child-mode .node.current {
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      color: #fff; border-color: #F59E0B;
+      box-shadow: 0 6px 24px rgba(245,159,11,.4);
+      animation: kidpulse 2s infinite;
+    }
+    .child-mode .node.current .num  { font-size: 20px; }
+    .child-mode .node.current .play { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+    @keyframes kidpulse {
+      0%,100% { box-shadow: 0 6px 24px rgba(245,159,11,.4); }
+      50%      { box-shadow: 0 6px 24px rgba(245,159,11,.6), 0 0 0 12px rgba(245,159,11,.08); }
+    }
+    .child-mode .node.milestone {
+      background: linear-gradient(135deg, #C89B3C, #F0E1B8);
+      border-color: #C89B3C;
+      box-shadow: 0 4px 20px rgba(200,155,60,.4);
+    }
+    .child-mode .node.milestone .trophy { font-size: 32px; }
+    .child-mode .node-label { font-size: 12px; font-weight: 700; }
+    .child-mode .node.current .node-label { color: #D97706; }
+
     .node-label {
       position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
       font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600;
@@ -323,13 +351,13 @@ export class CatechumenPath extends LitElement {
     return html`
       <div class="unit-header">
         <div>
-          <div class="unit-number">${sectionLabel} · Questions ${firstQ}–${lastQ}</div>
-          <div class="unit-title">${sectionName}</div>
+          <div class="unit-number">${this.childMode ? sectionName : `${sectionLabel} · Questions ${firstQ}–${lastQ}`}</div>
+          ${this.childMode ? '' : html`<div class="unit-title">${sectionName}</div>`}
         </div>
-        <div class="unit-status">${this.masteredCount} of ${qs.length} mastered</div>
+        <div class="unit-status">${this.masteredCount} of ${qs.length} ${this.childMode ? '⭐ mastered' : 'mastered'}</div>
       </div>
 
-      <div class="path-wrap">
+      <div class="path-wrap ${this.childMode ? 'child-mode' : ''}">
         <svg class="path-svg" viewBox="0 0 ${SVG_W} ${svgH}" xmlns="http://www.w3.org/2000/svg"></svg>
         <div class="path-nodes">
           ${nodes.map(n => {
@@ -376,7 +404,8 @@ export class CatechumenPath extends LitElement {
 
   render() {
     return html`
-      <stats-bar name=${this.name} streak=${this.streak} xp=${this.xp} hearts=${this.hearts} gems=${this.gems}></stats-bar>
+      <stats-bar name=${this.name} streak=${this.streak} xp=${this.xp} hearts=${this.hearts} gems=${this.gems}
+        ?child-mode=${this.childMode}></stats-bar>
 
       <div class="quest">
         <div class="quest-icon">🎯</div>
@@ -391,7 +420,7 @@ export class CatechumenPath extends LitElement {
         <button>Continue →</button>
       </div>
 
-      <div class="layout">
+      <div class="${this.childMode ? '' : 'layout'}">
         <div>
           ${this.plans.length > 1 ? html`
             <div class="path-selector">
@@ -411,12 +440,12 @@ export class CatechumenPath extends LitElement {
           ${!this.plansLoading && this.plans.length === 0 ? html`
             <div class="empty-path">
               <p>You haven't enrolled in any catechism yet.</p>
-              <p>Head to the <strong>Library</strong> to get started.</p>
+              <p>Head to the <strong>${this.childMode ? 'Books' : 'Library'}</strong> to get started.</p>
             </div>
           ` : this.renderPath()}
         </div>
 
-        <aside class="side">
+        ${this.childMode ? '' : html`<aside class="side">
           <div class="verse-card">
             <div class="verse-eyebrow">Verse of the day</div>
             <blockquote>"Whether therefore ye eat, or drink, or whatsoever ye do, do all to the glory of God."</blockquote>
@@ -451,7 +480,7 @@ export class CatechumenPath extends LitElement {
               }
             </div>
           </div>
-        </aside>
+        </aside>`}
       </div>
     `;
   }

@@ -141,6 +141,7 @@ export class CatechumenLesson extends LitElement {
   @property({ type: String,  attribute: 'quiz-mode'      }) quizMode      = 'fill_blank';
   @property({ type: Boolean, attribute: 'review-mode'    }) reviewMode    = false;
   @property({ type: Number,  attribute: 'session-key'    }) sessionKey    = 0;
+  @property({ type: Boolean, attribute: 'child-mode'     }) childMode     = false;
 
   @state() phase: Phase = 'loading';
   @state() questions: ApiQuestion[] = [];
@@ -744,19 +745,19 @@ export class CatechumenLesson extends LitElement {
 
         ${this.phase === 'correct' ? html`
           <div class="feedback success">
-            <div class="fb-icon">✓</div>
+            <div class="fb-icon">${this.childMode ? '🌟' : '✓'}</div>
             <div>
-              <div class="fb-title">Excellent!</div>
-              <div class="fb-sub">+15 XP earned · Keep it up</div>
+              <div class="fb-title">${this.childMode ? 'Amazing! 🎉' : 'Excellent!'}</div>
+              <div class="fb-sub">${this.childMode ? 'You got it! +15 XP ⭐' : '+15 XP earned · Keep it up'}</div>
             </div>
           </div>
         ` : ''}
         ${this.phase === 'incorrect' ? html`
           <div class="feedback error">
-            <div class="fb-icon">←</div>
+            <div class="fb-icon">${this.childMode ? '💪' : '←'}</div>
             <div>
-              <div class="fb-title">Not quite — you lost a heart.</div>
-              <div class="fb-sub">Tap a filled blank to clear it and try again.</div>
+              <div class="fb-title">${this.childMode ? 'Almost! Try again.' : 'Not quite — you lost a heart.'}</div>
+              <div class="fb-sub">${this.childMode ? 'Tap a word to clear it and try again.' : 'Tap a filled blank to clear it and try again.'}</div>
             </div>
           </div>
         ` : ''}

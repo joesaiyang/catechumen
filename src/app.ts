@@ -110,10 +110,11 @@ export class CatechumenApp extends LitElement {
 
   private renderNav() {
     const user = auth.user;
-    const initial = user?.display_name?.[0]?.toUpperCase() ?? '?';
+    const initial  = user?.display_name?.[0]?.toUpperCase() ?? '?';
+    const isChild  = user?.role === 'child';
     const links: { id: Screen; label: string }[] = [
-      { id: 'path',    label: 'Learn' },
-      { id: 'library', label: 'Library' },
+      { id: 'path',    label: isChild ? '🏠 Home'  : 'Learn'   },
+      { id: 'library', label: isChild ? '📚 Books' : 'Library' },
       ...(user?.role === 'parent' ? [{ id: 'parent' as Screen, label: 'Family' }] : []),
     ];
     return html`
@@ -150,7 +151,8 @@ export class CatechumenApp extends LitElement {
   render() {
     if (!this.loggedIn) return html`<auth-page></auth-page>`;
 
-    const user = auth.user!;
+    const user    = auth.user!;
+    const isChild = user.role === 'child';
     return html`
       <div class="container">
         ${this.renderNav()}
@@ -160,6 +162,7 @@ export class CatechumenApp extends LitElement {
               name=${user.display_name} streak=${user.streak_days}
               xp=${user.xp} hearts=${user.hearts} gems=${user.gems}
               path-key=${this.pathKey}
+              ?child-mode=${isChild}
             ></catechumen-path>
           </div>
           <div class="screen ${this.screen === 'library' ? 'active' : ''}">
@@ -172,6 +175,7 @@ export class CatechumenApp extends LitElement {
               quiz-mode=${this.lessonConfig.mode}
               ?review-mode=${this.lessonConfig.reviewMode ?? false}
               session-key=${this.lessonKey}
+              ?child-mode=${isChild}
             ></catechumen-lesson>
           </div>
           <div class="screen ${this.screen === 'parent'  ? 'active' : ''}">
