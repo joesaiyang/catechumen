@@ -14,6 +14,7 @@ export class CatechumenApp extends LitElement {
   @state() lessonConfig: LessonConfig = { type: 'catechism', source: 'wsc', mode: 'fill_blank' };
   @state() lessonKey = 0;
   @state() pathKey = 0;
+  @state() avatarOpen = false;
 
   private _unsub: () => void = () => {};
 
@@ -60,18 +61,34 @@ export class CatechumenApp extends LitElement {
     }
     .nav-link:hover  { color: #1B3024; background: rgba(45,74,58,.06); }
     .nav-link.active { color: #1B3024; background: rgba(45,74,58,.08); }
+    .avatar-wrap { position: relative; }
     .user-pill {
       display: flex; align-items: center; gap: 8px; padding: 5px 12px 5px 7px;
       background: rgba(45,74,58,.07); border-radius: 999px;
       font-size: 13px; font-weight: 600; color: #1B3024;
+      cursor: pointer; user-select: none; transition: background .15s;
     }
+    .user-pill:hover { background: rgba(45,74,58,.13); }
     .user-avatar {
       width: 26px; height: 26px; background: #2D4A3A; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-family: 'Fraunces', serif; font-size: 12px; font-weight: 600; color: #F5EFE0;
     }
-    .logout-btn { padding: 7px 10px; font-size: 13px; color: #7A8278; border-radius: 8px; cursor: pointer; }
-    .logout-btn:hover { color: #9B2C2C; background: rgba(155,44,44,.06); }
+    .avatar-dropdown {
+      position: absolute; top: calc(100% + 8px); right: 0; min-width: 160px;
+      background: #FFFCF5; border: 1px solid rgba(31,41,32,.1);
+      border-radius: 12px; padding: 6px;
+      box-shadow: 0 4px 16px rgba(31,41,32,.15), 0 1px 4px rgba(31,41,32,.08);
+      z-index: 300;
+    }
+    .avatar-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; color: #9B2C2C;
+      cursor: pointer; transition: background .1s;
+    }
+    .avatar-item:hover { background: rgba(155,44,44,.07); }
+    .avatar-backdrop { position: fixed; inset: 0; z-index: 200; }
 
     .stage { padding: 32px 0 80px; min-height: 600px; }
     .screen { display: none; animation: fadeIn .3s ease; }
@@ -111,13 +128,20 @@ export class CatechumenApp extends LitElement {
               ${l.label}
             </span>
           `)}
-          <div class="user-pill">
-            <div class="user-avatar">${initial}</div>
-            ${user?.display_name}
+          <div class="avatar-wrap">
+            <div class="user-pill" @click=${() => this.avatarOpen = !this.avatarOpen}>
+              <div class="user-avatar">${initial}</div>
+              ${user?.display_name}
+            </div>
+            ${this.avatarOpen ? html`
+              <div class="avatar-dropdown">
+                <div class="avatar-item" @click=${() => { this.avatarOpen = false; this.logout(); }}>
+                  ⎋ Log out
+                </div>
+              </div>
+              <div class="avatar-backdrop" @click=${() => this.avatarOpen = false}></div>
+            ` : ''}
           </div>
-          <span class="logout-btn" @click=${this.logout} title="Sign out">
-            <i class="ti ti-logout"></i>
-          </span>
         </div>
       </nav>
     `;
