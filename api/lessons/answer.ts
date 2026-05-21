@@ -75,7 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   `;
 
   if (correct) {
-    await sql`UPDATE users SET xp = xp + ${xpEarned} WHERE id = ${payload.userId}`;
+    await sql`UPDATE users SET xp = xp + ${xpEarned}, gems = gems + 1 WHERE id = ${payload.userId}`;
     await sql`
       UPDATE users SET
         streak_days    = CASE

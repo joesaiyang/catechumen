@@ -709,7 +709,7 @@ export class CatechumenLesson extends LitElement {
   }
 
   private async purchaseHearts() {
-    const res = await apiFetch('/api/hearts', { method: 'POST' });
+    const res = await apiFetch('/api/auth/me', { method: 'POST' });
     if (!res.ok) {
       const data = await res.json();
       alert(data.error ?? 'Purchase failed');

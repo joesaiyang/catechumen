@@ -3,6 +3,14 @@ import { customElement, state } from 'lit/decorators.js';
 import { apiFetch } from '../store/auth.js';
 import { BADGES } from '../data/achievements.js';
 
+interface StoreItem {
+  id: string; name: string; emoji: string; gem_cost: number; description?: string;
+}
+interface Redemption {
+  id: string; status: string; child_name: string;
+  item_name: string; emoji: string; gem_cost: number; created_at: string;
+}
+
 interface ChildPlan {
   catechism_id: string; catechism_name: string; abbreviation: string;
   question_count: number; answered: number; mastered: number;
@@ -48,6 +56,16 @@ export class CatechumenParent extends LitElement {
 
   // Assign catechism modal
   @state() assignTarget: Child | null = null;
+
+  // Gem store
+  @state() storeItems: StoreItem[] = [];
+  @state() redemptions: Redemption[] = [];
+  @state() showStoreForm = false;
+  @state() newItemName = '';
+  @state() newItemEmoji = '🎁';
+  @state() newItemCost = 50;
+  @state() newItemDesc = '';
+  @state() storeSubmitting = false;
   @state() catechisms: Catechism[] = [];
   @state() assigning: string | null = null; // catechism_id being assigned
 
@@ -55,6 +73,7 @@ export class CatechumenParent extends LitElement {
     super.connectedCallback();
     this.loadChildren();
     this.loadCatechisms();
+    this.loadStore();
   }
 
   async loadChildren() {
@@ -117,6 +136,40 @@ export class CatechumenParent extends LitElement {
     this.deleteSubmitting = false;
     this.deleteTarget = null;
     await this.loadChildren();
+  }
+
+  async loadStore() {
+    const res = await apiFetch('/api/gems');
+    if (res.ok) {
+      const d = await res.json();
+      this.storeItems   = d.items        ?? [];
+      this.redemptions  = d.redemptions  ?? [];
+    }
+  }
+
+  async addStoreItem(e: Event) {
+    e.preventDefault();
+    this.storeSubmitting = true;
+    const res = await apiFetch('/api/gems', {
+      method: 'POST',
+      body: JSON.stringify({ name: this.newItemName, emoji: this.newItemEmoji, gemCost: this.newItemCost, description: this.newItemDesc }),
+    });
+    this.storeSubmitting = false;
+    if (res.ok) {
+      this.newItemName = ''; this.newItemEmoji = '🎁'; this.newItemCost = 50; this.newItemDesc = '';
+      this.showStoreForm = false;
+      await this.loadStore();
+    }
+  }
+
+  async deleteStoreItem(itemId: string) {
+    await apiFetch(`/api/gems?itemId=${itemId}`, { method: 'DELETE' });
+    await this.loadStore();
+  }
+
+  async respondToRedemption(redemptionId: string, approved: boolean) {
+    await apiFetch('/api/gems', { method: 'PATCH', body: JSON.stringify({ redemptionId, approved }) });
+    await this.loadStore();
   }
 
   async loadCatechisms() {
@@ -276,6 +329,35 @@ export class CatechumenParent extends LitElement {
     .cat-enroll { padding: 7px 14px; background: #2D4A3A; color: #F5EFE0; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; white-space: nowrap; }
     .cat-enroll:hover { background: #1B3024; }
     .cat-enroll:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* Gem store */
+    .store-section { margin-top: 40px; }
+    .store-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .store-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; color: #1B3024; }
+    .store-item-row {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+      border: 1px solid rgba(31,41,32,.08); border-radius: 12px; background: #FFFCF5; margin-bottom: 8px;
+    }
+    .store-emoji { font-size: 24px; }
+    .store-item-info { flex: 1; }
+    .store-item-name { font-size: 14px; font-weight: 600; color: #1B3024; }
+    .store-item-desc { font-size: 12px; color: #7A8278; margin-top: 2px; }
+    .gem-cost { font-size: 13px; font-weight: 700; color: #2D4A3A; white-space: nowrap; }
+    .store-delete { font-size: 13px; color: #9B2C2C; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
+    .store-delete:hover { background: rgba(155,44,44,.08); }
+    .redemption-row {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+      border: 1px solid rgba(31,41,32,.08); border-radius: 12px; background: #FFFCF5; margin-bottom: 8px;
+    }
+    .redemption-info { flex: 1; }
+    .redemption-name { font-size: 14px; font-weight: 600; color: #1B3024; }
+    .redemption-meta { font-size: 12px; color: #7A8278; margin-top: 2px; }
+    .redemption-status { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+    .redemption-status.pending  { background: #F0E1B8; color: #8A6620; }
+    .redemption-status.approved { background: #E1EBE5; color: #2D4A3A; }
+    .redemption-status.declined { background: #E8D0CE; color: #9B2C2C; }
+    .approve-btn { padding: 7px 12px; background: #2D4A3A; color: #F5EFE0; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; }
+    .decline-btn { padding: 7px 12px; background: transparent; border: 1.5px solid rgba(155,44,44,.3); color: #9B2C2C; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; }
 
     /* Empty / loading */
     .empty { text-align: center; padding: 60px 24px; border: 1.5px dashed rgba(31,41,32,.15); border-radius: 16px; color: #7A8278; }
@@ -479,6 +561,103 @@ export class CatechumenParent extends LitElement {
     `;
   }
 
+  private renderGemStore(): TemplateResult {
+    const pending = this.redemptions.filter(r => r.status === 'pending');
+    const past    = this.redemptions.filter(r => r.status !== 'pending');
+    return html`
+      <div class="store-section">
+        <div class="store-head">
+          <div class="store-title">💎 Gem Store</div>
+          <button class="add-btn" @click=${() => this.showStoreForm = !this.showStoreForm}>+ Add reward</button>
+        </div>
+
+        ${this.showStoreForm ? html`
+          <div class="form-card">
+            <div class="form-title" style="font-size:16px;margin-bottom:12px">New reward item</div>
+            <form @submit=${this.addStoreItem}>
+              <div class="form-grid">
+                <div class="field">
+                  <label>Emoji</label>
+                  <input type="text" maxlength="2" .value=${this.newItemEmoji}
+                    @input=${(e: Event) => this.newItemEmoji = (e.target as HTMLInputElement).value} />
+                </div>
+                <div class="field">
+                  <label>Reward name</label>
+                  <input type="text" placeholder="Bookmark, treat, screen time…" required .value=${this.newItemName}
+                    @input=${(e: Event) => this.newItemName = (e.target as HTMLInputElement).value} />
+                </div>
+                <div class="field">
+                  <label>Gem cost 💎</label>
+                  <input type="number" min="1" .value=${String(this.newItemCost)}
+                    @input=${(e: Event) => this.newItemCost = parseInt((e.target as HTMLInputElement).value)} />
+                </div>
+                <div class="field">
+                  <label>Description (optional)</label>
+                  <input type="text" placeholder="Any details…" .value=${this.newItemDesc}
+                    @input=${(e: Event) => this.newItemDesc = (e.target as HTMLInputElement).value} />
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-cancel" @click=${() => this.showStoreForm = false}>Cancel</button>
+                <button type="submit" class="btn-submit" ?disabled=${this.storeSubmitting}>
+                  ${this.storeSubmitting ? 'Adding…' : 'Add reward'}
+                </button>
+              </div>
+            </form>
+          </div>
+        ` : ''}
+
+        ${this.storeItems.length === 0 && !this.showStoreForm ? html`
+          <div style="color:#7A8278;font-size:14px;padding:12px 0">
+            No rewards yet. Add something kids can redeem with their 💎 gems.
+          </div>
+        ` : this.storeItems.map(item => html`
+          <div class="store-item-row">
+            <span class="store-emoji">${item.emoji}</span>
+            <div class="store-item-info">
+              <div class="store-item-name">${item.name}</div>
+              ${item.description ? html`<div class="store-item-desc">${item.description}</div>` : ''}
+            </div>
+            <span class="gem-cost">💎 ${item.gem_cost}</span>
+            <span class="store-delete" @click=${() => this.deleteStoreItem(item.id)}>✕</span>
+          </div>
+        `)}
+
+        ${pending.length > 0 ? html`
+          <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#1B3024;margin:20px 0 10px">
+            ⏳ Pending redemptions
+          </div>
+          ${pending.map(r => html`
+            <div class="redemption-row">
+              <span class="store-emoji">${r.emoji}</span>
+              <div class="redemption-info">
+                <div class="redemption-name">${r.child_name} wants <strong>${r.item_name}</strong></div>
+                <div class="redemption-meta">💎 ${r.gem_cost} gems</div>
+              </div>
+              <button class="approve-btn" @click=${() => this.respondToRedemption(r.id, true)}>✓ Approve</button>
+              <button class="decline-btn" @click=${() => this.respondToRedemption(r.id, false)}>✕</button>
+            </div>
+          `)}
+        ` : ''}
+
+        ${past.length > 0 ? html`
+          <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#1B3024;margin:20px 0 10px">
+            Recent
+          </div>
+          ${past.slice(0, 5).map(r => html`
+            <div class="redemption-row">
+              <span class="store-emoji">${r.emoji}</span>
+              <div class="redemption-info">
+                <div class="redemption-name">${r.child_name} — ${r.item_name}</div>
+              </div>
+              <span class="redemption-status ${r.status}">${r.status}</span>
+            </div>
+          `)}
+        ` : ''}
+      </div>
+    `;
+  }
+
   render(): TemplateResult {
     return html`
       <div class="ph-title">Family</div>
@@ -504,6 +683,7 @@ export class CatechumenParent extends LitElement {
         `
       }
 
+      ${this.renderGemStore()}
       ${this.renderAssignModal()}
       ${this.renderEditModal()}
       ${this.renderDeleteModal()}

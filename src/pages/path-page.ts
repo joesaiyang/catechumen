@@ -42,6 +42,10 @@ export class CatechumenPath extends LitElement {
   @state() allProgress: QuestionProgress[] = [];
   @state() plansLoading = true;
   @state() progressLoading = false;
+  @state() storeItems: { id: string; name: string; emoji: string; gem_cost: number }[] = [];
+  @state() myRedemptions: { id: string; item_name: string; emoji: string; status: string }[] = [];
+  @state() storeGems = 0;
+  @state() redeeming: string | null = null;
 
   connectedCallback() {
     super.connectedCallback();
@@ -51,6 +55,28 @@ export class CatechumenPath extends LitElement {
   updated(changed: Map<string, unknown>) {
     if (changed.has('selectedId') && this.selectedId) this.loadProgress();
     if (changed.has('pathKey') && this.selectedId)    this.loadProgress();
+    if (changed.has('childMode') && this.childMode)   this.loadStore();
+  }
+
+  async loadStore() {
+    const res = await apiFetch('/api/gems');
+    if (res.ok) {
+      const d = await res.json();
+      this.storeItems     = d.items          ?? [];
+      this.myRedemptions  = d.myRedemptions  ?? [];
+      this.storeGems      = d.gems           ?? 0;
+    }
+  }
+
+  async redeemItem(itemId: string) {
+    this.redeeming = itemId;
+    const res = await apiFetch('/api/gems', { method: 'POST', body: JSON.stringify({ itemId }) });
+    if (res.ok) {
+      const d = await res.json();
+      this.storeGems = d.gems;
+      await this.loadStore();
+    }
+    this.redeeming = null;
   }
 
   async loadPlans() {
@@ -282,6 +308,29 @@ export class CatechumenPath extends LitElement {
     }
     .node.current .node-label { color: #B5481E; }
 
+    /* ── Gem store (child mode) ── */
+    .kid-store { margin-top: 32px; }
+    .kid-store-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: #1B3024; margin-bottom: 6px; }
+    .kid-gem-bal { font-size: 14px; color: #4A554A; margin-bottom: 14px; }
+    .kid-store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .kid-store-card {
+      background: #FFFCF5; border: 1.5px solid rgba(31,41,32,.1); border-radius: 14px;
+      padding: 14px 12px; text-align: center; display: flex; flex-direction: column; gap: 6px;
+    }
+    .kid-store-card.can-afford { border-color: #C89B3C; background: #FFFDF7; }
+    .kid-store-emoji { font-size: 32px; }
+    .kid-store-name  { font-size: 13px; font-weight: 700; color: #1B3024; }
+    .kid-store-cost  { font-size: 12px; font-weight: 600; color: #8A6620; }
+    .kid-redeem-btn  { margin-top: 4px; padding: 8px; background: #C89B3C; color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; }
+    .kid-redeem-btn:hover { background: #A67C2E; }
+    .kid-redeem-btn:disabled { background: rgba(31,41,32,.1); color: rgba(31,41,32,.3); cursor: not-allowed; }
+    .kid-redemptions { display: flex; flex-direction: column; gap: 8px; }
+    .kid-redemption-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #FFFCF5; border: 1px solid rgba(31,41,32,.08); border-radius: 10px; }
+    .kid-r-status { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+    .kid-r-status.pending  { background: #F0E1B8; color: #8A6620; }
+    .kid-r-status.approved { background: #E1EBE5; color: #2D4A3A; }
+    .kid-r-status.declined { background: #E8D0CE; color: #9B2C2C; }
+
     /* ── Badge shelf (child mode) ── */
     .badge-shelf { margin-top: 32px; }
     .badge-shelf-title {
@@ -352,6 +401,47 @@ export class CatechumenPath extends LitElement {
   }
 
   // ── render helpers ────────────────────────────────────────────────────────
+
+  private renderKidStore(): TemplateResult {
+    if (this.storeItems.length === 0 && this.myRedemptions.length === 0) return html``;
+    return html`
+      <div class="kid-store">
+        <div class="kid-store-title">💎 Gem Store</div>
+        <div class="kid-gem-bal">You have <strong>${this.storeGems} gems</strong></div>
+        ${this.storeItems.length > 0 ? html`
+          <div class="kid-store-grid">
+            ${this.storeItems.map(item => {
+              const canAfford = this.storeGems >= item.gem_cost;
+              return html`
+                <div class="kid-store-card ${canAfford ? 'can-afford' : ''}">
+                  <div class="kid-store-emoji">${item.emoji}</div>
+                  <div class="kid-store-name">${item.name}</div>
+                  <div class="kid-store-cost">💎 ${item.gem_cost}</div>
+                  <button class="kid-redeem-btn"
+                    ?disabled=${!canAfford || this.redeeming === item.id}
+                    @click=${() => this.redeemItem(item.id)}>
+                    ${this.redeeming === item.id ? '…' : canAfford ? 'Redeem!' : `Need ${item.gem_cost - this.storeGems} more`}
+                  </button>
+                </div>
+              `;
+            })}
+          </div>
+        ` : ''}
+        ${this.myRedemptions.length > 0 ? html`
+          <div style="font-size:14px;font-weight:700;color:#1B3024;margin-bottom:8px">My requests</div>
+          <div class="kid-redemptions">
+            ${this.myRedemptions.slice(0, 5).map(r => html`
+              <div class="kid-redemption-row">
+                <span style="font-size:20px">${r.emoji}</span>
+                <span style="flex:1;font-size:13px;font-weight:600;color:#1B3024">${r.item_name}</span>
+                <span class="kid-r-status ${r.status}">${r.status === 'approved' ? '✓ Approved!' : r.status === 'declined' ? 'Declined' : '⏳ Pending'}</span>
+              </div>
+            `)}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
 
   private renderBadgeShelf(): TemplateResult {
     const earned = new Set(auth.earnedAchievements);
@@ -496,7 +586,7 @@ export class CatechumenPath extends LitElement {
             </div>
           ` : this.renderPath()}
 
-          ${this.childMode ? this.renderBadgeShelf() : ''}
+          ${this.childMode ? html`${this.renderKidStore()}${this.renderBadgeShelf()}` : ''}
         </div>
 
         ${this.childMode ? '' : html`<aside class="side">

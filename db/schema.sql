@@ -256,3 +256,22 @@ ON CONFLICT (id) DO NOTHING;
 -- MIGRATIONS
 -- =============================================================
 ALTER TABLE users ADD COLUMN IF NOT EXISTS hearts_refill_at TIMESTAMPTZ;
+
+CREATE TABLE IF NOT EXISTS gem_store_items (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  family_id   UUID NOT NULL REFERENCES families(id) ON DELETE CASCADE,
+  name        TEXT NOT NULL,
+  description TEXT,
+  emoji       TEXT NOT NULL DEFAULT '🎁',
+  gem_cost    INTEGER NOT NULL CHECK (gem_cost > 0),
+  is_active   BOOLEAN NOT NULL DEFAULT true,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS gem_redemptions (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id    UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  item_id    UUID NOT NULL REFERENCES gem_store_items(id) ON DELETE CASCADE,
+  status     TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','declined')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
