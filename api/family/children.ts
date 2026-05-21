@@ -68,5 +68,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
+  if (req.method === 'PATCH') {
+    const { childId, displayName, username, pin } = req.body as {
+      childId: string; displayName?: string; username?: string; pin?: string;
+    };
+    if (!childId) return res.status(400).json({ error: 'Missing childId' });
+    if (pin && !/^\d{4,6}$/.test(pin)) return res.status(400).json({ error: 'PIN must be 4–6 digits' });
+
+    const rounds = parseInt(process.env.BCRYPT_ROUNDS ?? '12', 10);
+    const pinHash = pin ? await bcrypt.hash(pin, rounds) : null;
+
+    try {
+      const [child] = await sql`
+        UPDATE users SET
+          display_name = COALESCE(${displayName ?? null}, display_name),
+          username     = COALESCE(${username?.toLowerCase() ?? null}, username),
+          pin_hash     = COALESCE(${pinHash}, pin_hash)
+        WHERE id = ${childId} AND family_id = ${payload.familyId} AND role = 'child'
+        RETURNING id, display_name, username, xp, streak_days, hearts, gems, league_tier
+      `;
+      if (!child) return res.status(404).json({ error: 'Child not found' });
+      return res.status(200).json({ child });
+    } catch (err: unknown) {
+      const pg = err as { code?: string };
+      if (pg.code === '23505') return res.status(409).json({ error: 'Username already taken in this family' });
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  if (req.method === 'DELETE') {
+    const childId = req.query.childId as string | undefined;
+    if (!childId) return res.status(400).json({ error: 'Missing childId' });
+    await sql`
+      DELETE FROM users
+      WHERE id = ${childId} AND family_id = ${payload.familyId} AND role = 'child'
+    `;
+    return res.status(200).json({ ok: true });
+  }
+
   return res.status(405).json({ error: 'Method not allowed' });
 }
